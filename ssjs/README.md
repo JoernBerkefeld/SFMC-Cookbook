@@ -1,15 +1,15 @@
 # The SSJS Coding Guide
 
 - [The SSJS Coding Guide](#the-ssjs-coding-guide)
-  - [Style Guideline](#style-guideline)
-  - [How to debug quickly](#how-to-debug-quickly)
-  - [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript-%E2%80%93-the-major-differences-that-will-break-your-code)
-    - [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
-      - [“new” Operator](#new-operator)
-      - [Returning a new object in a function](#returning-a-new-object-in-a-function)
-      - [Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
-    - [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation-%E2%80%93-stuff-that-simply-does-not-work)
-      - [Retrieve()](#retrieve)
+	- [Style Guideline](#style-guideline)
+	- [How to debug quickly](#how-to-debug-quickly)
+	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript-%E2%80%93-the-major-differences-that-will-break-your-code)
+		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
+			- [“new” Operator](#new-operator)
+			- [Returning a new object in a function](#returning-a-new-object-in-a-function)
+			- [Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
+		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation-%E2%80%93-stuff-that-simply-does-not-work)
+			- [Retrieve()](#retrieve)
 
 ## Style Guideline
 
