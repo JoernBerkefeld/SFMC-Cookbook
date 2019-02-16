@@ -1,0 +1,12 @@
+{
+    "name": "sfmc-cookbook",
+    "version": "1.0.0",
+    "description": "guide on how to survive as a developer for Salesforce Marketing Cloud",
+    "author": "Jörn Berkefeld",
+    "devDependencies": {
+        "eslint": "^5.14.0",
+        "eslint-config-google": "^0.9.1",
+        "prettier": "^1.14.2",
+        "prettier-eslint": "^8.8.2"
+    }
+}
