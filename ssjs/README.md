@@ -20,11 +20,19 @@
 
 To get proper hints set your ESLint to "eslint:recommended", "google" in the “extends” settings attribute and the parserOptions.ecmaVersion to 3.
 From there you need to add all globals (objects/classes that SSJS publishes into the global scope) and you are pretty much done. Please refer to the attached config for a complete setup.
-In general, sticking to the official Angular.js 1.0 guide leads to good SSJS code as well.
+In general, sticking to the [official Angular.js 1.0 guide](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md) leads to good SSJS code as well.
 
-**ATTACH .estlintrc FILE HERE**
+Download these for general setup:
+- [.eslintrc](../.eslintrc)
+- [.prettierrc](../.prettierrc)
+- [.editorconfig](../.editorconfig)
+- [package.json](../package.json)
 
-**ATTACH package.json FILE HERE**
+And these if you will use Visual Studio Code (place them .vscode folder inside the root of your project folder):
+
+- [Recommended VSC Extensions](../.vscode/extensions.json)
+- [Recommended VSC Settings](../.vscode/settings.json)
+
 
 ## SSJS snippets for typical problems
 
@@ -61,7 +69,7 @@ var param = Platform.Request.GetFormField("firstname");
 
 ```html
 <!-- POST url.com/cloudpage -->
-<script runat="server" language="JavaScript" executioncontexttype="get">
+<script runat="server" language="JavaScript">
 Platform.Load("core", "1.1.1");
 
 var postBody = Platform.Request.GetPostData();
@@ -83,7 +91,7 @@ The return value varies depending on the header. Some bad payload-header combina
 <!-- enhanced wrapper to deal with post data -->
 <!-- post body: {"attribute1": "test", "foo":"bar"} -->
 
-<script runat="server" language="JavaScript" executioncontexttype="get">
+<script runat="server" language="JavaScript">
 Platform.Load("core", "1.1.1");
 
 function PostBody() {
