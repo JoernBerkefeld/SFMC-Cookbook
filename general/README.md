@@ -4,7 +4,7 @@
 	- [Development Setup](#development-setup)
 		- [Where to code](#where-to-code)
 		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
-		- [Folder structure](#folder-structure)
+		- [File structure](#file-structure)
 		- [How to debug quickly](#how-to-debug-quickly)
 
 ## Development Setup
@@ -35,9 +35,28 @@ _Why?_ Junior developers can learn from how their code is changed by the auto-fo
 
 _Why?_ Still not convinced? The guys over at Prettier wrote an actual [essay](https://prettier.io/docs/en/why-prettier.html) on this.
 
-### Folder structure
+### File structure
 
-This is by far up to personal taste but I would recommend to stick
+Any file should only contain markup language (HTML) or front-end code (CSS or JS) or AMPscript code or SSJS. You should avoid mixing this and mimic what the structure you saved locally.
+To still be able to easily recognize which content block contains what, add a little AMPscript at the beginning:
+
+```java
+%%[ /* myAMPscript.amp */ ]%%
+
+%%[
+// insert AMPscript code here
+]%%
+```
+
+or
+
+```java
+%%[ /* mySSJS.ssjs */ ]%%
+
+<script runat="server" language="JavaScript">
+// insert SSJS code here
+</script>
+```
 
 ### How to debug quickly
 
