@@ -4,6 +4,7 @@
 	- [Development Setup](#development-setup)
 		- [Where to code](#where-to-code)
 		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
+		- [Use Syntax Highlighting](#use-syntax-highlighting)
 		- [Folder structure](#folder-structure)
 		- [File structure](#file-structure)
 		- [How to debug quickly](#how-to-debug-quickly)
@@ -35,6 +36,10 @@ _Why?_ Your client will likely ask you to adhere to certain standards. Adapting 
 _Why?_ Junior developers can learn from how their code is changed by the auto-formatters and
 
 _Why?_ Still not convinced? The guys over at Prettier wrote an actual [essay](https://prettier.io/docs/en/why-prettier.html) on this.
+
+### Use Syntax Highlighting
+
+For Visual Studio Code you can get this [AMPscript syntax highlighter](https://marketplace.visualstudio.com/items?itemName=sergey-agadzhanov.AMPscript). Also, you should manually assign `*.ssjs` of type JavaScript, providing you more options when it comes to linting and auto-formatting than if you were using `*.js`. It also logically separates your SSJS from JS, avoiding confusion.
 
 ### Folder structure
 
