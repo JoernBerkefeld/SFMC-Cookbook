@@ -1,0 +1,40 @@
+{
+	"files.exclude": {
+		"node_modules": true,
+		"**/*.sublime-workspace": true,
+		"**/*.code-workspace": false
+	},
+	"eslint.autoFixOnSave": true,
+	"prettier.eslintIntegration": true,
+	"workbench.iconTheme": "vscode-icons",
+	"todo-tree.tags": ["TODO", "FIXME", "README"],
+	"todo-tree.defaultHighlight": {
+		"foreground": "",
+		"background": "yellow",
+		"type": "tag"
+	},
+	"todo-tree.customHighlight": {
+		"TODO": {
+			"background": "#ffa500",
+			"icon": "tools"
+		},
+		"README": {
+			"background": "#88c651",
+			"icon": "info"
+		},
+		"FIXME": {
+			"foreground": "#ffffff",
+			"background": "red",
+			"type": "line",
+			"icon": "beaker"
+		}
+	},
+	"liveSassCompile.settings.excludeList": ["**/node_modules/**", ".vscode/**"],
+	"liveSassCompile.settings.formats": [
+		{
+			"format": "compressed",
+			"extensionName": ".css",
+			"savePath": "~/../css/"
+		}
+	]
+}
