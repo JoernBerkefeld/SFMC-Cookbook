@@ -9,6 +9,8 @@ This is an attempt at starting a guide on how to survive as a developer for Sale
 -   [x] [HowTo deal with AMPscript](ampscript)
 -   [ ] **TODO**: HowTo deal with Guided Template Language
 
+The guides are by no means finished and are to be considered work in progress. I will add more rules & advice over time.
+
 ## Notes
 
 ### Thanks
