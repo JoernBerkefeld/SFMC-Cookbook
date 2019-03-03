@@ -1,27 +1,17 @@
 # General Guide on SFMC developing
 
 - [General Guide on SFMC developing](#general-guide-on-sfmc-developing)
-	- [Development Setup](#development-setup)
-		- [Where to code](#where-to-code)
+	- [Development Environment](#development-environment)
 		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
 		- [Use Syntax Highlighting](#use-syntax-highlighting)
+		- [Where to code: GUI vs. online editor vs. IDE](#where-to-code-gui-vs-online-editor-vs-ide)
+		- [How to debug quickly](#how-to-debug-quickly)
+		- [Online Services for quick debugging](#online-services-for-quick-debugging)
+	- [Project Setup](#project-setup)
 		- [Folder structure](#folder-structure)
 		- [File structure](#file-structure)
-		- [How to debug quickly](#how-to-debug-quickly)
 
-## Development Setup
-
-### Where to code
-
-By all means, avoid making changes directly in SFMC's GUI. Best practice is to make all your changes in your local IDE instead (I recommend the free [Visual Studio Code](https://code.visualstudio.com/)).
-
-_Why?_ Whenever you save a content block, there is no going back. No CTRL+Z, no undo last change - nothing. Your previous code is imply gone.
-
-_Why?_ If others open your CloudPage and accidentally make changes you (a) will never find out who did it and (b) have no way of recovering the previous version.
-
-_Why?_ The GUI does not offer proper code highlighting (even if you wrap your code in `<script>...</script>`)
-
-_Why?_ The GUI does not offer any linting / error correction. In your IDE you can utilize [ESLint](https://eslint.org/) for your SSJS and JS code, as well as [Prettier](https://prettier.io/) for your CSS
+## Development Environment
 
 ### Use Live Linting & Auto-Formatting
 
@@ -40,6 +30,91 @@ _Why?_ Still not convinced? The guys over at Prettier wrote an actual [essay](ht
 ### Use Syntax Highlighting
 
 For Visual Studio Code you can get this [AMPscript syntax highlighter](https://marketplace.visualstudio.com/items?itemName=sergey-agadzhanov.AMPscript). Also, you should manually assign `*.ssjs` of type JavaScript, providing you more options when it comes to linting and auto-formatting than if you were using `*.js`. It also logically separates your SSJS from JS, avoiding confusion.
+Checkout the [.eslintrc](../.eslintrc) and [.prettierrc](../.prettierrc) which includes a configuration for JS, CSS and SSJS.
+
+### Where to code: GUI vs. online editor vs. IDE
+
+By all means, avoid making changes directly in SFMC's GUI. Best practice is to make all your changes in your local IDE instead (I recommend the free [Visual Studio Code](https://code.visualstudio.com/)).
+
+_Why?_ Whenever you save a content block, there is no going back. No CTRL+Z, no undo last change - nothing. Your previous code is imply gone.
+
+_Why?_ If others open your CloudPage and accidentally make changes you (a) will never find out who did it and (b) have no way of recovering the previous version.
+
+_Why?_ The GUI does not offer proper code highlighting (even if you wrap your code in `<script>...</script>`)
+
+_Why?_ The GUI does not offer any linting / error correction. In your IDE you can utilize [ESLint](https://eslint.org/) for your SSJS and JS code, as well as [Prettier](https://prettier.io/) for your CSS
+
+### How to debug quickly
+
+Ever tried to fix a bug and got annoyed by having to publish your page or send your email 1000 times per day? Turns out you can load **any** text file that’s freely available on the internet and run it through the server-side engines for both AmpScript and SSJS. The key is a method that’s similar to JavaScript’s `eval()` method together with another method that grabs the text content of a URL and returns it as a String:
+
+```javascript
+/* put this into an HTML block in your debug CloudPage (nothing else) */
+%%= TreatAsContent(HTTPGet("https://myurl.com/loader.html")) =%%
+```
+
+```html
+<!-- loader.html -->
+
+<!-- optionally load AmpScript file -->
+%%= TreatAsContent(HTTPGet("https://myurl.com/myampcode.amp")) =%%
+
+<script runat="server" language="JavaScript">
+
+Platform.Load("core", "1.1.5"); // define one core version up front for all
+
+// load SSJS file #1 via AmpScript
+%%= TreatAsContent(HTTPGet("https://myurl.com/mycode1.ssjs")) =%%
+// load SSJS file #2 via AmpScript
+%%= TreatAsContent(HTTPGet("https://myurl.com/mycode2.ssjs")) =%%
+// load SSJS file #3 via AmpScript
+%%= TreatAsContent(HTTPGet("https://myurl.com/mycode3.ssjs")) =%%
+
+</script>
+
+<!-- optionally load HTML file via AmpScript -->
+%%= TreatAsContent(HTTPGet("https://myurl.com/app.html")) =%%
+```
+
+```javascript
+// mycode1.ssjs
+function MyUtilities() {
+    ...
+}
+```
+
+```javascript
+// mycode2.ssjs
+function MySfmcApiWrapper() {
+    ...
+}
+```
+
+```javascript
+// mycode3.ssjs
+var util = MyUtilities();
+var sfmc = MySfmcApiWrapper();
+
+// ... fancy app code here
+```
+
+_Why?_ You save time because now you only update your online file on whatever webserver you like and don't need to re-publish your debug page ever again.
+
+_How?_ Internally, AmpScript is always processed & executed first and only afterwards it runs through the SSJS processor.
+
+_Thanks_ to my buddy Christian published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) on this a while ago and taught me this.
+
+### Online Services for quick debugging
+
+If you have access to your own web-server it is definitely recommended to use that one rather than a free online service for security reasons. Also, being able to integrate via SFTP will speed up your process.
+
+If you do not have that, there are multiple services out there that offer quick and easy access to files you created online. The easiest services for this purpose at the time of writing seem to be c9.io or codesandbox.io.
+
+**Note:** They might automatically apply formatting that breaks your code at their own will when you paste code there, making it imperative to use `*.ssjs` and `*.amp` file extensions as these will not be recognized and hence not auto-formatted.
+
+**Important:** Please keep in mind never to store credentials in these online services to avoid security issues! If credentials or secrets are needed, retrieve them from SFMC's Key management (Administration section; for `De-/EncryptSymmetric()`) or from a Data Extensions if you need to use other types of credentials.
+
+## Project Setup
 
 ### Folder structure
 
@@ -54,7 +129,7 @@ This is what I would recommend after playing around with it for some time:
                 -   lib/
                     -   jquery.min.js
                     -   bootstrap.min.css
-                    -   ..._(optional; libraries that you want to host in SFMC)_
+                    -   ... _(optional; libraries that you want to host in SFMC)_
                 -   scss/
                     -   ... _(optional; all your SASS files)_
                 -   js/
@@ -149,63 +224,3 @@ or
 // insert SSJS code here
 </script>
 ```
-
-### How to debug quickly
-
-Ever tried to fix a bug and got annoyed by having to publish your page or send your email 1000 times per day? Turns out you can load **any** text file that’s freely available on the internet and run it through the server-side engines for both AmpScript and SSJS. The key is a method that’s similar to JavaScript’s `eval()` method together with another method that grabs the text content of a URL and returns it as a String:
-
-```javascript
-/* put this into an HTML block in your debug CloudPage (nothing else) */
-%%= TreatAsContent(HTTPGet("https://myurl.com/loader.html")) =%%
-```
-
-```html
-<!-- loader.html -->
-
-<!-- optionally load AmpScript file -->
-%%= TreatAsContent(HTTPGet("https://myurl.com/myampcode.amp")) =%%
-
-<script runat="server" language="JavaScript">
-
-Platform.Load("core", "1.1.5"); // define one core version up front for all
-
-// load SSJS file #1 via AmpScript
-%%= TreatAsContent(HTTPGet("https://myurl.com/mycode1.ssjs")) =%%
-// load SSJS file #2 via AmpScript
-%%= TreatAsContent(HTTPGet("https://myurl.com/mycode2.ssjs")) =%%
-// load SSJS file #3 via AmpScript
-%%= TreatAsContent(HTTPGet("https://myurl.com/mycode3.ssjs")) =%%
-
-</script>
-
-<!-- optionally load HTML file via AmpScript -->
-%%= TreatAsContent(HTTPGet("https://myurl.com/app.html")) =%%
-```
-
-```javascript
-// mycode1.ssjs
-function MyUtilities() {
-    ...
-}
-```
-
-```javascript
-// mycode2.ssjs
-function MySfmcApiWrapper() {
-    ...
-}
-```
-
-```javascript
-// mycode3.ssjs
-var util = MyUtilities();
-var sfmc = MySfmcApiWrapper();
-
-// ... fancy app code here
-```
-
-_Why?_ You save time because now you only update your online file on whatever webserver you like and don't need to re-publish your debug page ever again.
-
-_How?_ Internally, AmpScript is always processed & executed first and only afterwards it runs through the SSJS processor.
-
-_Thanks_ to my buddy Christian published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) on this a while ago and taught me this.
