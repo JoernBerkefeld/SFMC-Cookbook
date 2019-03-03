@@ -131,6 +131,46 @@ for (var el in json) {
 
 ```
 
+### Getting/Setting AMPscript variables
+
+```html
+<!-- setter.amp -->
+%%[
+
+Set @myAmpscriptVariable = "test"
+
+]%%
+
+<!-- getter.ssjs -->
+<script runat="server" language="JavaScript">
+Platform.Load("core", "1.1.1");
+
+var temp = Variable.GetValue('@myAmpscriptVariable');
+// temp now has the value "test"
+</script>
+```
+
+```html
+<!-- setter.ssjs -->
+<script runat="server" language="JavaScript">
+Platform.Load("core", "1.1.1");
+
+var temp = 'test2';
+Variable.SetValue('@myAmpscriptVariable', temp);
+// @myAmpscriptVariable now has the value "test2"
+</script>
+
+<!-- getter.amp -->
+%%[
+
+Set @testVariable = @myAmpscriptVariable
+
+]%%
+<!-- @testVariable is now set to "test2"; one can of course you -->
+<!-- the following outputs "test2" -->
+%%= var(@myAmpscriptVariable) =%%
+```
+
 ## SSJS vs. JavaScript – the major differences that will break your code.
 
 ### Standard JS features not available in SSJS
