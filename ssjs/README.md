@@ -2,6 +2,11 @@
 
 - [The SSJS Coding Guide](#the-ssjs-coding-guide)
 	- [Style Guideline](#style-guideline)
+	- [SSJS snippets for typical problems](#ssjs-snippets-for-typical-problems)
+		- [Reading GET parameters](#reading-get-parameters)
+		- [Reading POST form parameters](#reading-post-form-parameters)
+		- [Reading POST payload](#reading-post-payload)
+		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
 	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript-%E2%80%93-the-major-differences-that-will-break-your-code)
 		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
 			- [“new” Operator](#new-operator)
@@ -9,6 +14,7 @@
 			- [Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
 		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation-%E2%80%93-stuff-that-simply-does-not-work)
 			- [Retrieve()](#retrieve)
+			- [Platform.Request.GetPostData()](#platformrequestgetpostdata)
 
 ## Style Guideline
 
@@ -19,6 +25,111 @@ In general, sticking to the official Angular.js 1.0 guide leads to good SSJS cod
 **ATTACH .estlintrc FILE HERE**
 
 **ATTACH package.json FILE HERE**
+
+## SSJS snippets for typical problems
+
+### Reading GET parameters
+
+GET parameters require you to know the name. It seems there is no way to get all parameters or the query string itself.
+```html
+<!-- GET url.com/cloudpage?data=test -->
+<script runat="server" language="JavaScript">
+Platform.Load("core", "1.1.1");
+
+var param = Platform.Request.GetQueryStringParameter("data");
+// param now has the value "test"
+</script>
+```
+
+_Note: it also works if you omit the `Platform.` in front of `Request.`_
+
+### Reading POST form parameters
+
+Using POST form parameters requires you to know the name of each.
+
+```html
+<!-- GET url.com/cloudpage with form field "firstname" -->
+<script runat="server" language="JavaScript">
+Platform.Load("core", "1.1.1");
+
+var param = Platform.Request.GetFormField("firstname");
+// param now has the value "firstname"
+</script>
+```
+
+### Reading POST payload
+
+```html
+<!-- POST url.com/cloudpage -->
+<script runat="server" language="JavaScript" executioncontexttype="get">
+Platform.Load("core", "1.1.1");
+
+var postBody = Platform.Request.GetPostData();
+</script>
+```
+
+**Note:** This method only works the first time you call it. Every next execution returns nothing. Save the response in a variable if you need it multiple times.
+
+The return value varies depending on the header. Some bad payload-header combinations will cause immediate 500 errors while others work fine.
+
+**Allowed Content-Type:**
+
+| Header                                                             | Sample payload                                                                   | Sample return                   | Comment                             |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------- | ----------------------------------- |
+| `application/x-www-form-urlencoded`                                | `firstname=John&lastname=Smith`                                                  | `firstname=John&lastname=Smith` | this is used for normal form fields |
+| `application/json` / `application/xml` / `text/xml` / `text/plain` | `whatever you like`; providing a JSON value allows you to later parse it as such | `whatever you like`             |
+
+```html
+<!-- enhanced wrapper to deal with post data -->
+<!-- post body: {"attribute1": "test", "foo":"bar"} -->
+
+<script runat="server" language="JavaScript" executioncontexttype="get">
+Platform.Load("core", "1.1.1");
+
+function PostBody() {
+	var postBody = null;
+	var service = {
+		json: json,
+		text: text
+	};
+
+	// init
+	_init();
+
+	return service;
+
+	function _init() {
+		postBody = Platform.Request.GetPostData();
+	}
+
+	function text() {
+		return postBody;
+	}
+	function json() {
+		var temp = Platform.Function.ParseJSON(postBody);
+		if (!temp && postBody) {
+			temp = {error: "input was no string and not JSON formatted"};
+		}
+		return temp;
+	}
+
+}
+
+// demo on how to use it
+var myPostBody = PostBody();
+Write(myPostBody.text() + "\n");
+// {"attribute1": "test", "foo":"bar"}
+
+var json = myPostBody.json();
+for (var el in json) {
+	Write(el + ": " + json[el] + "\n");
+	// attribute1: test
+	// foo: bar
+}
+
+</script>
+
+```
 
 ## SSJS vs. JavaScript – the major differences that will break your code.
 
@@ -140,3 +251,7 @@ Yup, this happens more often than you would think: The docs offer you this reall
 
 This is a fun one because it comes with multiple challenges: It does not work AT ALL in CloudPages but it does work just fine in automations.
 Also, if you leave out the filter parameter, which is officially an optional parameter, then it stops working all together. Also, if you try to omit it in a sneaky way by checking isNotNull on some field that is always filled it will still not work. You
+
+#### Platform.Request.GetPostData()
+
+This only works the first time you call it. Every next execution returns nothing.
