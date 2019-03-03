@@ -45,7 +45,7 @@ _Note: it also works if you omit the `Platform.` in front of `Request.`_
 
 ### Reading POST form parameters
 
-Using POST form parameters requires you to know the name of each.
+This is a shortcut if you want to read only a few values. Below is an option to retrieve all form values at once.
 
 ```html
 <!-- GET url.com/cloudpage with form field "firstname" -->
@@ -90,6 +90,7 @@ function PostBody() {
 	var postBody = null;
 	var service = {
 		json: json,
+		form: form,
 		text: text
 	};
 
@@ -112,7 +113,17 @@ function PostBody() {
 		}
 		return temp;
 	}
-
+	function form() {
+		var obj = {};
+		var tempArr = postBody.split("&");
+		for (var i = 0; i < tempArr.length; i++) {
+			var temp = tempArr[i].split("=");
+			if(temp.lengh>1) {
+				obj[temp[0]] = temp[1];
+			}
+		}
+		return obj;
+	}
 }
 
 // demo on how to use it
@@ -123,6 +134,13 @@ Write(myPostBody.text() + "\n");
 var json = myPostBody.json();
 for (var el in json) {
 	Write(el + ": " + json[el] + "\n");
+	// attribute1: test
+	// foo: bar
+}
+
+var form = myPostBody.form();
+for (var el in form) {
+	Write(el + ": " + form[el] + "\n");
 	// attribute1: test
 	// foo: bar
 }
