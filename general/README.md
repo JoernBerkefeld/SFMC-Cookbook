@@ -4,6 +4,7 @@
 	- [Development Setup](#development-setup)
 		- [Where to code](#where-to-code)
 		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
+		- [Folder structure](#folder-structure)
 		- [File structure](#file-structure)
 		- [How to debug quickly](#how-to-debug-quickly)
 
@@ -34,6 +35,92 @@ _Why?_ Your client will likely ask you to adhere to certain standards. Adapting 
 _Why?_ Junior developers can learn from how their code is changed by the auto-formatters and
 
 _Why?_ Still not convinced? The guys over at Prettier wrote an actual [essay](https://prettier.io/docs/en/why-prettier.html) on this.
+
+### Folder structure
+
+This is by far up to personal taste but I would recommend to stick any one folder structure in your Git repos for every CloudPage/E-Mail. For CloudPages and e-Mails a similar structure can be used, but keep in mind that JavaScript (app/) will not be executed in e-Mails and SFMC actually automatically removes any non-SSJS `<script>` nodes from your content blocks without warning.
+
+This is what I would recommend after playing around with it for some time:
+
+-   project-root/
+    -   cloudPages/
+        -   cloudPageName1/
+            -   app/ _(this is where all front end code goes)_
+                -   lib/
+                    -   jquery.min.js
+                    -   bootstrap.min.css
+                    -   ..._(optional; libraries that you want to host in SFMC)_
+                -   scss/
+                    -   ... _(optional; all your SASS files)_
+                -   js/
+                    -   ... _(all your non-minified JS files)_
+                -   app-1.html
+                -   app-2.loadExternalLibs.html
+                -   app-3.style.min.css
+                -   app-4.script.min.js
+            -   server/ _(this is where SSJS and AMPscript goes)_
+                -   lib/
+                    -   ... _(any SSJS files containing shared classes / polyfills, ...)_
+                -   server-1.amp
+                -   server-2.initCore.ssjs
+                -   server-3.ssjs
+        -   cloudPageName2/
+            -   ...
+    -   emails/
+        -   ...
+    -   contentBlocks/ _(sometimes you will want to prepare code snippets)_
+        -   snippet1/
+        -   ...
+
+How you structure your `app/` directory is likely up to whatever front end library you might be using. Angular(JS), react and others all come with their standard directory approach and it is recommended to follow these best practices.
+
+In any case, you should try to map your local files to one content block each in the CloudPage - except for when you minify your front end code, then one content block per code type / per .min file should be used.
+
+```html
+<!-- model layout of a CloudPage -->
+
+<!-- Start of server-side code here -->
+<!-- block 1 -->
+server-1.amp
+
+<!-- block 2 -->
+server-2.initCore.ssjs
+
+<!-- block 3 -->
+lib.mySharedClass.ssjs
+
+<!-- block 4 -->
+server-3.ssjs
+<!-- END of server-side code here -->
+
+<!-- block 5 - this is where all your HTML goes -->
+app-1.html
+
+<!-- start loading CSS & JS below here -->
+<!-- block 6 -->
+app-2.loadExternalLibs.html
+
+<!-- block 7 -->
+app-3.style.min.css
+
+<!-- block 8 -->
+app-4.script.min.js
+```
+
+Load the Platform Core once before all other SSJS files to use one consistent version across the CloudPage:
+
+```html
+<!-- initCore.ssjs -->
+<!-- load this before all other SSJS files to use one consistent Core version across the CloudPage -->
+%%[ /* <b>initCore.ssjs</b> */ ]%%
+<script runat="server" language="JavaScript">
+	Platform.Load('core', '1.1.5'); // choose a version suitable to your needs!
+</script>
+```
+
+Keep in mind that the above is just the minimal example. Of you have more code, it's good to split it up into files of up to 150 lines each, if possible.
+
+**Important:** For optimal code highlighting, linting and auto-formatting you will need to remove the `<script>` ndoes around SSJS and `<style>` nodes around CSS in your local `*.ssjs` & `*.css` files. In the online version on the SFMC server however, you do need to include these in every file.
 
 ### File structure
 
