@@ -102,7 +102,7 @@ _Why?_ You save time because now you only update your online file on whatever we
 
 _How?_ Internally, AmpScript is always processed & executed first and only afterwards it runs through the SSJS processor.
 
-_Thanks_ to my buddy Christian published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) on this a while ago and taught me this.
+_Thanks_ to my buddy Christian who published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) a while ago and taught me how to use this hack.
 
 ### Online Services for quick debugging
 
