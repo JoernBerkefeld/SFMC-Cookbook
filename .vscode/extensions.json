@@ -21,7 +21,7 @@
 		"joshpeng.sublime-babel-vscode",
 		// SASS / SCSS server
 		"ritwickdey.live-sass",
-		// Markdown / Readme.md
+		// Markdown
 		"yzhang.markdown-all-in-one",
 		"davidanson.vscode-markdownlint"
 	],

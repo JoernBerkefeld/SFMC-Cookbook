@@ -7,12 +7,12 @@
 		- [Reading POST form parameters](#reading-post-form-parameters)
 		- [Reading POST payload](#reading-post-payload)
 		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
-	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript-%E2%80%93-the-major-differences-that-will-break-your-code)
+	- [SSJS vs. JavaScript – the major differences that will break your code](#ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
 		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
 			- [“new” Operator](#new-operator)
 			- [Returning a new object in a function](#returning-a-new-object-in-a-function)
 			- [Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
-		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation-%E2%80%93-stuff-that-simply-does-not-work)
+		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
 			- [Retrieve()](#retrieve)
 			- [Platform.Request.GetPostData()](#platformrequestgetpostdata)
 
@@ -23,6 +23,7 @@ From there you need to add all globals (objects/classes that SSJS publishes into
 In general, sticking to the [official Angular.js 1.0 guide](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md) leads to good SSJS code as well.
 
 Download these for general setup:
+
 - [.eslintrc](../.eslintrc)
 - [.prettierrc](../.prettierrc)
 - [.editorconfig](../.editorconfig)
@@ -33,12 +34,12 @@ And these if you will use Visual Studio Code (place them .vscode folder inside t
 - [Recommended VSC Extensions](../.vscode/extensions.json)
 - [Recommended VSC Settings](../.vscode/settings.json)
 
-
 ## SSJS snippets for typical problems
 
 ### Reading GET parameters
 
 GET parameters require you to know the name. It seems there is no way to get all parameters or the query string itself.
+
 ```html
 <!-- GET url.com/cloudpage?data=test -->
 <script runat="server" language="JavaScript">
@@ -197,7 +198,7 @@ Set @testVariable = @myAmpscriptVariable
 %%= var(@myAmpscriptVariable) =%%
 ```
 
-## SSJS vs. JavaScript – the major differences that will break your code.
+## SSJS vs. JavaScript – the major differences that will break your code
 
 ### Standard JS features not available in SSJS
 
