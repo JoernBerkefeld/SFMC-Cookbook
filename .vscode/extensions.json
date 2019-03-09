@@ -7,15 +7,13 @@
 		"alefragnani.bookmarks",
 		"robertohuertasm.vscode-icons",
 		"ms-vsliveshare.vsliveshare",
-		"msjsdiag.debugger-for-chrome",
 		"gruntfuggly.todo-tree",
 		// Git
 		"eamodio.gitlens",
-		// Linters
-		// Formatting & colors
-		"dbaeumer.vscode-eslint", // JS
+		// Linters, Formatting & colors
+		"dbaeumer.vscode-eslint",
 		"editorconfig.editorconfig",
-		"esbenp.prettier-vscode", // JS
+		"esbenp.prettier-vscode",
 		"richie5um2.vscode-sort-json",
 		"joelday.docthis",
 		"joshpeng.sublime-babel-vscode",
