@@ -54,6 +54,7 @@
 				"Platform": false,
 				"Script": false,
 				"Stringify": false,
+				"Subscriber": false,
 				"Variable": false,
 				"Write": false
 			}

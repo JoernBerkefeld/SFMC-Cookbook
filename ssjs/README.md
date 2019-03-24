@@ -7,6 +7,7 @@
 		- [Reading POST form parameters](#reading-post-form-parameters)
 		- [Reading POST payload](#reading-post-payload)
 		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
+		- [Update (All) Subscriber List](#update-all-subscriber-list)
 	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript-%E2%80%93-the-major-differences-that-will-break-your-code)
 		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
 			- [“new” Operator](#new-operator)
@@ -195,6 +196,48 @@ Set @testVariable = @myAmpscriptVariable
 <!-- @testVariable is now set to "test2"; one can of course you -->
 <!-- the following outputs "test2" -->
 %%= var(@myAmpscriptVariable) =%%
+```
+
+### Update (All) Subscriber List
+
+First, you need to know the ID of the List you want to update. Even the All Subscriber List has it's own id and it's not necessarily "1". You can get that in the Property page of the list:
+
+1. Go to Email Studio
+2. In the top navation click on Subscribers -> Lists
+3. In the left navigation, click on the first link, ``My Subscribers``
+4. Tick the checkbox in front of ``All Subscribers``, then click on ``Properties``
+5. Here under List Identification > List Attributes you will find a table that has the required ``ID`` as first column.
+
+```javascript
+// *** preparation ***
+
+var newStatus = 'Unsubscribed'; // Active|Unsubscribed
+var subscriberListID = 12; // see how to find the ID above; potentially different on every instance!
+var mySubKey = "test@domain.com"; // this is the subscriberKey of the contact that you want to udpate
+var subscriberObj = {
+	Attributes: {}, // optional custom attributes
+	EmailTypePreference: 'HTML',
+	Lists: {
+		Status: newStatus,
+		ID: subscriberListID,
+		Action: 'Update'
+	},
+	SubscriberKey: mySubKey
+};
+
+// optionally add custom attribues:
+subscriberObj.Attributes = {
+	foo: 'bar',
+	hello: 'world'
+};
+
+// *** execute update ***
+
+// instantiate your subscriber
+var mySubscriber = Subscriber.Init(mySubKey);
+// run the update
+var subscriptionStatus = mySubscriber.Update(subscriberObj);
+
 ```
 
 ## SSJS vs. JavaScript – the major differences that will break your code.
