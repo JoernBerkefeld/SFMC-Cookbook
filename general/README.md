@@ -122,35 +122,35 @@ This is by far up to personal taste but I would recommend to stick any one folde
 
 This is what I would recommend after playing around with it for some time:
 
--   project-root/
-    -   cloudPages/
-        -   cloudPageName1/
-            -   app/ _(this is where all front end code goes)_
-                -   lib/
-                    -   jquery.min.js
-                    -   bootstrap.min.css
-                    -   ... _(optional; libraries that you want to host in SFMC)_
-                -   scss/
-                    -   ... _(optional; all your SASS files)_
-                -   js/
-                    -   ... _(all your non-minified JS files)_
-                -   app-1.html
-                -   app-2.loadExternalLibs.html
-                -   app-3.style.min.css
-                -   app-4.script.min.js
-            -   server/ _(this is where SSJS and AMPscript goes)_
-                -   lib/
-                    -   ... _(any SSJS files containing shared classes / polyfills, ...)_
-                -   server-1.amp
-                -   server-2.initCore.ssjs
-                -   server-3.ssjs
-        -   cloudPageName2/
-            -   ...
-    -   emails/
-        -   ...
-    -   contentBlocks/ _(sometimes you will want to prepare code snippets)_
-        -   snippet1/
-        -   ...
+- project-root/
+    - cloudPages/
+        - cloudPageName1/
+            - app/ _(this is where all front end code goes)_
+                - lib/
+                    - jquery.min.js
+                    - bootstrap.min.css
+                    - ... _(optional; libraries that you want to host in SFMC)_
+                - scss/
+                    - ... _(optional; all your SASS files)_
+                - js/
+                    - ... _(all your non-minified JS files)_
+                - app-1.html
+                - app-2.loadExternalLibs.html
+                - app-3.style.min.css
+                - app-4.script.min.js
+            - server/ _(this is where SSJS and AMPscript goes)_
+                - lib/
+                    - ... _(any SSJS files containing shared classes / polyfills, ...)_
+                - server-1.amp
+                - server-2.initCore.ssjs
+                - server-3.ssjs
+        - cloudPageName2/
+            - ...
+    - emails/
+        - ...
+    - contentBlocks/ _(sometimes you will want to prepare code snippets)_
+        - snippet1/
+        - ...
 
 How you structure your `app/` directory is likely up to whatever front end library you might be using. Angular(JS), react and others all come with their standard directory approach and it is recommended to follow these best practices.
 

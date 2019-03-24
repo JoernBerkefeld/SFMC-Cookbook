@@ -3,10 +3,14 @@
     "version": "1.0.0",
     "description": "guide on how to survive as a developer for Salesforce Marketing Cloud",
     "author": "Jörn Berkefeld",
+    "scripts": {
+        "upgrade": "npm-check --update"
+    },
     "devDependencies": {
-        "eslint": "^5.14.0",
         "eslint-config-google": "^0.9.1",
-        "prettier": "^1.14.2",
+        "eslint": "^5.15.1",
+        "npm-check": "^5.9.0",
+        "prettier": "^1.16.4",
         "prettier-eslint": "^8.8.2"
     }
 }

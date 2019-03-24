@@ -36,5 +36,6 @@
 			"extensionName": ".css",
 			"savePath": "~/../"
 		}
-	]
+	],
+	"markdown.extension.toc.githubCompatibility": true
 }
