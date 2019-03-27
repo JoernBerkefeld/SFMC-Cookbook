@@ -264,7 +264,7 @@ var orderBy = 'first name'; // OPTIONAL; omit parameter if no sorting needed
 
 // execution
 var myDe = DataExtension.Init(deName); // add 'ENT.' in front of the name for shared DEs!
-var myDeArr = localeDe.Rows.Lookup(whereColumnArr, whereColumValueArr, limit, orderBy);
+var myDeArr = myDe.Rows.Lookup(whereColumnArr, whereColumValueArr, limit, orderBy);
 
 // parsing
 // if no rows where returned, myDeArr returns NULL
@@ -276,6 +276,18 @@ if(myDeArr === null) {
 if(myDeArr.length) {
 	// your code here
 }
+```
+
+```javascript
+// TODO test & explain Rows.Retrieve() compared to Rows.Lookup()
+// https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRetrieve.htm
+
+// already known that this works in automation but NOT in landing pages
+// it does NOT work WITHOUT the filter, despite the docs stating the contrary
+var birthdayDE = DataExtension.Init("birthdayDE");
+// according to the docs this filter allows complex structures including OR
+var filter = {Property:"Age",SimpleOperator:"greaterThan",Value:20};
+var data = birthdayDE.Rows.Retrieve(filter);
 ```
 
 #### INSERT, UPSERT, UPDATE, DELETE
@@ -307,7 +319,23 @@ var insertColumnArr = ['lastname', 'age']; // REQUIRED
 var insertColumnValueArr = ['Connor', '16']; // REQUIRED
 
 var insertedRowCount = Platform.Function.InsertData(deName, insertColumnArr, insertColumnValueArr);
+// or
+Platform.Function.InsertDE(deName, insertColumnArr, insertColumnValueArr);
 ```
+
+```javascript
+// TODO test & compare Rows.Add()
+// https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsAdd.htm
+
+var arrContacts =  [
+	{Email:"jdoe@example.com", FirstName:"John", LastName:"Doe"},
+	{Email:"aruiz@example.com", FirstName:"Angel", LastName:"Ruiz"}
+];
+
+var birthdayDE = DataExtension.Init("birthdayDE");
+birthdayDE.Rows.Add(arrContacts);
+```
+
 
 ```javascript
 // *** UPSERT ***
@@ -321,6 +349,9 @@ var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
 var upsertedRowCount = Platform.Function.UpsertData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+// or
+Platform.Function.UpsertDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+
 ```
 
 ```javascript
@@ -335,7 +366,18 @@ var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
 var updatedRowCount = Platform.Function.UpdateData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+// or
+Platform.Function.UpdateDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
 ```
+
+```javascript
+// TODO test & compare Rows.Update()
+// https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsUpdate.htm
+
+var birthdayDE = DataExtension.Init("birthdayDE");
+birthdayDE.Rows.Update({Age:"25"}, ["FirstName"], ["Angel"]);
+```
+
 
 ```javascript
 // *** DELETE ***
@@ -347,6 +389,17 @@ var whereColumnArr = ['firstname']; // REQUIRED
 var whereColumValueArr = ['John']; // REQUIRED
 
 var deletedRowCount = Platform.Function.DeleteData(deName, whereColumnArr, whereColumValueArr);
+// or
+Platform.Function.DeleteDE(deName, whereColumnArr, whereColumValueArr);
+
+```
+
+```javascript
+// TODO test & compare Rows.Remove()
+// https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRemove.htm
+
+var birthdayDE= DataExtension.Init("birthdayDE");
+birthdayDE.Rows.Remove(["FirstName", "Age"], ["Angel", 24]);
 ```
 
 ## SSJS vs. JavaScript – the major differences that will break your code.
