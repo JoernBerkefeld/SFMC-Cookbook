@@ -8,6 +8,9 @@
 		- [Reading POST payload](#reading-post-payload)
 		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
 		- [Update (All) Subscriber List](#update-all-subscriber-list)
+		- [Data Extensions](#data-extensions)
+			- [SELECT](#select)
+			- [INSERT, UPSERT, UPDATE, DELETE](#insert-upsert-update-delete)
 	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
 		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
 			- [“new” Operator](#new-operator)
@@ -239,6 +242,111 @@ var mySubscriber = Subscriber.Init(mySubKey);
 // run the update
 var subscriptionStatus = mySubscriber.Update(subscriberObj);
 
+```
+
+### Data Extensions
+
+Note: There is no option to filter (WHERE) with OR combinations. Only AND combos are possible. When function parameters are arrays, you may pass in one or multiple values. Just make sure that column names and column values are both provided.
+
+#### SELECT
+
+```javascript
+// *** SELECT ***
+// Having 1 where condition is obligatory.
+// Hack: Add a column that always has the same value if you want to be able to get all rows.
+
+// config
+var deName = 'name_of_your_de'; // REQUIRED
+var whereColumnArr = ['where_col1', 'where_col2']; // REQUIRED
+var whereColumValueArr = ['value1', 'value2']; // REQUIRED
+var limit = 50;  // REQUIRED
+var orderBy = 'first name'; // OPTIONAL; omit parameter if no sorting needed
+
+// execution
+var myDe = DataExtension.Init(deName); // add 'ENT.' in front of the name for shared DEs!
+var myDeArr = localeDe.Rows.Lookup(whereColumnArr, whereColumValueArr, limit, orderBy);
+
+// parsing
+// if no rows where returned, myDeArr returns NULL
+// optionally normalize the result:
+if(myDeArr === null) {
+	myDeArr = [];
+}
+
+if(myDeArr.length) {
+	// your code here
+}
+```
+
+#### INSERT, UPSERT, UPDATE, DELETE
+
+There are 2 types of methods in SSJS: ``XxxxDE(...)`` and ``XxxxData(...)``.
+
+|                  | ``XxxxData(...)``                                                                                                                     | ``XxxxDE(...)``                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **When to use**  | - **landing pages** (°°°)<br>- SMS & MMS in MobileConnect (°)<br>- push messages in MobilePush (°)<br>- messages in GroupConnect. (°) | - landing pages (°°)<br>- email messages at send time (°) |
+| **return value** | ``{integer}`` number of affected rows                                                                                                 | ``void``                                                  |
+
+Legend:
+- **bold** : recommended
+- (°) : according to docs (TODO: test this)
+- (°°) : not in docs but working
+- (°°°) : according to docs & confirmed
+
+
+
+The code samples are identical for ``XxxxData()`` and ``XxxxDE()`` aside from the option the check the number of affected rows.
+
+```javascript
+// *** INSERT ***
+// the docs propose to add 2 parameters per column/value combination instead of 2 arrays.
+// --> ignore the docs.
+
+var deName = 'myDe'; // REQUIRED
+var insertColumnArr = ['lastname', 'age']; // REQUIRED
+var insertColumnValueArr = ['Connor', '16']; // REQUIRED
+
+var insertedRowCount = Platform.Function.InsertData(deName, insertColumnArr, insertColumnValueArr);
+```
+
+```javascript
+// *** UPSERT ***
+// the docs propose to pass in strings instead of arrays
+// --> ignore the docs.
+
+var deName = 'myDe'; // REQUIRED
+var whereColumnArr = ['firstname']; // REQUIRED
+var whereColumValueArr = ['John']; // REQUIRED
+var upsertColumnArr = ['lastname', 'age']; // REQUIRED
+var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
+
+var upsertedRowCount = Platform.Function.UpsertData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+```
+
+```javascript
+// *** UPDATE ***
+// the docs propose to pass in strings instead of arrays
+// --> ignore the docs.
+
+var deName = 'myDe'; // REQUIRED
+var whereColumnArr = ['firstname']; // REQUIRED
+var whereColumValueArr = ['John']; // REQUIRED
+var upsertColumnArr = ['lastname', 'age']; // REQUIRED
+var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
+
+var updatedRowCount = Platform.Function.UpdateData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+```
+
+```javascript
+// *** DELETE ***
+// the docs propose to pass in strings instead of arrays
+// --> ignore the docs.
+
+var deName = 'myDe'; // REQUIRED
+var whereColumnArr = ['firstname']; // REQUIRED
+var whereColumValueArr = ['John']; // REQUIRED
+
+var deletedRowCount = Platform.Function.DeleteData(deName, whereColumnArr, whereColumValueArr);
 ```
 
 ## SSJS vs. JavaScript – the major differences that will break your code.
