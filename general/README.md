@@ -10,6 +10,9 @@
 	- [Project Setup](#project-setup)
 		- [Folder structure](#folder-structure)
 		- [File structure](#file-structure)
+	- [Data Extensions](#data-extensions)
+		- [SEO, Page title](#seo-page-title)
+		- [Data types](#data-types)
 
 ## Development Environment
 
@@ -122,35 +125,35 @@ This is by far up to personal taste but I would recommend to stick any one folde
 
 This is what I would recommend after playing around with it for some time:
 
-- project-root/
-    - cloudPages/
-        - cloudPageName1/
-            - app/ _(this is where all front end code goes)_
-                - lib/
-                    - jquery.min.js
-                    - bootstrap.min.css
-                    - ... _(optional; libraries that you want to host in SFMC)_
-                - scss/
-                    - ... _(optional; all your SASS files)_
-                - js/
-                    - ... _(all your non-minified JS files)_
-                - app-1.html
-                - app-2.loadExternalLibs.html
-                - app-3.style.min.css
-                - app-4.script.min.js
-            - server/ _(this is where SSJS and AMPscript goes)_
-                - lib/
-                    - ... _(any SSJS files containing shared classes / polyfills, ...)_
-                - server-1.amp
-                - server-2.initCore.ssjs
-                - server-3.ssjs
-        - cloudPageName2/
-            - ...
-    - emails/
-        - ...
-    - contentBlocks/ _(sometimes you will want to prepare code snippets)_
-        - snippet1/
-        - ...
+-   project-root/
+    -   cloudPages/
+        -   cloudPageName1/
+            -   app/ _(this is where all front end code goes)_
+                -   lib/
+                    -   jquery.min.js
+                    -   bootstrap.min.css
+                    -   ... _(optional; libraries that you want to host in SFMC)_
+                -   scss/
+                    -   ... _(optional; all your SASS files)_
+                -   js/
+                    -   ... _(all your non-minified JS files)_
+                -   app-1.html
+                -   app-2.loadExternalLibs.html
+                -   app-3.style.min.css
+                -   app-4.script.min.js
+            -   server/ _(this is where SSJS and AMPscript goes)_
+                -   lib/
+                    -   ... _(any SSJS files containing shared classes / polyfills, ...)_
+                -   server-1.amp
+                -   server-2.initCore.ssjs
+                -   server-3.ssjs
+        -   cloudPageName2/
+            -   ...
+    -   emails/
+        -   ...
+    -   contentBlocks/ _(sometimes you will want to prepare code snippets)_
+        -   snippet1/
+        -   ...
 
 How you structure your `app/` directory is likely up to whatever front end library you might be using. Angular(JS), react and others all come with their standard directory approach and it is recommended to follow these best practices.
 
@@ -224,3 +227,36 @@ or
 // insert SSJS code here
 </script>
 ```
+
+## Data Extensions
+
+They can be set up via Email Studio and via Audience Builder ("Contact Builder"). The two interfaces look mostly similar but they do have distinct differences:
+
+
+| Feature                             | Email Studio                                                                                                                                                                                                                                                                                                                                                                                                                                            | Audience/Contact Builder                                         |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Where to find DEs                   | top navigation > Subscribers > Data Extensions                                                                                                                                                                                                                                                                                                                                                                                                          | top navigation > Data Extensions                                 |
+| Sharing with BUs                    | You can either share an entire folder or a single DE.<br> -   Sharing a folder: via the right-click menu of shared folders in the left navigation.<br> -   Sharing single DE: Open the DE, then click the Permissions tab. The "Sharing Status" column reveals the sharing status for each BU.<br> - You can distinctly choose what access rights are granted: `View`, `Update`, `Delete`, `Manage Data`, `Transfer Ownership`, `Manage Data Retention` | n/a                                                              |
+| Data Import sources                 | FTP, Upload (including Zips)                                                                                                                                                                                                                                                                                                                                                                                                                            | FTP, Upload, DataExtensions (no Zips)                            |
+| Data Export destinations            | FTP                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Browser download, "Salesforce Objects & Reports", "Enhanced FTP" |
+| Single Record Add/Update/Delete     | no                                                                                                                                                                                                                                                                                                                                                                                                                                                      | yes                                                              |
+| Delete All Records (Truncate table) | "Clear Data"-button                                                                                                                                                                                                                                                                                                                                                                                                                                     | "Clear Records"-button                                           |
+| Columns Add/Update/Delete           | yes, all at once (click on "Edit Fields" to activate); <br>**Note:** this feature is deactivated in Email Studio if you set up data relationships with this DE in Contact Builder!                                                                                                                                                                                                                                                                      | yes, 1-by-1 (even when data relationsships have been set up)     |
+| Columns Update - Limitations        | - You may never decrease the length of a field.<br>- You may never change the field type.<br>- If the DE is part of a relationship, you may not delete any field<br>- Decimal length can never be changed                                                                                                                                                                                                                                               |
+
+### SEO, Page title
+
+You can actually easily set the Page Title and a few other SEO relevant settings ususally found in the page header's code via GUI in SFMC. While you are in the folder view, find the burger icon and delete icon on every page. Clicking the burger icon ("Page Properties") brings you to a page with an "Advanced Settings"-button and there to the "SEO" tab. Here you can set up page title, keywords, descriptions, and if search engines should be allowed to index the particular CloudPage.
+
+### Data types
+
+| Name          | SQL equivalent | Max Length                                                     | Example                                                                                                         |
+| ------------- | -------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Text          | String         | `4000`                                                         | `"any text."`                                                                                                   |
+| Number        | Integer        | ???                                                            | `21`                                                                                                            |
+| Date          | ???            | ???                                                            | ???                                                                                                             |
+| Boolean       | Boolean        | -                                                              | `True`, `False`                                                                                                 |
+| Email Address | String         | `254`                                                          | `"demo@domain.com"`<br>(a filter is applied making sure only standard compliant emails are stored)              |
+| Phone         | String         | ???                                                            | ??? (adhering to [E.164 standard](https://en.wikipedia.org/wiki/E.164))                                         |
+| Decimal       | Decimal        | `21,17`, max sum is `38`, with max `17` digits after the comma | `1234.56789`                                                                                                    |
+| Locale        | Enum           | `5`                                                            | `"en-us"`, [complete list](https://help.salesforce.com/articleView?id=mc_moc_data_extension_locales.htm&type=5) |
