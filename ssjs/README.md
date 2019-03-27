@@ -246,7 +246,24 @@ var subscriptionStatus = mySubscriber.Update(subscriberObj);
 
 ### Data Extensions
 
-Note: There is no option to filter (WHERE) with OR combinations. Only AND combos are possible. When function parameters are arrays, you may pass in one or multiple values. Just make sure that column names and column values are both provided.
+There are multiple types of methods in SSJS for the same purpose but each with their own drawbacks and benefits:
+
+|                  | ``XxxxData(...)``                                                                                                                     | ``XxxxDE(...)``                                           | ``Rows.Xxxx(...)`` |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------ |
+| **When to use**  | - **landing pages** (°°°)<br>- SMS & MMS in MobileConnect (°)<br>- push messages in MobilePush (°)<br>- messages in GroupConnect. (°) | - landing pages (°°)<br>- email messages at send time (°) | ?                  |
+| **return value** | ``{integer}`` number of affected rows                                                                                                 | ``void``                                                  | ?                  |
+
+Legend:
+- **bold** : recommended
+- (°) : according to docs (TODO: test this)
+- (°°) : not in docs but working
+- (°°°) : according to docs & confirmed
+
+
+
+The code samples are identical for ``XxxxData()`` and ``XxxxDE()`` aside from the option the check the number of affected rows.
+
+**Note:** There is no option to filter (WHERE) with OR combinations. Only AND combos are possible. When function parameters are arrays, you may pass in one or multiple values. Just make sure that column names and column values are both provided.
 
 #### SELECT
 
@@ -279,6 +296,14 @@ if(myDeArr.length) {
 ```
 
 ```javascript
+// TODO Lookup: https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformDataExtensionLookup.htm
+
+// TODO LookupRows: https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformDataExtensionLookupRows.htm
+
+// TODO LookupOrderedRows: https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformDataExtensionLookupOrderedRows.htm
+```
+
+```javascript
 // TODO test & explain Rows.Retrieve() compared to Rows.Lookup()
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRetrieve.htm
 
@@ -292,22 +317,6 @@ var data = birthdayDE.Rows.Retrieve(filter);
 
 #### INSERT, UPSERT, UPDATE, DELETE
 
-There are 2 types of methods in SSJS: ``XxxxDE(...)`` and ``XxxxData(...)``.
-
-|                  | ``XxxxData(...)``                                                                                                                     | ``XxxxDE(...)``                                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| **When to use**  | - **landing pages** (°°°)<br>- SMS & MMS in MobileConnect (°)<br>- push messages in MobilePush (°)<br>- messages in GroupConnect. (°) | - landing pages (°°)<br>- email messages at send time (°) |
-| **return value** | ``{integer}`` number of affected rows                                                                                                 | ``void``                                                  |
-
-Legend:
-- **bold** : recommended
-- (°) : according to docs (TODO: test this)
-- (°°) : not in docs but working
-- (°°°) : according to docs & confirmed
-
-
-
-The code samples are identical for ``XxxxData()`` and ``XxxxDE()`` aside from the option the check the number of affected rows.
 
 ```javascript
 // *** INSERT ***
