@@ -6,9 +6,11 @@
 		- [Use dynamic trackable links](#use-dynamic-trackable-links)
 		- [Data Extensions](#data-extensions)
 			- [SELECT](#select)
-				- [Full row, case-Insensitive search](#full-row-case-insensitive-search)
-				- [Full row, case-Sensitive search](#full-row-case-sensitive-search)
 				- [Single column of row, case-insensitive search](#single-column-of-row-case-insensitive-search)
+				- [Full row, case-insensitive search](#full-row-case-insensitive-search)
+				- [Full row, case-sensitive search](#full-row-case-sensitive-search)
+				- [Sorted full row, case-insensitive search](#sorted-full-row-case-insensitive-search)
+				- [Sorted full row, case-sensitive search](#sorted-full-row-case-sensitive-search)
 
 ## Hide your code
 
@@ -65,11 +67,27 @@ Now, if your link includes parameters, make sure you properly URL-encode the val
 
 #### SELECT
 
-##### Full row, case-Insensitive search
-This method gets all fields from the specified data extension; where-filter is case-insensitive.
+##### Single column of row, case-insensitive search
+This method gets one field from the specified data extension; where-filter is case-insensitive.
+
+_Docs [Lookup](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookup.htm)_
 
 ```c++
-/* https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprows.htm */
+
+Set @dataExtension = 'name of data extension'
+Set @returnedField = 'City'
+Set @whereCol = 'PostalCode'
+Set @whereValue = '12345'
+
+/* get field value from the row according to the filter */
+Set @fieldValue = Lookup(@dataExtension, @returnedField, @whereCol, @whereValue)
+```
+
+##### Full row, case-insensitive search
+This method gets all fields from the specified data extension; where-filter is case-insensitive.
+
+_Docs [LookupRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprows.htm)_
+```c++
 
 Set @dataExtension = 'name of data extension'
 Set @whereCol = 'some-column'
@@ -89,11 +107,12 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Full row, case-Sensitive search
+##### Full row, case-sensitive search
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
+_Docs [LookupRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprowscs.htm)_
+
 ```c++
-/* https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprowscs.htm */
 
 Set @dataExtension = 'name of data extension'
 Set @whereCol = 'some-column'
@@ -113,17 +132,56 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Single column of row, case-insensitive search
-This method gets one field from the specified data extension; where-filter is case-insensitive.
+##### Sorted full row, case-insensitive search
+This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
+_Docs [LookupOrderedRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrows.htm)_
 ```c++
-/* https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookup.htm */
 
 Set @dataExtension = 'name of data extension'
-Set @returnedField = 'City'
-Set @whereCol = 'PostalCode'
-Set @whereValue = '12345'
+Set @maxReturnedRows = 2000
+Set @orderBy = 'MyField ASC' /* 'fieldname ASC' or 'fieldname DESC' */
+Set @whereCol = 'some-column'
+Set @whereValue = 'soMething'
+Set @rows = LookupOrderedRows(@dataExtension, @maxReturnedRows, @orderBy, @whereCol, @whereValue)
 
-/* get field value from the row according to the filter */
-Set @fieldValue = Lookup(@dataExtension, @returnedField, @whereCol, @whereValue)
+/* check if @rowCount has at least one row; Row() will fail if it does not */
+for @i = 1 to RowCount(@rows) do
+
+	/* select first row */
+	Set @row = Row(@rows, @i)
+
+	/* get field values from the row */
+	Set @name = Field(@row,'Firstname')
+	Set @email = Field(@row,'EmailAddress')
+
+next @i
 ```
+
+
+##### Sorted full row, case-sensitive search
+This method gets all fields from the specified data extension; where-filter is case-sensitive.
+
+_Docs [LookupOrderedRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrowscs.htm)_
+```c++
+
+Set @dataExtension = 'name of data extension'
+Set @maxReturnedRows = 2000
+Set @orderBy = 'MyField ASC' /* 'fieldname ASC' or 'fieldname DESC' */
+Set @whereCol = 'some-column'
+Set @whereValue = 'soMething'
+Set @rows = LookupOrderedRowsCS(@dataExtension, @maxReturnedRows, @orderBy, @whereCol, @whereValue)
+
+/* check if @rowCount has at least one row; Row() will fail if it does not */
+for @i = 1 to RowCount(@rows) do
+
+	/* select first row */
+	Set @row = Row(@rows, @i)
+
+	/* get field values from the row */
+	Set @name = Field(@row,'Firstname')
+	Set @email = Field(@row,'EmailAddress')
+
+next @i
+```
+
