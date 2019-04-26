@@ -6,11 +6,11 @@
 		- [Use dynamic trackable links](#use-dynamic-trackable-links)
 		- [Data Extensions](#data-extensions)
 			- [SELECT](#select)
-				- [Single column of row, case-insensitive search](#single-column-of-row-case-insensitive-search)
-				- [Full row, case-insensitive search](#full-row-case-insensitive-search)
-				- [Full row, case-sensitive search](#full-row-case-sensitive-search)
-				- [Sorted full row, case-insensitive search](#sorted-full-row-case-insensitive-search)
-				- [Sorted full row, case-sensitive search](#sorted-full-row-case-sensitive-search)
+				- [Single column of row, case-insensitive](#single-column-of-row-case-insensitive)
+				- [Full row, case-insensitive](#full-row-case-insensitive)
+				- [Full row, case-sensitive](#full-row-case-sensitive)
+				- [Sorted full row, case-insensitive](#sorted-full-row-case-insensitive)
+				- [Sorted full row, case-sensitive](#sorted-full-row-case-sensitive)
 
 ## Hide your code
 
@@ -67,7 +67,7 @@ Now, if your link includes parameters, make sure you properly URL-encode the val
 
 #### SELECT
 
-##### Single column of row, case-insensitive search
+##### Single column of row, case-insensitive
 This method gets one field from the specified data extension; where-filter is case-insensitive.
 
 _Docs [Lookup](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookup.htm)_
@@ -83,7 +83,7 @@ Set @whereValue = '12345'
 Set @fieldValue = Lookup(@dataExtension, @returnedField, @whereCol, @whereValue)
 ```
 
-##### Full row, case-insensitive search
+##### Full row, case-insensitive
 This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
 _Docs [LookupRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprows.htm)_
@@ -107,7 +107,7 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Full row, case-sensitive search
+##### Full row, case-sensitive
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
 _Docs [LookupRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprowscs.htm)_
@@ -132,8 +132,8 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Sorted full row, case-insensitive search
-This method gets all fields from the specified data extension; where-filter is case-sensitive.
+##### Sorted full row, case-insensitive
+This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
 _Docs [LookupOrderedRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrows.htm)_
 ```c++
@@ -159,7 +159,7 @@ next @i
 ```
 
 
-##### Sorted full row, case-sensitive search
+##### Sorted full row, case-sensitive
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
 _Docs [LookupOrderedRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrowscs.htm)_
