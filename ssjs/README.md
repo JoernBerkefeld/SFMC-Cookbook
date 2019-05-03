@@ -2,11 +2,12 @@
 
 - [The SSJS Coding Guide](#the-ssjs-coding-guide)
 	- [Style Guideline](#style-guideline)
-	- [SSJS snippets for typical problems](#ssjs-snippets-for-typical-problems)
+	- [SSJS snippets](#ssjs-snippets)
 		- [Reading GET parameters](#reading-get-parameters)
 		- [Reading POST form parameters](#reading-post-form-parameters)
 		- [Reading POST payload](#reading-post-payload)
 		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
+		- [Get/Set Cookies](#getset-cookies)
 		- [Update (All) Subscriber List](#update-all-subscriber-list)
 		- [Data Extensions](#data-extensions)
 			- [SELECT](#select)
@@ -38,7 +39,7 @@ And these if you will use Visual Studio Code (place them .vscode folder inside t
 - [Recommended VSC Extensions](../.vscode/extensions.json)
 - [Recommended VSC Settings](../.vscode/settings.json)
 
-## SSJS snippets for typical problems
+## SSJS snippets
 
 ### Reading GET parameters
 
@@ -201,6 +202,54 @@ Set @testVariable = @myAmpscriptVariable
 <!-- the following outputs "test2" -->
 %%= var(@myAmpscriptVariable) =%%
 ```
+
+### Get/Set Cookies
+
+To read cookies, all you need to know is the name.
+
+_Docs [Request.GetCookieValue](https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformHTTPPropertyGetCookieValue.htm)_
+
+```javascript
+/* getter */
+var oldCookieValue = Platform.Request.GetCookieValue('cookie_name');
+```
+
+When setting a cookie you may *optionally* specifiy (a) the ``Expires`` date & time and (b) if the cookie value shall only be shared with the server if the client called it via https (``Secure`` attribute).
+
+Other standard attributes are not supported, which also excludes ``HTTP1.1``'s ``Max-Age``, rendering this implementaion deprecated by modern standards. So far it's still working though as browsers didn't drop support yet.
+
+The official docs state a weird date format (``"2015-12-31 140000.999"``) but in reality a more standard format like ``"5/1/2019 12:12:06"`` works fine. SFMC will autoconvert it from its internal timezone to GMT, making it compatible with the standard for cookies.
+
+_Docs [Response.SetCookie](https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformClientBrowserSetCookie.htm)_
+
+```javascript
+/* setter */
+var newCookieValue = 'foo bar';
+var expirationString = getTimestamp(new Date()); // optional parameter
+var httpsOnly = true; // optional parameter
+Platform.Response.SetCookie('cookie_name', newCookieValue, expirationString, httpsOnly);
+
+/* helper function that returns the date in a format SFMC can understand */
+function getTimestamp(dt) {
+	var h = dt.getHours();
+	var m = dt.getMinutes();
+	var s = dt.getSeconds();
+	if (h < 10) {
+		h = '0' + h;
+	}
+	if (m < 10) {
+		m = '0' + m;
+	}
+	if (s < 10) {
+		s = '0' + s;
+	}
+	var ts = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear() + ' ' + h + ':' + m + ':' + s;
+
+	return ts;
+}
+
+```
+
 
 ### Update (All) Subscriber List
 
