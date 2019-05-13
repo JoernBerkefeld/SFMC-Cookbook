@@ -588,5 +588,5 @@ This only works the first time you call it. Every next execution returns nothing
 
 #### DateExtension.Init(): DE Name vs. External Key
 
-In Automations you NEED to use the External Key. Meanwhile in Landing pages and SMS you can use the Name or the External Key.
+In Automations you NEED to use the External Key. Meanwhile in Landing pages, E-Mails and SMS you can use the Name or the External Key.
 --> Always set your External Key to the same value as the name to circumvent this problem.
