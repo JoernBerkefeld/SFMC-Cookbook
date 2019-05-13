@@ -20,6 +20,7 @@
 		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
 			- [Retrieve()](#retrieve)
 			- [Platform.Request.GetPostData()](#platformrequestgetpostdata)
+			- [DateExtension.Init(): DE Name vs. External Key](#dateextensioninit-de-name-vs-external-key)
 
 ## Style Guideline
 
@@ -584,3 +585,8 @@ Also, if you leave out the filter parameter, which is officially an optional par
 #### Platform.Request.GetPostData()
 
 This only works the first time you call it. Every next execution returns nothing.
+
+#### DateExtension.Init(): DE Name vs. External Key
+
+In Automations you NEED to use the External Key. Meanwhile in Landing pages and SMS you can use the Name or the External Key.
+--> Always set your External Key to the same value as the name to circumvent this problem.
