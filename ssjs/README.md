@@ -21,6 +21,7 @@
 			- [Retrieve()](#retrieve)
 			- [Platform.Request.GetPostData()](#platformrequestgetpostdata)
 			- [DateExtension.Init(): DE Name vs. External Key](#dateextensioninit-de-name-vs-external-key)
+			- [switch - default](#switch---default)
 
 ## Style Guideline
 
@@ -30,15 +31,15 @@ In general, sticking to the [official Angular.js 1.0 guide](https://github.com/j
 
 Download these for general setup:
 
-- [.eslintrc](../.eslintrc)
-- [.prettierrc](../.prettierrc)
-- [.editorconfig](../.editorconfig)
-- [package.json](../package.json)
+-   [.eslintrc](../.eslintrc)
+-   [.prettierrc](../.prettierrc)
+-   [.editorconfig](../.editorconfig)
+-   [package.json](../package.json)
 
 And these if you will use Visual Studio Code (place them .vscode folder inside the root of your project folder):
 
-- [Recommended VSC Extensions](../.vscode/extensions.json)
-- [Recommended VSC Settings](../.vscode/settings.json)
+-   [Recommended VSC Extensions](../.vscode/extensions.json)
+-   [Recommended VSC Settings](../.vscode/settings.json)
 
 ## SSJS snippets
 
@@ -161,7 +162,6 @@ for (var el in form) {
 }
 
 </script>
-
 ```
 
 ### Getting/Setting AMPscript variables
@@ -215,11 +215,11 @@ _Docs [Request.GetCookieValue](https://developer.salesforce.com/docs/atlas.en-us
 var oldCookieValue = Platform.Request.GetCookieValue('cookie_name');
 ```
 
-When setting a cookie you may *optionally* specifiy (a) the ``Expires`` date & time and (b) if the cookie value shall only be shared with the server if the client called it via https (``Secure`` attribute).
+When setting a cookie you may _optionally_ specifiy (a) the `Expires` date & time and (b) if the cookie value shall only be shared with the server if the client called it via https (`Secure` attribute).
 
-Other standard attributes are not supported, which also excludes ``HTTP1.1``'s ``Max-Age``, rendering this implementaion deprecated by modern standards. So far it's still working though as browsers didn't drop support yet.
+Other standard attributes are not supported, which also excludes `HTTP1.1`'s `Max-Age`, rendering this implementaion deprecated by modern standards. So far it's still working though as browsers didn't drop support yet.
 
-The official docs state a weird date format (``"2015-12-31 140000.999"``) but in reality a more standard format like ``"5/1/2019 12:12:06"`` works fine. SFMC will autoconvert it from its internal timezone to GMT, making it compatible with the standard for cookies.
+The official docs state a weird date format (`"2015-12-31 140000.999"`) but in reality a more standard format like `"5/1/2019 12:12:06"` works fine. SFMC will autoconvert it from its internal timezone to GMT, making it compatible with the standard for cookies.
 
 _Docs [Response.SetCookie](https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_platformClientBrowserSetCookie.htm)_
 
@@ -248,9 +248,7 @@ function getTimestamp(dt) {
 
 	return ts;
 }
-
 ```
-
 
 ### Update (All) Subscriber List
 
@@ -258,16 +256,16 @@ First, you need to know the ID of the List you want to update. Even the All Subs
 
 1. Go to Email Studio
 2. In the top navation click on Subscribers -> Lists
-3. In the left navigation, click on the first link, ``My Subscribers``
-4. Tick the checkbox in front of ``All Subscribers``, then click on ``Properties``
-5. Here under List Identification > List Attributes you will find a table that has the required ``ID`` as first column.
+3. In the left navigation, click on the first link, `My Subscribers`
+4. Tick the checkbox in front of `All Subscribers`, then click on `Properties`
+5. Here under List Identification > List Attributes you will find a table that has the required `ID` as first column.
 
 ```javascript
 // *** preparation ***
 
 var newStatus = 'Unsubscribed'; // Active|Unsubscribed
 var subscriberListID = 12; // see how to find the ID above; potentially different on every instance!
-var mySubKey = "test@domain.com"; // this is the subscriberKey of the contact that you want to udpate
+var mySubKey = 'test@domain.com'; // this is the subscriberKey of the contact that you want to udpate
 var subscriberObj = {
 	Attributes: {}, // optional custom attributes
 	EmailTypePreference: 'HTML',
@@ -291,27 +289,25 @@ subscriberObj.Attributes = {
 var mySubscriber = Subscriber.Init(mySubKey);
 // run the update
 var subscriptionStatus = mySubscriber.Update(subscriberObj);
-
 ```
 
 ### Data Extensions
 
 There are multiple types of methods in SSJS for the same purpose but each with their own drawbacks and benefits:
 
-|                  | ``XxxxData(...)``                                                                                                                     | ``XxxxDE(...)``                                           | ``Rows.Xxxx(...)`` |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------ |
-| **When to use**  | - **landing pages** (°°°)<br>- SMS & MMS in MobileConnect (°)<br>- push messages in MobilePush (°)<br>- messages in GroupConnect. (°) | - landing pages (°°)<br>- email messages at send time (°) | ?                  |
-| **return value** | ``{integer}`` number of affected rows                                                                                                 | ``void``                                                  | ?                  |
+|                  | `XxxxData(...)`                                                                                                                       | `XxxxDE(...)`                                             | `Rows.Xxxx(...)` |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------- |
+| **When to use**  | - **landing pages** (°°°)<br>- SMS & MMS in MobileConnect (°)<br>- push messages in MobilePush (°)<br>- messages in GroupConnect. (°) | - landing pages (°°)<br>- email messages at send time (°) | ?                |
+| **return value** | `{integer}` number of affected rows                                                                                                   | `void`                                                    | ?                |
 
 Legend:
-- **bold** : recommended
-- (°) : according to docs (TODO: test this)
-- (°°) : not in docs but working
-- (°°°) : according to docs & confirmed
 
+-   **bold** : recommended
+-   (°) : according to docs (TODO: test this)
+-   (°°) : not in docs but working
+-   (°°°) : according to docs & confirmed
 
-
-The code samples are identical for ``XxxxData()`` and ``XxxxDE()`` aside from the option the check the number of affected rows.
+The code samples are identical for `XxxxData()` and `XxxxDE()` aside from the option the check the number of affected rows.
 
 **Note:** There is no option to filter (WHERE) with OR combinations. Only AND combos are possible. When function parameters are arrays, you may pass in one or multiple values. Just make sure that column names and column values are both provided.
 
@@ -326,7 +322,7 @@ The code samples are identical for ``XxxxData()`` and ``XxxxDE()`` aside from th
 var deName = 'name_of_your_de'; // REQUIRED
 var whereColumnArr = ['where_col1', 'where_col2']; // REQUIRED
 var whereColumValueArr = ['value1', 'value2']; // REQUIRED
-var limit = 50;  // REQUIRED
+var limit = 50; // REQUIRED
 var orderBy = 'first name'; // OPTIONAL; omit parameter if no sorting needed
 
 // execution
@@ -336,11 +332,11 @@ var myDeArr = myDe.Rows.Lookup(whereColumnArr, whereColumValueArr, limit, orderB
 // parsing
 // if no rows where returned, myDeArr returns NULL
 // optionally normalize the result:
-if(myDeArr === null) {
+if (myDeArr === null) {
 	myDeArr = [];
 }
 
-if(myDeArr.length) {
+if (myDeArr.length) {
 	// your code here
 }
 ```
@@ -359,14 +355,13 @@ if(myDeArr.length) {
 
 // already known that this works in automation but NOT in landing pages
 // it does NOT work WITHOUT the filter, despite the docs stating the contrary
-var birthdayDE = DataExtension.Init("birthdayDE");
+var birthdayDE = DataExtension.Init('birthdayDE');
 // according to the docs this filter allows complex structures including OR
-var filter = {Property:"Age",SimpleOperator:"greaterThan",Value:20};
+var filter = { Property: 'Age', SimpleOperator: 'greaterThan', Value: 20 };
 var data = birthdayDE.Rows.Retrieve(filter);
 ```
 
 #### INSERT, UPSERT, UPDATE, DELETE
-
 
 ```javascript
 // *** INSERT ***
@@ -386,15 +381,14 @@ Platform.Function.InsertDE(deName, insertColumnArr, insertColumnValueArr);
 // TODO test & compare Rows.Add()
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsAdd.htm
 
-var arrContacts =  [
-	{Email:"jdoe@example.com", FirstName:"John", LastName:"Doe"},
-	{Email:"aruiz@example.com", FirstName:"Angel", LastName:"Ruiz"}
+var arrContacts = [
+	{ Email: 'jdoe@example.com', FirstName: 'John', LastName: 'Doe' },
+	{ Email: 'aruiz@example.com', FirstName: 'Angel', LastName: 'Ruiz' }
 ];
 
-var birthdayDE = DataExtension.Init("birthdayDE");
+var birthdayDE = DataExtension.Init('birthdayDE');
 birthdayDE.Rows.Add(arrContacts);
 ```
-
 
 ```javascript
 // *** UPSERT ***
@@ -407,10 +401,15 @@ var whereColumValueArr = ['John']; // REQUIRED
 var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
-var upsertedRowCount = Platform.Function.UpsertData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+var upsertedRowCount = Platform.Function.UpsertData(
+	deName,
+	whereColumnArr,
+	whereColumValueArr,
+	upsertColumnArr,
+	upsertColumnValueArr
+);
 // or
 Platform.Function.UpsertDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
-
 ```
 
 ```javascript
@@ -424,7 +423,13 @@ var whereColumValueArr = ['John']; // REQUIRED
 var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
-var updatedRowCount = Platform.Function.UpdateData(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
+var updatedRowCount = Platform.Function.UpdateData(
+	deName,
+	whereColumnArr,
+	whereColumValueArr,
+	upsertColumnArr,
+	upsertColumnValueArr
+);
 // or
 Platform.Function.UpdateDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
 ```
@@ -433,10 +438,9 @@ Platform.Function.UpdateDE(deName, whereColumnArr, whereColumValueArr, upsertCol
 // TODO test & compare Rows.Update()
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsUpdate.htm
 
-var birthdayDE = DataExtension.Init("birthdayDE");
-birthdayDE.Rows.Update({Age:"25"}, ["FirstName"], ["Angel"]);
+var birthdayDE = DataExtension.Init('birthdayDE');
+birthdayDE.Rows.Update({ Age: '25' }, ['FirstName'], ['Angel']);
 ```
-
 
 ```javascript
 // *** DELETE ***
@@ -450,15 +454,14 @@ var whereColumValueArr = ['John']; // REQUIRED
 var deletedRowCount = Platform.Function.DeleteData(deName, whereColumnArr, whereColumValueArr);
 // or
 Platform.Function.DeleteDE(deName, whereColumnArr, whereColumValueArr);
-
 ```
 
 ```javascript
 // TODO test & compare Rows.Remove()
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRemove.htm
 
-var birthdayDE= DataExtension.Init("birthdayDE");
-birthdayDE.Rows.Remove(["FirstName", "Age"], ["Angel", 24]);
+var birthdayDE = DataExtension.Init('birthdayDE');
+birthdayDE.Rows.Remove(['FirstName', 'Age'], ['Angel', 24]);
 ```
 
 ## SSJS vs. JavaScript – the major differences that will break your code.
@@ -590,3 +593,7 @@ This only works the first time you call it. Every next execution returns nothing
 
 In Automations you NEED to use the External Key. Meanwhile in Landing pages, E-Mails and SMS you can use the Name or the External Key.
 --> Always set your External Key to the same value as the name to circumvent this problem.
+
+#### switch - default
+
+Using a normal switch statement with a `default` part at the end can lead to that section not being processed. Avoid `default` and instead set
