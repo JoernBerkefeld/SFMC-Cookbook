@@ -11,6 +11,7 @@
 				- [Full row, case-sensitive](#full-row-case-sensitive)
 				- [Sorted full row, case-insensitive](#sorted-full-row-case-insensitive)
 				- [Sorted full row, case-sensitive](#sorted-full-row-case-sensitive)
+	- [Other resources](#other-resources)
 
 ## Hide your code
 
@@ -31,7 +32,6 @@ _Why?_ Non-developers will just get distracted by the code
 _Why?_ Showing lots of code during a demo in the preview window distracts from the actual email content and might cost you time explaining this again and again.
 
 _Why?_ Not seeing the Code shrinks the content block to its minimum height, making selecting the right block easier as scrolling occurs less often.
-
 
 ## AMPscript snippets for typical problems
 
@@ -68,12 +68,12 @@ Now, if your link includes parameters, make sure you properly URL-encode the val
 #### SELECT
 
 ##### Single column of row, case-insensitive
+
 This method gets one field from the specified data extension; where-filter is case-insensitive.
 
 _Docs [Lookup](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookup.htm)_
 
 ```c++
-
 Set @dataExtension = 'name of data extension'
 Set @returnedField = 'City'
 Set @whereCol = 'PostalCode'
@@ -84,11 +84,12 @@ Set @fieldValue = Lookup(@dataExtension, @returnedField, @whereCol, @whereValue)
 ```
 
 ##### Full row, case-insensitive
+
 This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
 _Docs [LookupRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprows.htm)_
-```c++
 
+```c++
 Set @dataExtension = 'name of data extension'
 Set @whereCol = 'some-column'
 Set @whereValue = 'something'
@@ -108,12 +109,12 @@ next @i
 ```
 
 ##### Full row, case-sensitive
+
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
 _Docs [LookupRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuprowscs.htm)_
 
 ```c++
-
 Set @dataExtension = 'name of data extension'
 Set @whereCol = 'some-column'
 Set @whereValue = 'soMething'
@@ -133,11 +134,12 @@ next @i
 ```
 
 ##### Sorted full row, case-insensitive
+
 This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
 _Docs [LookupOrderedRows](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrows.htm)_
-```c++
 
+```c++
 Set @dataExtension = 'name of data extension'
 Set @maxReturnedRows = 2000
 Set @orderBy = 'MyField ASC' /* 'fieldname ASC' or 'fieldname DESC' */
@@ -158,13 +160,13 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-
 ##### Sorted full row, case-sensitive
+
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
 _Docs [LookupOrderedRowsCS](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/lookuporderedrowscs.htm)_
-```c++
 
+```c++
 Set @dataExtension = 'name of data extension'
 Set @maxReturnedRows = 2000
 Set @orderBy = 'MyField ASC' /* 'fieldname ASC' or 'fieldname DESC' */
@@ -185,3 +187,6 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
+## Other resources
+
+-   https://ampscript.guide/
