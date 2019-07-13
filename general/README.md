@@ -1,18 +1,19 @@
 # General Guide on SFMC developing
 
-- [General Guide on SFMC developing](#general-guide-on-sfmc-developing)
-	- [Development Environment](#development-environment)
-		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
-		- [Use Syntax Highlighting](#use-syntax-highlighting)
-		- [Where to code: GUI vs. online editor vs. IDE](#where-to-code-gui-vs-online-editor-vs-ide)
-		- [How to debug quickly](#how-to-debug-quickly)
-		- [Online Services for quick debugging](#online-services-for-quick-debugging)
-	- [Project Setup](#project-setup)
-		- [Folder structure](#folder-structure)
-		- [File structure](#file-structure)
-	- [Data Extensions](#data-extensions)
-		- [SEO, Page title](#seo-page-title)
-		- [Data types](#data-types)
+- [General Guide on SFMC developing](#General-Guide-on-SFMC-developing)
+	- [Development Environment](#Development-Environment)
+		- [Use Live Linting & Auto-Formatting](#Use-Live-Linting--Auto-Formatting)
+		- [Use Syntax Highlighting](#Use-Syntax-Highlighting)
+		- [Where to code: GUI vs. online editor vs. IDE](#Where-to-code-GUI-vs-online-editor-vs-IDE)
+		- [How to debug quickly](#How-to-debug-quickly)
+		- [Online Services for quick debugging](#Online-Services-for-quick-debugging)
+	- [Project Setup](#Project-Setup)
+		- [Folder structure](#Folder-structure)
+		- [File structure](#File-structure)
+	- [Data Extensions](#Data-Extensions)
+		- [SEO, Page title](#SEO-Page-title)
+		- [Data types](#Data-types)
+		- [updating External key of Data Extensions](#updating-External-key-of-Data-Extensions)
 
 ## Development Environment
 
@@ -232,17 +233,16 @@ or
 
 They can be set up via Email Studio and via Audience Builder ("Contact Builder"). The two interfaces look mostly similar but they do have distinct differences:
 
-
-| Feature                             | Email Studio                                                                                                                                                                                                                                                                                                                                                                                                                                            | Audience/Contact Builder                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Where to find DEs                   | top navigation > Subscribers > Data Extensions                                                                                                                                                                                                                                                                                                                                                                                                          | top navigation > Data Extensions                                 |
-| Sharing with BUs                    | You can either share an entire folder or a single DE.<br> -   Sharing a folder: via the right-click menu of shared folders in the left navigation.<br> -   Sharing single DE: Open the DE, then click the Permissions tab. The "Sharing Status" column reveals the sharing status for each BU.<br> - You can distinctly choose what access rights are granted: `View`, `Update`, `Delete`, `Manage Data`, `Transfer Ownership`, `Manage Data Retention` | n/a                                                              |
-| Data Import sources                 | FTP, Upload (including Zips)                                                                                                                                                                                                                                                                                                                                                                                                                            | FTP, Upload, DataExtensions (no Zips)                            |
-| Data Export destinations            | FTP                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Browser download, "Salesforce Objects & Reports", "Enhanced FTP" |
-| Single Record Add/Update/Delete     | no                                                                                                                                                                                                                                                                                                                                                                                                                                                      | yes                                                              |
-| Delete All Records (Truncate table) | "Clear Data"-button                                                                                                                                                                                                                                                                                                                                                                                                                                     | "Clear Records"-button                                           |
-| Columns Add/Update/Delete           | yes, all at once (click on "Edit Fields" to activate); <br>**Note:** this feature is deactivated in Email Studio if you set up data relationships with this DE in Contact Builder!                                                                                                                                                                                                                                                                      | yes, 1-by-1 (even when data relationsships have been set up)     |
-| Columns Update - Limitations        | - You may never decrease the length of a field.<br>- You may never change the field type.<br>- If the DE is part of a relationship, you may not delete any field<br>- Decimal length can never be changed                                                                                                                                                                                                                                               |
+| Feature                             | Email Studio                                                                                                                                                                                                                                                                                                                                                                                                                                        | Audience/Contact Builder                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Where to find DEs                   | top navigation > Subscribers > Data Extensions                                                                                                                                                                                                                                                                                                                                                                                                      | top navigation > Data Extensions                                 |
+| Sharing with BUs                    | You can either share an entire folder or a single DE.<br> - Sharing a folder: via the right-click menu of shared folders in the left navigation.<br> - Sharing single DE: Open the DE, then click the Permissions tab. The "Sharing Status" column reveals the sharing status for each BU.<br> - You can distinctly choose what access rights are granted: `View`, `Update`, `Delete`, `Manage Data`, `Transfer Ownership`, `Manage Data Retention` | n/a                                                              |
+| Data Import sources                 | FTP, Upload (including Zips)                                                                                                                                                                                                                                                                                                                                                                                                                        | FTP, Upload, DataExtensions (no Zips)                            |
+| Data Export destinations            | FTP                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Browser download, "Salesforce Objects & Reports", "Enhanced FTP" |
+| Single Record Add/Update/Delete     | no                                                                                                                                                                                                                                                                                                                                                                                                                                                  | yes                                                              |
+| Delete All Records (Truncate table) | "Clear Data"-button                                                                                                                                                                                                                                                                                                                                                                                                                                 | "Clear Records"-button                                           |
+| Columns Add/Update/Delete           | yes, all at once (click on "Edit Fields" to activate); <br>**Note:** this feature is deactivated in Email Studio if you set up data relationships with this DE in Contact Builder!                                                                                                                                                                                                                                                                  | yes, 1-by-1 (even when data relationsships have been set up)     |
+| Columns Update - Limitations        | - You may never decrease the length of a field.<br>- You may never change the field type.<br>- If the DE is part of a relationship, you may not delete any field<br>- Decimal length can never be changed                                                                                                                                                                                                                                           |
 
 ### SEO, Page title
 
@@ -260,3 +260,7 @@ You can actually easily set the Page Title and a few other SEO relevant settings
 | Phone         | String         | ???                                                            | ??? (adhering to [E.164 standard](https://en.wikipedia.org/wiki/E.164))                                         |
 | Decimal       | Decimal        | `21,17`, max sum is `38`, with max `17` digits after the comma | `1234.56789`                                                                                                    |
 | Locale        | Enum           | `5`                                                            | `"en-us"`, [complete list](https://help.salesforce.com/articleView?id=mc_moc_data_extension_locales.htm&type=5) |
+
+### updating External key of Data Extensions
+
+Only works in Email Studio - not in Contact Builder
