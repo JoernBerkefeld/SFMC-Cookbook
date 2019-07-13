@@ -1,27 +1,27 @@
 # The SSJS Coding Guide
 
-- [The SSJS Coding Guide](#the-ssjs-coding-guide)
-	- [Style Guideline](#style-guideline)
-	- [SSJS snippets](#ssjs-snippets)
-		- [Reading GET parameters](#reading-get-parameters)
-		- [Reading POST form parameters](#reading-post-form-parameters)
-		- [Reading POST payload](#reading-post-payload)
-		- [Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
-		- [Get/Set Cookies](#getset-cookies)
-		- [Update (All) Subscriber List](#update-all-subscriber-list)
-		- [Data Extensions](#data-extensions)
-			- [SELECT](#select)
-			- [INSERT, UPSERT, UPDATE, DELETE](#insert-upsert-update-delete)
-	- [SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
-		- [Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
-			- [“new” Operator](#new-operator)
-			- [Returning a new object in a function](#returning-a-new-object-in-a-function)
-			- [Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
-		- [SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
-			- [Retrieve()](#retrieve)
-			- [Platform.Request.GetPostData()](#platformrequestgetpostdata)
-			- [DateExtension.Init(): DE Name vs. External Key](#dateextensioninit-de-name-vs-external-key)
-			- [switch - default](#switch---default)
+- [The SSJS Coding Guide](#The-SSJS-Coding-Guide)
+	- [Style Guideline](#Style-Guideline)
+	- [SSJS snippets](#SSJS-snippets)
+		- [Reading GET parameters](#Reading-GET-parameters)
+		- [Reading POST form parameters](#Reading-POST-form-parameters)
+		- [Reading POST payload](#Reading-POST-payload)
+		- [Getting/Setting AMPscript variables](#GettingSetting-AMPscript-variables)
+		- [Get/Set Cookies](#GetSet-Cookies)
+		- [Update (All) Subscriber List](#Update-All-Subscriber-List)
+		- [Data Extensions](#Data-Extensions)
+			- [SELECT](#SELECT)
+			- [INSERT, UPSERT, UPDATE, DELETE](#INSERT-UPSERT-UPDATE-DELETE)
+	- [SSJS vs. JavaScript – the major differences that will break your code.](#SSJS-vs-JavaScript--the-major-differences-that-will-break-your-code)
+		- [Standard JS features not available in SSJS](#Standard-JS-features-not-available-in-SSJS)
+			- [“new” Operator](#new-Operator)
+			- [Returning a new object in a function](#Returning-a-new-object-in-a-function)
+			- [Using multiple script-tags and hoisting](#Using-multiple-script-tags-and-hoisting)
+		- [SSJS vs. SSJS documentation – stuff that simply does not work](#SSJS-vs-SSJS-documentation--stuff-that-simply-does-not-work)
+			- [Retrieve()](#Retrieve)
+			- [Platform.Request.GetPostData()](#PlatformRequestGetPostData)
+			- [DateExtension.Init(): DE Name vs. External Key](#DateExtensionInit-DE-Name-vs-External-Key)
+			- [Using "default" in a switch(...) {} statement](#Using-default-in-a-switch--statement)
 
 ## Style Guideline
 
@@ -353,7 +353,7 @@ if (myDeArr.length) {
 // TODO test & explain Rows.Retrieve() compared to Rows.Lookup()
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRetrieve.htm
 
-// already known that this works in automation but NOT in landing pages
+// already known that this works in automation but sometimes not in landing pages. so far it's unclear what's causing this.
 // it does NOT work WITHOUT the filter, despite the docs stating the contrary
 var birthdayDE = DataExtension.Init('birthdayDE');
 // according to the docs this filter allows complex structures including OR
@@ -594,6 +594,6 @@ This only works the first time you call it. Every next execution returns nothing
 In Automations you NEED to use the External Key. Meanwhile in Landing pages, E-Mails and SMS you can use the Name or the External Key.
 --> Always set your External Key to the same value as the name to circumvent this problem.
 
-#### switch - default
+#### Using "default" in a switch(...) {} statement
 
-Using a normal switch statement with a `default` part at the end can lead to that section not being processed. Avoid `default` and instead set
+Using a normal switch statement with a `default` part at the end can lead to that section not being processed. Avoid `default` and instead set possible values explicitely.
