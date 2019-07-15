@@ -74,7 +74,7 @@ This one is a bit tricky, however possible in both SSJS and AmpScript:
 
 AmpScript solution:
 
-```batch
+```c++
 # ampscript
 %%[
 // get attributes passed in during the API call
