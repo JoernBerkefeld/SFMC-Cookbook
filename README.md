@@ -4,7 +4,8 @@ This is an attempt at starting a guide on how to survive as a developer for Sale
 
 ## Content
 
--   [x] [General SFMC guideline](general/README.md)
+-   [x] [General FAQ](faq/README.md)
+-   [x] [General coding guideline](general/README.md)
 -   [x] [HowTo deal with Server-Side JavaScript / SSJS](ssjs/README.md)
 -   [x] [HowTo deal with AMPscript](ampscript/README.md)
 -   [ ] **TODO**: HowTo deal with Guided Template Language
