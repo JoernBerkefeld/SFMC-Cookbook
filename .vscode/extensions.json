@@ -1,37 +1,26 @@
 {
 	// See http://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
 	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		// general tools
-		"alefragnani.bookmarks",
-		"robertohuertasm.vscode-icons",
-		"ms-vsliveshare.vsliveshare",
 		"gruntfuggly.todo-tree",
-		// Git
-		"eamodio.gitlens",
-		// Linters, Formatting & colors
-		"dbaeumer.vscode-eslint",
+		"aaron-bond.better-comments",
+		"ms-vsliveshare.vsliveshare",
+
+		// Linters
+		"dbaeumer.vscode-eslint", // JS
+
+		// Formatting & colors
 		"editorconfig.editorconfig",
 		"esbenp.prettier-vscode",
-		"richie5um2.vscode-sort-json",
 		"joelday.docthis",
-		"joshpeng.sublime-babel-vscode",
-		// SASS / SCSS server
-		"ritwickdey.live-sass",
-		// Markdown
+		"sergey-agadzhanov.ampscript",
+
+		// Markdown / Readme.md
 		"yzhang.markdown-all-in-one",
-		"davidanson.vscode-markdownlint"
-	],
-	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-	"unwantedRecommendations": [
-		"dbaeumer.jshint",
-		"glen-84.sass-lint",
-		"hookyqr.beautify",
-		"mrmlnc.vscode-autoprefixer",
-		"mrmlnc.vscode-csscomb",
-		"mrmlnc.vscode-scss",
-		"raymondcamden.csslint",
-		"wayou.vscode-todo-highlight"
+		"davidanson.vscode-markdownlint",
+		"shd101wyy.markdown-preview-enhanced"
 	]
 }
