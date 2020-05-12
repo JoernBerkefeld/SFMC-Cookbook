@@ -1,19 +1,21 @@
 # General Guide on SFMC developing
 
-- [General Guide on SFMC developing](#General-Guide-on-SFMC-developing)
-	- [Development Environment](#Development-Environment)
-		- [Use Live Linting & Auto-Formatting](#Use-Live-Linting--Auto-Formatting)
-		- [Use Syntax Highlighting](#Use-Syntax-Highlighting)
-		- [Where to code: GUI vs. online editor vs. IDE](#Where-to-code-GUI-vs-online-editor-vs-IDE)
-		- [How to debug quickly](#How-to-debug-quickly)
-		- [Online Services for quick debugging](#Online-Services-for-quick-debugging)
-	- [Project Setup](#Project-Setup)
-		- [Folder structure](#Folder-structure)
-		- [File structure](#File-structure)
-	- [Data Extensions](#Data-Extensions)
-		- [SEO, Page title](#SEO-Page-title)
-		- [Data types](#Data-types)
-		- [updating External key of Data Extensions](#updating-External-key-of-Data-Extensions)
+- [General Guide on SFMC developing](#general-guide-on-sfmc-developing)
+	- [Development Environment](#development-environment)
+		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
+		- [Use Syntax Highlighting](#use-syntax-highlighting)
+		- [Where to code: GUI vs. online editor vs. IDE](#where-to-code-gui-vs-online-editor-vs-ide)
+		- [How to debug quickly](#how-to-debug-quickly)
+		- [Online Services for quick debugging](#online-services-for-quick-debugging)
+	- [Project Setup](#project-setup)
+		- [Folder structure](#folder-structure)
+		- [File structure](#file-structure)
+	- [Data Extensions](#data-extensions)
+		- [SEO, Page title](#seo-page-title)
+		- [Data types](#data-types)
+		- [updating External key of Data Extensions](#updating-external-key-of-data-extensions)
+	- [Businesss Units](#businesss-units)
+		- [Seeing all business units as admin](#seeing-all-business-units-as-admin)
 
 ## Development Environment
 
@@ -263,4 +265,12 @@ You can actually easily set the Page Title and a few other SEO relevant settings
 
 ### updating External key of Data Extensions
 
-Only works in Email Studio - not in Contact Builder
+Only works in Email Studio - not in Contact Builder, despite the offered input field in Contact Builder.
+
+## Businesss Units
+
+### Seeing all business units as admin
+
+When others create Business Units, it often happens that not all users get access to these by default. If you have access to the Business Edit right you can in fact always change what Business Units are visible to you and to others. However, while you are "logged into" a Child BU even the setup menu will not show these additional BUs to you, or present them grayed out.
+
+*Solution?* Switch to the Parent BU and all options will re-appear.
