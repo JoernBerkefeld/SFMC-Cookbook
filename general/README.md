@@ -6,7 +6,7 @@
 		- [Use Syntax Highlighting](#use-syntax-highlighting)
 		- [Where to code: GUI vs. online editor vs. IDE](#where-to-code-gui-vs-online-editor-vs-ide)
 		- [How to debug quickly](#how-to-debug-quickly)
-		- [Online Services for quick debugging](#online-services-for-quick-debugging)
+			- [Use Online Services for quick debugging](#use-online-services-for-quick-debugging)
 	- [Project Setup](#project-setup)
 		- [Folder structure](#folder-structure)
 		- [File structure](#file-structure)
@@ -52,14 +52,18 @@ _Why?_ The GUI does not offer any linting / error correction. In your IDE you ca
 
 ### How to debug quickly
 
-Ever tried to fix a bug and got annoyed by having to publish your page or send your email 1000 times per day? Turns out you can load **any** text file that’s freely available on the internet and run it through the server-side engines for both AmpScript and SSJS. The key is a method that’s similar to JavaScript’s `eval()` method together with another method that grabs the text content of a URL and returns it as a String:
+Ever tried to fix a bug and got annoyed by having to publish your page or send your email 1000 times per day? Turns out you can load **any** text file that’s freely available on the internet and run it through the server-side engines for both AmpScript and SSJS. The key is a method that’s similar to JavaScript’s `eval()` method together with another method that grabs the text content of a URL and returns it as a String.
+
+**Open a new CloudPage and replace everything in Code View with this:**
 
 ```javascript
-/* put this into an HTML block in your debug CloudPage (nothing else) */
 %%= TreatAsContent(HTTPGet("https://myurl.com/loader.html")) =%%
 ```
 
+**Put all following files into your online service for quick editing:**
+
 ```html
+
 <!-- loader.html -->
 
 <!-- optionally load AmpScript file -->
@@ -110,13 +114,15 @@ _How?_ Internally, AmpScript is always processed & executed first and only after
 
 _Thanks_ to my buddy Christian who published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) a while ago and taught me how to use this hack.
 
-### Online Services for quick debugging
+#### Use Online Services for quick debugging
 
 If you have access to your own web-server it is definitely recommended to use that one rather than a free online service for security reasons. Also, being able to integrate via SFTP will speed up your process.
 
-If you do not have that, there are multiple services out there that offer quick and easy access to files you created online. The easiest services for this purpose at the time of writing seem to be c9.io or codesandbox.io.
+If you do not have that, there are multiple services out there that offer quick and easy access to files you created online. A good, though not-save-for-passwords service are [c9.io](https://c9.io) or [codesandbox.io](https://codesandbox.io/) as it creates your own subdomain for each project you start.
 
-**Note:** They might automatically apply formatting that breaks your code at their own will when you paste code there, making it imperative to use `*.ssjs` and `*.amp` file extensions as these will not be recognized and hence not auto-formatted.
+[Dropbox](https://www.dropbox.com/) or your private [OneDrive](https://onedrive.live.com/) account may also serve the purpose while being a bit more secure. Enterprise accounts of these services often don't allow **public** sharing to anyone which is what you need to make this work.
+
+**Note:** Some of these services might automatically apply formatting that breaks your code at their own will when you paste code there, making it imperative to use `*.ssjs` and `*.amp` file extensions as these will not be recognized and hence not auto-formatted.
 
 **Important:** Please keep in mind never to store credentials in these online services to avoid security issues! If credentials or secrets are needed, retrieve them from SFMC's Key management (Administration section; for `De-/EncryptSymmetric()`) or from a Data Extensions if you need to use other types of credentials.
 
