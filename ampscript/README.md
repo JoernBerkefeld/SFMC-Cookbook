@@ -1,19 +1,19 @@
-# The AMPscript Coding Guide
+# 1. The AMPscript Coding Guide
 
-- [The AMPscript Coding Guide](#the-ampscript-coding-guide)
-	- [Hide your code](#hide-your-code)
-	- [AMPscript snippets for typical problems](#ampscript-snippets-for-typical-problems)
-		- [Use dynamic trackable links](#use-dynamic-trackable-links)
-		- [Data Extensions](#data-extensions)
-			- [SELECT](#select)
-				- [Single column of row, case-insensitive](#single-column-of-row-case-insensitive)
-				- [Full row, case-insensitive](#full-row-case-insensitive)
-				- [Full row, case-sensitive](#full-row-case-sensitive)
-				- [Sorted full row, case-insensitive](#sorted-full-row-case-insensitive)
-				- [Sorted full row, case-sensitive](#sorted-full-row-case-sensitive)
-	- [Other resources](#other-resources)
+- [1. The AMPscript Coding Guide](#1-the-ampscript-coding-guide)
+	- [1.1. Hide your code](#11-hide-your-code)
+	- [1.2. AMPscript snippets for typical problems](#12-ampscript-snippets-for-typical-problems)
+		- [1.2.1. Use dynamic trackable links](#121-use-dynamic-trackable-links)
+		- [1.2.2. Data Extensions](#122-data-extensions)
+			- [1.2.2.1. SELECT](#1221-select)
+				- [1.2.2.1.1. Single column of row, case-insensitive](#12211-single-column-of-row-case-insensitive)
+				- [1.2.2.1.2. Full row, case-insensitive](#12212-full-row-case-insensitive)
+				- [1.2.2.1.3. Full row, case-sensitive](#12213-full-row-case-sensitive)
+				- [1.2.2.1.4. Sorted full row, case-insensitive](#12214-sorted-full-row-case-insensitive)
+				- [1.2.2.1.5. Sorted full row, case-sensitive](#12215-sorted-full-row-case-sensitive)
+	- [1.3. Other resources](#13-other-resources)
 
-## Hide your code
+## 1.1. Hide your code
 
 When AMPscript is inserted into either an email or a CloudPage it usually clutters up the preview window with code. To avoid this, wrap your code in something that will not render:
 
@@ -33,9 +33,9 @@ _Why?_ Showing lots of code during a demo in the preview window distracts from t
 
 _Why?_ Not seeing the Code shrinks the content block to its minimum height, making selecting the right block easier as scrolling occurs less often.
 
-## AMPscript snippets for typical problems
+## 1.2. AMPscript snippets for typical problems
 
-### Use dynamic trackable links
+### 1.2.1. Use dynamic trackable links
 
 When creating links that include variables there are multiple approaches but some will lead to tracking being disabled.
 
@@ -63,11 +63,11 @@ SET @url = CONCAT('<a href="', "https://mydomain.com/somePath?foo=", @myParam, '
 
 Now, if your link includes parameters, make sure you properly URL-encode the values, otherwise it will fail:
 
-### Data Extensions
+### 1.2.2. Data Extensions
 
-#### SELECT
+#### 1.2.2.1. SELECT
 
-##### Single column of row, case-insensitive
+##### 1.2.2.1.1. Single column of row, case-insensitive
 
 This method gets one field from the specified data extension; where-filter is case-insensitive.
 
@@ -83,7 +83,7 @@ Set @whereValue = '12345'
 Set @fieldValue = Lookup(@dataExtension, @returnedField, @whereCol, @whereValue)
 ```
 
-##### Full row, case-insensitive
+##### 1.2.2.1.2. Full row, case-insensitive
 
 This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
@@ -108,7 +108,7 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Full row, case-sensitive
+##### 1.2.2.1.3. Full row, case-sensitive
 
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
@@ -133,7 +133,7 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Sorted full row, case-insensitive
+##### 1.2.2.1.4. Sorted full row, case-insensitive
 
 This method gets all fields from the specified data extension; where-filter is case-insensitive.
 
@@ -160,7 +160,7 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-##### Sorted full row, case-sensitive
+##### 1.2.2.1.5. Sorted full row, case-sensitive
 
 This method gets all fields from the specified data extension; where-filter is case-sensitive.
 
@@ -187,6 +187,6 @@ for @i = 1 to RowCount(@rows) do
 next @i
 ```
 
-## Other resources
+## 1.3. Other resources
 
--   https://ampscript.guide/
+- https://ampscript.guide/

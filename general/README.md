@@ -1,25 +1,26 @@
-# General Guide on SFMC developing
+# 1. General Guide on SFMC developing
 
-- [General Guide on SFMC developing](#general-guide-on-sfmc-developing)
-	- [Development Environment](#development-environment)
-		- [Use Live Linting & Auto-Formatting](#use-live-linting--auto-formatting)
-		- [Use Syntax Highlighting](#use-syntax-highlighting)
-		- [Where to code: GUI vs. online editor vs. IDE](#where-to-code-gui-vs-online-editor-vs-ide)
-		- [How to debug quickly](#how-to-debug-quickly)
-			- [Use Online Services for quick debugging](#use-online-services-for-quick-debugging)
-	- [Project Setup](#project-setup)
-		- [Folder structure](#folder-structure)
-		- [File structure](#file-structure)
-	- [Data Extensions](#data-extensions)
-		- [SEO, Page title](#seo-page-title)
-		- [Data types](#data-types)
-		- [updating External key of Data Extensions](#updating-external-key-of-data-extensions)
-	- [Businesss Units](#businesss-units)
-		- [Seeing all business units as admin](#seeing-all-business-units-as-admin)
+- [1. General Guide on SFMC developing](#1-general-guide-on-sfmc-developing)
+	- [1.1. Development Environment](#11-development-environment)
+		- [1.1.1. Use Live Linting & Auto-Formatting](#111-use-live-linting--auto-formatting)
+		- [1.1.2. Use Syntax Highlighting](#112-use-syntax-highlighting)
+		- [1.1.3. Where to code: GUI vs. online editor vs. IDE](#113-where-to-code-gui-vs-online-editor-vs-ide)
+		- [1.1.4. How to debug quickly](#114-how-to-debug-quickly)
+			- [1.1.4.1. Use Online Services for quick debugging](#1141-use-online-services-for-quick-debugging)
+			- [1.1.4.2. Use browser console for debug output](#1142-use-browser-console-for-debug-output)
+	- [1.2. Project Setup](#12-project-setup)
+		- [1.2.1. Folder structure](#121-folder-structure)
+		- [1.2.2. File structure](#122-file-structure)
+	- [1.3. Data Extensions](#13-data-extensions)
+		- [1.3.1. SEO, Page title](#131-seo-page-title)
+		- [1.3.2. Data types](#132-data-types)
+		- [1.3.3. updating External key of Data Extensions](#133-updating-external-key-of-data-extensions)
+	- [1.4. Businesss Units](#14-businesss-units)
+		- [1.4.1. Seeing all business units as admin](#141-seeing-all-business-units-as-admin)
 
-## Development Environment
+## 1.1. Development Environment
 
-### Use Live Linting & Auto-Formatting
+### 1.1.1. Use Live Linting & Auto-Formatting
 
 Now, this unfortunately is NOT yet available for AMPscript but one day in the future... well either AMPscript is gone or somebody will have written a plugin. Aside from that, for HTML, CSS, JavaScript and whatever preprocessor you might want to use in your project, there are powerful tools available that can auto-fix minor code issues and enforce code formatting rules.
 
@@ -33,12 +34,12 @@ _Why?_ Junior developers can learn from how their code is changed by the auto-fo
 
 _Why?_ Still not convinced? The guys over at Prettier wrote an actual [essay](https://prettier.io/docs/en/why-prettier.html) on this.
 
-### Use Syntax Highlighting
+### 1.1.2. Use Syntax Highlighting
 
 For Visual Studio Code you can get this [AMPscript syntax highlighter](https://marketplace.visualstudio.com/items?itemName=sergey-agadzhanov.AMPscript). Also, you should manually assign `*.ssjs` of type JavaScript, providing you more options when it comes to linting and auto-formatting than if you were using `*.js`. It also logically separates your SSJS from JS, avoiding confusion.
 Checkout the [.eslintrc](../.eslintrc) and [.prettierrc](../.prettierrc) which includes a configuration for JS, CSS and SSJS.
 
-### Where to code: GUI vs. online editor vs. IDE
+### 1.1.3. Where to code: GUI vs. online editor vs. IDE
 
 By all means, avoid making changes directly in SFMC's GUI. Best practice is to make all your changes in your local IDE instead (I recommend the free [Visual Studio Code](https://code.visualstudio.com/)).
 
@@ -50,7 +51,7 @@ _Why?_ The GUI does not offer proper code highlighting (even if you wrap your co
 
 _Why?_ The GUI does not offer any linting / error correction. In your IDE you can utilize [ESLint](https://eslint.org/) for your SSJS and JS code, as well as [Prettier](https://prettier.io/) for your CSS
 
-### How to debug quickly
+### 1.1.4. How to debug quickly
 
 Ever tried to fix a bug and got annoyed by having to publish your page or send your email 1000 times per day? Turns out you can load **any** text file that’s freely available on the internet and run it through the server-side engines for both AmpScript and SSJS. The key is a method that’s similar to JavaScript’s `eval()` method together with another method that grabs the text content of a URL and returns it as a String.
 
@@ -114,7 +115,7 @@ _How?_ Internally, AmpScript is always processed & executed first and only after
 
 _Thanks_ to my buddy Christian who published a [full tutorial](https://simple-force.com/2018/12/17/marketing-cloud-best-practice-external-editors/) a while ago and taught me how to use this hack.
 
-#### Use Online Services for quick debugging
+#### 1.1.4.1. Use Online Services for quick debugging
 
 If you have access to your own web-server it is definitely recommended to use that one rather than a free online service for security reasons. Also, being able to integrate via SFTP will speed up your process.
 
@@ -126,43 +127,45 @@ If you do not have that, there are multiple services out there that offer quick 
 
 **Important:** Please keep in mind never to store credentials in these online services to avoid security issues! If credentials or secrets are needed, retrieve them from SFMC's Key management (Administration section; for `De-/EncryptSymmetric()`) or from a Data Extensions if you need to use other types of credentials.
 
-## Project Setup
+#### 1.1.4.2. Use browser console for debug output
 
-### Folder structure
+## 1.2. Project Setup
+
+### 1.2.1. Folder structure
 
 This is by far up to personal taste but I would recommend to stick any one folder structure in your Git repos for every CloudPage/E-Mail. For CloudPages and e-Mails a similar structure can be used, but keep in mind that JavaScript (app/) will not be executed in e-Mails and SFMC actually automatically removes any non-SSJS `<script>` nodes from your content blocks without warning.
 
 This is what I would recommend after playing around with it for some time:
 
--   project-root/
-    -   cloudPages/
-        -   cloudPageName1/
-            -   app/ _(this is where all front end code goes)_
-                -   lib/
-                    -   jquery.min.js
-                    -   bootstrap.min.css
-                    -   ... _(optional; libraries that you want to host in SFMC)_
-                -   scss/
-                    -   ... _(optional; all your SASS files)_
-                -   js/
-                    -   ... _(all your non-minified JS files)_
-                -   app-1.html
-                -   app-2.loadExternalLibs.html
-                -   app-3.style.min.css
-                -   app-4.script.min.js
-            -   server/ _(this is where SSJS and AMPscript goes)_
-                -   lib/
-                    -   ... _(any SSJS files containing shared classes / polyfills, ...)_
-                -   server-1.amp
-                -   server-2.initCore.ssjs
-                -   server-3.ssjs
-        -   cloudPageName2/
-            -   ...
-    -   emails/
-        -   ...
-    -   contentBlocks/ _(sometimes you will want to prepare code snippets)_
-        -   snippet1/
-        -   ...
+- project-root/
+    - cloudPages/
+        - cloudPageName1/
+            - app/ _(this is where all front end code goes)_
+                - lib/
+                    - jquery.min.js
+                    - bootstrap.min.css
+                    - ... _(optional; libraries that you want to host in SFMC)_
+                - scss/
+                    - ... _(optional; all your SASS files)_
+                - js/
+                    - ... _(all your non-minified JS files)_
+                - app-1.html
+                - app-2.loadExternalLibs.html
+                - app-3.style.min.css
+                - app-4.script.min.js
+            - server/ _(this is where SSJS and AMPscript goes)_
+                - lib/
+                    - ... _(any SSJS files containing shared classes / polyfills, ...)_
+                - server-1.amp
+                - server-2.initCore.ssjs
+                - server-3.ssjs
+        - cloudPageName2/
+            - ...
+    - emails/
+        - ...
+    - contentBlocks/ _(sometimes you will want to prepare code snippets)_
+        - snippet1/
+        - ...
 
 How you structure your `app/` directory is likely up to whatever front end library you might be using. Angular(JS), react and others all come with their standard directory approach and it is recommended to follow these best practices.
 
@@ -214,7 +217,7 @@ Keep in mind that the above is just the minimal example. Of you have more code, 
 
 **Important:** For optimal code highlighting, linting and auto-formatting you will need to remove the `<script>` ndoes around SSJS and `<style>` nodes around CSS in your local `*.ssjs` & `*.css` files. In the online version on the SFMC server however, you do need to include these in every file.
 
-### File structure
+### 1.2.2. File structure
 
 Any file should only contain markup language (HTML) or front-end code (CSS or JS) or AMPscript code or SSJS. You should avoid mixing this and mimic what the structure you saved locally.
 To still be able to easily recognize which content block contains what, add a little AMPscript at the beginning:
@@ -237,7 +240,7 @@ or
 </script>
 ```
 
-## Data Extensions
+## 1.3. Data Extensions
 
 They can be set up via Email Studio and via Audience Builder ("Contact Builder"). The two interfaces look mostly similar but they do have distinct differences:
 
@@ -252,11 +255,11 @@ They can be set up via Email Studio and via Audience Builder ("Contact Builder")
 | Columns Add/Update/Delete           | yes, all at once (click on "Edit Fields" to activate); <br>**Note:** this feature is deactivated in Email Studio if you set up data relationships with this DE in Contact Builder!                                                                                                                                                                                                                                                                  | yes, 1-by-1 (even when data relationsships have been set up)     |
 | Columns Update - Limitations        | - You may never decrease the length of a field.<br>- You may never change the field type.<br>- If the DE is part of a relationship, you may not delete any field<br>- Decimal length can never be changed                                                                                                                                                                                                                                           |
 
-### SEO, Page title
+### 1.3.1. SEO, Page title
 
 You can actually easily set the Page Title and a few other SEO relevant settings ususally found in the page header's code via GUI in SFMC. While you are in the folder view, find the burger icon and delete icon on every page. Clicking the burger icon ("Page Properties") brings you to a page with an "Advanced Settings"-button and there to the "SEO" tab. Here you can set up page title, keywords, descriptions, and if search engines should be allowed to index the particular CloudPage.
 
-### Data types
+### 1.3.2. Data types
 
 | Name          | SQL equivalent | Max Length                                                     | Example                                                                                                         |
 | ------------- | -------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -269,13 +272,13 @@ You can actually easily set the Page Title and a few other SEO relevant settings
 | Decimal       | Decimal        | `21,17`, max sum is `38`, with max `17` digits after the comma | `1234.56789`                                                                                                    |
 | Locale        | Enum           | `5`                                                            | `"en-us"`, [complete list](https://help.salesforce.com/articleView?id=mc_moc_data_extension_locales.htm&type=5) |
 
-### updating External key of Data Extensions
+### 1.3.3. updating External key of Data Extensions
 
 Only works in Email Studio - not in Contact Builder, despite the offered input field in Contact Builder.
 
-## Businesss Units
+## 1.4. Businesss Units
 
-### Seeing all business units as admin
+### 1.4.1. Seeing all business units as admin
 
 When others create Business Units, it often happens that not all users get access to these by default. If you have access to the Business Edit right you can in fact always change what Business Units are visible to you and to others. However, while you are "logged into" a Child BU even the setup menu will not show these additional BUs to you, or present them grayed out.
 
