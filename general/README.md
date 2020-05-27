@@ -72,7 +72,7 @@ Ever tried to fix a bug and got annoyed by having to publish your page or send y
 
 <script runat="server" language="JavaScript">
 
-Platform.Load("core", "1.1.5"); // define one core version up front for all
+Platform.Load("core", "1.1.1"); // define one core version up front for all
 
 // load SSJS file #1 via AmpScript
 %%= TreatAsContent(HTTPGet("https://myurl.com/mycode1.ssjs")) =%%
@@ -128,6 +128,42 @@ If you do not have that, there are multiple services out there that offer quick 
 **Important:** Please keep in mind never to store credentials in these online services to avoid security issues! If credentials or secrets are needed, retrieve them from SFMC's Key management (Administration section; for `De-/EncryptSymmetric()`) or from a Data Extensions if you need to use other types of credentials.
 
 #### 1.1.4.2. Use browser console for debug output
+
+When testing your code you will likely want to see what's in your variables. Printing that to screen with `Write(myVar)` (or its alias form `Platform.Response.Write(myVar)`) can be cumbersome as it writes directly into your HTML code. Instead use this little method to get your output directly in the browser's debug console (e.g. Chrome Dev Tools):
+
+```html
+<script runat="server">
+Platform.Load("core", "1.1.1");
+var console = {
+	log: function(string) {
+		Write('<script>console.log(`' + string + '`)</script>');
+	},
+	error: function(string) {
+		Write('<script>console.error(`' + string + '`)</script>');
+	}
+}
+</script>
+```
+
+Place the above your code and then use it like this:
+
+```html
+<script runat="server">
+var myCodeTest = 'Hello World';
+console.log(myCodeTest); // prints "Hello World"
+console.error('something went wrong'); // prints "something went wrong" in red letters
+
+// or more real life:
+try {
+	console.log('executing my fancy code');
+	// your fancy code here
+	// ...
+} catch (ex) {
+	console.error("An error has occurred: " + Stringify(ex));
+}
+</script>
+```
+
 
 ## 1.2. Project Setup
 
