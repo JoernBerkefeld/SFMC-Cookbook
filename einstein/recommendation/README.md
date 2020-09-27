@@ -1,13 +1,12 @@
-# Einstein Web-Recommendations
+# Einstein Recommendations <!-- omit in toc -->
 
 This page aims to make using Einstein recommendations a little easier by adding a few explanations around how to use it in a modern setup.
 
-- [Einstein Web-Recommendations](#einstein-web-recommendations)
-	- [Collect Code](#collect-code)
-		- [Note to developers](#note-to-developers)
-		- [Collect Code on page load](#collect-code-on-page-load)
-		- [Asynchronous Collect Code](#asynchronous-collect-code)
-		- [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
+- [Collect Code](#collect-code)
+	- [Note to developers](#note-to-developers)
+	- [Collect Code on page load](#collect-code-on-page-load)
+	- [Asynchronous Collect Code](#asynchronous-collect-code)
+	- [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
 
 ## Collect Code
 

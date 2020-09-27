@@ -1,6 +1,11 @@
 {
     "extends": ["eslint:recommended", "prettier", "ssjs"],
-    "plugins": ["jsdoc", "prettier"],
+	"plugins": ["jsdoc", "prettier"],
+	"parserOptions": {
+		"ecmaVersion": 2018
+	},
+	"env": { "es6": true },
+
     "rules": {
         "padded-blocks": "off",
         "prefer-rest-params": "off",
@@ -18,20 +23,9 @@
             }
         ],
         "valid-jsdoc": "warn",
-        "spaced-comment": ["warn", "always", { "block": { "exceptions": ["*"], "balanced": true } }]
-    },
-    "overrides": [
-        {
-            "files": ["*.js"],
-            "env": { "es6": true },
-            "parserOptions": {
-                "ecmaVersion": 2018
-            },
-            "rules": {
-                "no-var": "error",
-                "prefer-const": "error",
-                "prettier/prettier": "warn"
-            }
-        }
-    ]
+		"spaced-comment": ["warn", "always", { "block": { "exceptions": ["*"], "balanced": true } }],
+		"no-var": "error",
+		"prefer-const": "error",
+		"prettier/prettier": "warn"
+    }
 }
