@@ -1,16 +1,18 @@
 {
-    "name": "sfmc-cookbook",
-    "version": "1.0.0",
-    "description": "guide on how to survive as a developer for Salesforce Marketing Cloud",
-    "author": "Jörn Berkefeld",
-    "scripts": {
-        "upgrade": "npm-check --update"
-    },
-    "devDependencies": {
-        "eslint-config-google": "^0.9.1",
-        "eslint": "^5.15.1",
-        "npm-check": "^5.9.0",
-        "prettier": "^1.16.4",
-        "prettier-eslint": "^8.8.2"
-    }
+	"name": "sfmc-cookbook",
+	"version": "1.0.0",
+	"description": "guide on how to survive as a developer for Salesforce Marketing Cloud",
+	"author": "Jörn Berkefeld",
+	"scripts": {
+		"upgrade": "npm-check --update"
+	},
+	"devDependencies": {
+		"eslint": "^7.10.0",
+		"eslint-config-prettier": "^6.12.0",
+		"eslint-config-ssjs": "^1.1.9",
+		"eslint-plugin-prettier": "^3.1.4",
+		"npm-check": "^5.9.0",
+		"prettier": "^2.1.2",
+		"prettier-eslint": "^11.0.0"
+	}
 }

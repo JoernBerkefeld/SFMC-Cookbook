@@ -1,63 +1,37 @@
 {
-	"extends": ["eslint:recommended", "google"],
-	"parserOptions": {
-		"ecmaVersion": 6
-	},
-	"rules": {
-		"comma-dangle": "off",
-		"no-var": "error",
-		"eol-last": ["warn", "never"],
-		"guard-for-in": "off",
-		"indent": [
-			"warn",
-			"tab",
-			{
-				"SwitchCase": 1
-			}
-		],
-		"linebreak-style": "off",
-		"max-len": [
-			"error",
-			{
-				"code": 120,
-				"comments": 120,
-				"tabWidth": 4,
-				"ignoreUrls": true,
-				"ignoreTrailingComments": true,
-				"ignoreStrings": true
-			}
-		],
-		"no-case-declarations": "off",
-		"no-extra-boolean-cast": "off",
-		"no-tabs": "off",
-		"padded-blocks": "off",
-		"prefer-rest-params": "off",
-		"prefer-spread": "off",
-		"valid-jsdoc": "off"
-	},
-	"overrides": [
-		{
-			"files": ["*.ssjs"],
-			"rules": {
-				"new-cap": "off",
-				"no-var": "off",
-				"no-extend-native": "off",
-				"no-console": "off",
-				"no-throw-literal": "off"
-			},
-			"parserOptions": {
-				"ecmaVersion": 3
-			},
-			"globals": {
-				"DataExtension": false,
-				"HTTP": false,
-				"Platform": false,
-				"Script": false,
-				"Stringify": false,
-				"Subscriber": false,
-				"Variable": false,
-				"Write": false
-			}
-		}
-	]
+    "extends": ["eslint:recommended", "prettier", "ssjs"],
+    "plugins": ["jsdoc", "prettier"],
+    "rules": {
+        "padded-blocks": "off",
+        "prefer-rest-params": "off",
+        "prefer-spread": "off",
+        "require-jsdoc": [
+            "warn",
+            {
+                "require": {
+                    "FunctionDeclaration": true,
+                    "MethodDefinition": true,
+                    "ClassDeclaration": true,
+                    "ArrowFunctionExpression": false,
+                    "FunctionExpression": true
+                }
+            }
+        ],
+        "valid-jsdoc": "warn",
+        "spaced-comment": ["warn", "always", { "block": { "exceptions": ["*"], "balanced": true } }]
+    },
+    "overrides": [
+        {
+            "files": ["*.js"],
+            "env": { "es6": true },
+            "parserOptions": {
+                "ecmaVersion": 2018
+            },
+            "rules": {
+                "no-var": "error",
+                "prefer-const": "error",
+                "prettier/prettier": "warn"
+            }
+        }
+    ]
 }
