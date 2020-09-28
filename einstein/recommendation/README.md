@@ -8,10 +8,10 @@ This page aims to make using Einstein recommendations a little easier by adding 
 		- [Collect Code on page load](#collect-code-on-page-load)
 		- [Asynchronous Collect Code](#asynchronous-collect-code)
 		- [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
-	- [Tracking and other Collect Code features](#tracking-and-other-collect-code-features)
 	- [Debug your tracking solution](#debug-your-tracking-solution)
-	- [Track Page Views: trackPageView](#track-page-views-trackpageview)
-	- [Disable tracking](#disable-tracking)
+	- [Tracking and other Collect Code features](#tracking-and-other-collect-code-features)
+		- [Track Page Views: trackPageView](#track-page-views-trackpageview)
+		- [Disable tracking](#disable-tracking)
 - [Update Catalog](#update-catalog)
 	- [Via Collect Code](#via-collect-code)
 	- [Update Catalog via API](#update-catalog-via-api)
@@ -117,24 +117,6 @@ Keep the above in the `<head>` section of your code.
 
 Download: [Async preload sample code](collect-code/collect-code.async-preload.html)
 
-### Tracking and other Collect Code features
-
-There are a lot of options available from the Collect Code library, available via the `_etmc.push()` method:
-
-| Method |Description |
-| -- | -- |
-| [doNotTrack](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5) | Deactivate tracking for current user; needs to be executed on page load before other push-calls. |
-| setFirstParty | ability to send tracking data to a server other than the default. Use together with one of the `track...` methods |
-| setInsecure | Allows to track data on a non-secure server if the current website was not opened securely either; use together with one of the `track...` methods |
-| setOrgId | set your BUs MID; use together with one of the `track...` methods |
-| [setUserInfo](https://help.salesforce.com/articleView?id=mc_ctc_set_user_info.htm&type=5)        | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
-| [trackCart](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) | Log items added or removed from a contact's cart |
-| [trackConversion](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) | Log details about a contact’s purchase |
-| trackEvent | **???** |
-| [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
-| [trackRating](https://help.salesforce.com/articleView?id=mc_ctc_track_rating.htm&type=5) | Log a user's rating for an item on your website. |
-| trackWishlist | **???** |
-| [updateItem](#via-collect-code) * | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
 
 ### Debug your tracking solution
 
@@ -147,7 +129,26 @@ _etmc.debug = true;
 
 Alternatively, look for loaded images in the Network tab of your browser. The calls go to "files" (endpoints) with the name of your method calls, though rewritten to [Snake Case](https://en.wikipedia.org/wiki/Snake_case).
 
-### Track Page Views: trackPageView
+### Tracking and other Collect Code features
+
+There are a lot of options available from the Collect Code library, available via the `_etmc.push()` method:
+
+| Method |Description |
+| -- | -- |
+| [doNotTrack](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5) * | Deactivate tracking for current user; needs to be executed on page load before other push-calls. More info below. |
+| setFirstParty | ability to send tracking data to a server other than the default. Use together with one of the `track...` methods |
+| setInsecure | Allows to track data on a non-secure server if the current website was not opened securely either; use together with one of the `track...` methods |
+| setOrgId | set your BUs MID; use together with one of the `track...` methods |
+| [setUserInfo](https://help.salesforce.com/articleView?id=mc_ctc_set_user_info.htm&type=5)        | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
+| [trackCart](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) | Log items added or removed from a contact's cart |
+| [trackConversion](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) | Log details about a contact’s purchase |
+| trackEvent | **???** |
+| [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
+| [trackRating](https://help.salesforce.com/articleView?id=mc_ctc_track_rating.htm&type=5) | Log a user's rating for an item on your website. |
+| trackWishlist | **???** |
+| [updateItem](#via-collect-code) * | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
+
+#### Track Page Views: trackPageView
 
 The first element you pass in basically represents a method name which takes multiple variables. `trackPageView` accepts the following parameters alone or combined:
 
@@ -178,7 +179,7 @@ But of course these can also be combined: If the user came to the page using you
 _etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE','search' : 'INSERT_SEARCH_TERM' }]);
 ```
 
-### Disable tracking
+#### Disable tracking
 
 Contrary to the docs, just a single line is needed, which then literally deactivates `_etmc.push()`.
 
