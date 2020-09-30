@@ -15,6 +15,7 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [Identify current user](#identify-current-user)
       - [Attribute Affinity](#attribute-affinity)
     - [Track Page Views: trackPageView](#track-page-views-trackpageview)
+    - [Track User Wishlist: trackWishList](#track-user-wishlist-trackwishlist)
 - [Update Catalog](#update-catalog)
   - [Via Collect Code](#via-collect-code)
   - [Update Catalog via API](#update-catalog-via-api)
@@ -125,7 +126,6 @@ Keep the above in the `<head>` section of your code.
 
 Download: [Async preload sample code](collect-code/collect-code.async-preload.html)
 
-
 ### Debug your tracking solution
 
 Use the following to activate `console.log` outputs whenever data is send to the server.
@@ -143,7 +143,7 @@ There are a lot of options available from the Collect Code library, available vi
 
 | Method |Description |
 | -- | -- |
-| [doNotTrack](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5) * | Deactivate tracking on the current page. More info below. |
+| [doNotTrack](#disable-tracking) * | Deactivate tracking on the current page. More info below. |
 | setFirstParty | Allows you to send tracking data to a server other than the default, e.g. to proxy the data through your own server. Use together with one of the `track...` methods |
 | setInsecure | Use together with `setFirstParty` to track data via a non-secure proxy server. Only works if the current website was not opened securely either; use together with one of the `track...` methods |
 | [setOrgId](#identify-business-unit-for-tracking) * | set your BUs MID; use together with one of the `track...` methods |
@@ -153,12 +153,12 @@ There are a lot of options available from the Collect Code library, available vi
 | trackEvent | _Undocumented feature:_ Allows you to track custom events |
 | [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
 | [trackRating](https://help.salesforce.com/articleView?id=mc_ctc_track_rating.htm&type=5) | Log a user's rating for an item on your website. |
-| trackWishlist | _Undocumented feature:_ Allows you to track multiple "shopping carts"-like lists in which users track future wishes |
+| [trackWishlist](#track-user-wishlist-trackwishlist) * | _Undocumented feature:_ Allows you to track multiple "shopping carts"-like lists in which users track future wishes |
 | [updateItem](#via-collect-code) * | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
 
 #### Disable tracking
 
-Contrary to the docs, just a single line is needed, which then literally deactivates `_etmc.push()` and therefore any other tracking calls that are issued afterwards on the current page. This should be executed on page load before other push-calls.
+Contrary to the [official docs](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5), just a single line is needed, which then literally deactivates `_etmc.push()` and therefore any other tracking calls that are issued afterwards on the current page. This should be executed on page load before other push-calls.
 
 ```javascript
 // disable tracking for current page
@@ -203,8 +203,6 @@ _etmc.push(['setUserInfo', {
 }]);
 ```
 
-
-
 #### Track Page Views: trackPageView
 
 The first element you pass in basically represents a method name which takes multiple variables. `trackPageView` accepts the following parameters alone or combined:
@@ -236,6 +234,24 @@ But of course these can also be combined: If the user came to the page using you
 _etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE','search' : 'INSERT_SEARCH_TERM' }]);
 ```
 
+#### Track User Wishlist: trackWishList
+
+Allows you to store contact wishlists for items on your website.
+
+```javascript
+_etmc.push(['trackWishlist', {
+    'items' : ['INSERT_ITEM_1', 'INSERT_ITEM_2', 'INSERT_ITEM_3'],
+    'skus' : ['INSERT_UNIQUE_ID_1', 'INSERT_UNIQUE_ID_2', 'INSERT_UNIQUE_ID_3']
+}]);
+```
+
+INSERT_ITEM_X represents the unique identifier of an item.
+INSERT_UNIQUE_ID_X is optional and represents the unique child identifier for the item.
+
+Match the value sent for "INSERT_ITEM" to the Product Code catalog field if you include a catalog file with your Personalization Builder implementation.
+
+The contact’s wishlist data is replaced by each subsequent trackWishlist call.  If you want their entire wishlist to persist, please include all items in each call.
+
 ## Update Catalog
 
 There are various ways of updating the catalog in Einstein that come with their own advantages and disadvantages.
@@ -249,14 +265,14 @@ It is actually possible to send in updates to your catalog via the collect code.
 **Update a single item:**
 
 ```javascript
-_etmc.push(["updateItem",
+_etmc.push(['updateItem',
     {
-    "item": "INSERT_ITEM",
-    "unique_id": "INSERT_UNIQUE_ITEM_ID",
-    "name": "INSERT_ITEM_NAME_OR_TITLE",
-    "url": "INSERT_ITEM_URL",
-    "item_type": "INSERT_ITEM_TYPE",
-    "INSERT_ATTRIBUTE_NAME": "INSERT_ATTRIBUTE_VALUE"
+    'item': 'INSERT_ITEM',
+    'unique_id': 'INSERT_UNIQUE_ITEM_ID',
+    'name': 'INSERT_ITEM_NAME_OR_TITLE',
+    'url': 'INSERT_ITEM_URL',
+    'item_type': 'INSERT_ITEM_TYPE',
+    'INSERT_ATTRIBUTE_NAME': 'INSERT_ATTRIBUTE_VALUE'
     }
 ]);
 ```
@@ -264,22 +280,22 @@ _etmc.push(["updateItem",
 **Update multiple items:**
 
 ```javascript
-_etmc.push(["updateItem", [
+_etmc.push(['updateItem', [
     {
-        "item": "INSERT_ITEM",
-        "unique_id": "INSERT_UNIQUE_ITEM_ID",
-        "name": "INSERT_ITEM_NAME_OR_TITLE",
-        "url": "INSERT_ITEM_URL",
-        "item_type": "INSERT_ITEM_TYPE",
-        "INSERT_ATTRIBUTE_NAME": "INSERT_ATTRIBUTE_VALUE"
+        'item': 'INSERT_ITEM',
+        'unique_id': 'INSERT_UNIQUE_ITEM_ID',
+        'name': 'INSERT_ITEM_NAME_OR_TITLE',
+        'url': 'INSERT_ITEM_URL',
+        'item_type': 'INSERT_ITEM_TYPE',
+        'INSERT_ATTRIBUTE_NAME': 'INSERT_ATTRIBUTE_VALUE'
     },
     {
-        "item": "INSERT_ITEM",
-        "unique_id": "INSERT_UNIQUE_ITEM_ID",
-        "name": "INSERT_ITEM_NAME_OR_TITLE",
-        "url": "INSERT_ITEM_URL",
-        "item_type": "INSERT_ITEM_TYPE",
-        "INSERT_ATTRIBUTE_NAME": "INSERT_ATTRIBUTE_VALUE"
+        'item': 'INSERT_ITEM',
+        'unique_id': 'INSERT_UNIQUE_ITEM_ID',
+        'name': 'INSERT_ITEM_NAME_OR_TITLE',
+        'url': 'INSERT_ITEM_URL',
+        'item_type': 'INSERT_ITEM_TYPE',
+        'INSERT_ATTRIBUTE_NAME': 'INSERT_ATTRIBUTE_VALUE'
     }
 ]]);
 ```
@@ -371,8 +387,6 @@ The reponse will look something like this once recommendations are actually avai
 ]
 ```
 
-
-
 #### Embed via JavaScript ("HTML")
 
 You will be asked to load a JavaScript file like this:
@@ -386,7 +400,7 @@ As well as position some HTML where you want the final recommendation to be inse
 
 ```html
 <!-- Copy this code to where you want to show web recommendations on your joerntest page-->
-<div id="igdrec_1"></div>
+<div id='igdrec_1'></div>
 ```
 
 This second part will vary depending on your choices made on the "Build">"Areas" tab.
@@ -399,8 +413,8 @@ As long as **recommendations are not ready** the code of `recommend.js` will be 
 // recommend.js if recommendations are not ready yet and only one area named "idgrec_1" was defined for this page
 
 function display_INSERT_PAGE_NAME(zone, id) {
-    if (id === "igdrec_1") {
-          zone.innerHTML = "";
+    if (id === 'igdrec_1') {
+          zone.innerHTML = '';
     }
 }
 
@@ -436,11 +450,11 @@ If you defined more than one recommendation area, the code will be auto-extended
 // recommend.js if recommendations are not ready yet and two areas named "idgrec_1" and "idgrec_2" were defined for this page
 
 function display_joerntest(zone, id) {
-    if (id === "igdrec_1") {
-        zone.innerHTML = "";
+    if (id === 'igdrec_1') {
+        zone.innerHTML = '';
     }
-    if (id === "igdrec_2") {
-        zone.innerHTML = "";
+    if (id === 'igdrec_2') {
+        zone.innerHTML = '';
     }
 }
 
@@ -493,8 +507,8 @@ The HTML that will be created for you will look something like the following:
             <span class='igo_product_link_value'>Link</span>
         </div>
         <div class='igo_product_image_link'>
-            <a href="">
-                <img class='igo_product_image' src="Image link">
+            <a href=''>
+                <img class='igo_product_image' src='Image link'>
             </a>
         </div>
         <div class='igo_product_name'>
@@ -512,8 +526,8 @@ The HTML that will be created for you will look something like the following:
             <span class='igo_product_link_value'>Link</span>
         </div>
         <div class='igo_product_image_link'>
-            <a href="">
-                <img class='igo_product_image' src="Image link">
+            <a href=''>
+                <img class='igo_product_image' src='Image link'>
             </a>
         </div>
         <div class='igo_product_name'>
@@ -531,8 +545,8 @@ The HTML that will be created for you will look something like the following:
             <span class='igo_product_link_value'>Link</span>
         </div>
         <div class='igo_product_image_link'>
-            <a href="">
-                <img class='igo_product_image' src="Image link">
+            <a href=''>
+                <img class='igo_product_image' src='Image link'>
             </a>
         </div>
         <div class='igo_product_name'>
