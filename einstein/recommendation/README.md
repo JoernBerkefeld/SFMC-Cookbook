@@ -14,8 +14,9 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [Identify Business Unit for Tracking](#identify-business-unit-for-tracking)
     - [Identify current user](#identify-current-user)
       - [Attribute Affinity](#attribute-affinity)
-    - [Track Items in Cart: trackCart](#track-items-in-cart-trackcart)
     - [Track Page Views: trackPageView](#track-page-views-trackpageview)
+    - [Track Items in Cart: trackCart](#track-items-in-cart-trackcart)
+    - [Track Purchases / Conversions: trackConversion](#track-purchases--conversions-trackconversion)
     - [Track User Wishlist: trackWishList](#track-user-wishlist-trackwishlist)
 - [Update Catalog](#update-catalog)
   - [Via Collect Code](#via-collect-code)
@@ -206,45 +207,6 @@ _etmc.push(['setUserInfo', {
 }]);
 ```
 
-#### Track Items in Cart: trackCart
-
-This should be run each time a product is added or removed from the cart, the quantity is changed or when the purchase is finalized.
-
-```javascript
-_etmc.push(['trackCart', { 'cart': [
-    {
-        'item': 'INSERT_ITEM',
-        'quantity':  'INSERT_QUANTITY',
-        'price': 'INSERT_PRICE',
-        'unique_id': 'INSERT_UNIQUE_ID'
-    },
-    {
-        'item': 'INSERT_ITEM',
-        'quantity':  'INSERT_QUANTITY' ,
-        'price': 'INSERT_PRICE' ,
-        'unique_id': 'INSERT_UNIQUE_ID'
-    }
-]}]);
-```
-
-**Definitions:**
-| Key         | Definition                                                                                                                                                                                                                               |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `item`      | Matches the field mapped to **ProductCode** in the catalog.                                                                                                                                                                              |
-| `quantity`  | The number of items added for the particular SKU.                                                                                                                                                                                        |
-| `price`     | The price at the time of adding an item to the cart.                                                                                                                                                                                     |
-| `unique_id` | Matches the field mapped to the **SKUId** in the catalog. When these items match it ensures the exact record in the catalog, including all specific attributes like color and size, is tied to the cart rather than just the ProductCode |
-
-**Important:** Always include the entire cart in this call because it will overwrite whatever was stored before. Therefore, in order to remove one row, simply pass in all other rows that were not deleted.
-
-The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) state that one should use the following to remove all cart line items at once:
-
-```javascript
-_etmc.push(['trackCart', { 'clear_cart': true } ]);
-```
-
-It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point.
-
 #### Track Page Views: trackPageView
 
 The first element you pass in basically represents a method name which takes multiple variables. `trackPageView` accepts the following parameters alone or combined:
@@ -276,6 +238,119 @@ But of course these can also be combined: If the user came to the page using you
 _etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE','search' : 'INSERT_SEARCH_TERM' }]);
 ```
 
+#### Track Items in Cart: trackCart
+
+This should be run each time a product is added or removed from the cart, the quantity is changed or when the purchase is finalized.
+
+```javascript
+_etmc.push(['trackCart', {
+    'cart': [
+        {
+            'item': 'INSERT_ITEM',
+            'quantity':  'INSERT_QUANTITY',
+            'price': 'INSERT_PRICE',
+            'unique_id': 'INSERT_UNIQUE_ID'
+        },
+        {
+            'item': 'INSERT_ITEM',
+            'quantity':  'INSERT_QUANTITY' ,
+            'price': 'INSERT_PRICE' ,
+            'unique_id': 'INSERT_UNIQUE_ID'
+        }
+    ]
+}]);
+```
+
+**Definitions:**
+| Key | Definition |
+| -- | -- |
+| `item`      | Matches the field mapped to **ProductCode** in the catalog. |
+| `quantity`  | The number of items added for the particular SKU. |
+| `price`     | The price at the time of adding an item to the cart. |
+| `unique_id` | Matches the field mapped to the **SKUId** in the catalog. When these items match it ensures the exact record in the catalog, including all specific attributes like color and size, is tied to the cart rather than just the ProductCode |
+
+**Important:** Always include the entire cart in this call because it will overwrite whatever was stored before. Therefore, in order to remove one row, simply pass in all other rows that were not deleted.
+
+The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) state that one should use the following to remove all cart line items at once:
+
+```javascript
+_etmc.push(['trackCart', { 'clear_cart': true } ]);
+```
+
+It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point.
+
+#### Track Purchases / Conversions: trackConversion
+
+```javascript
+_etmc.push(['trackConversion', {
+    'cart': [
+        {
+            'item': 'INSERT_ITEM',
+            'quantity':  'INSERT_QUANTITY',
+            'price': 'INSERT_PRICE',
+            'unique_id': 'INSERT_UNIQUE_ID'
+        },
+        {
+            'item': 'INSERT_ITEM',
+            'quantity':  'INSERT_QUANTITY',
+            'price': 'INSERT_PRICE',
+            'unique_id': 'INSERT_UNIQUE_ID'
+        }
+    ],
+   // OPTIONAL PARAMETERS
+   'order_number': 'INSERT_ORDER_NUMBER',
+   'discount': 'INSERT_DISCOUNT',
+   'shipping': 'INSERT_SHIPPING',
+   'details': {
+       'AttributeName': 'Value'
+    }
+   // END OPTIONAL PARAMETERS
+}]);
+```
+
+| Key          | Description                                                                           |
+| ------------ | ------------------------------------------------------------------------------------- |
+| cart         | same as for `trackCart`; [see above](#track-items-in-cart-trackcart) for more details |
+| order_number | _optional:_ String                                                                    |
+| discount     | _optional:_ Decimal, in local currency, not percental value                           |
+| shipping     | _optional:_ Decimal, in local currency, not percental value                           |
+| details      | _optional:_ ???                                                                       |
+
+**Note:**
+If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately (pseudo-code):
+
+```javascript
+// example call
+_etmc.push(["trackConversion", {
+    "cart": [
+        {
+            "item": "123",
+            "quantity": "2",
+            "price": "10.00",
+            "unique_id": "123"
+        },
+        {
+            "item": "234",
+            "quantity": "1",
+            "price": "5.00",
+            "unique_id": "234"
+        }
+    ],
+    // OPTIONAL PARAMETERS
+    "order_number": "123456",
+    "discount": "2.00",
+    "shipping": "5.00"
+    // END OPTIONAL PARAMETERS
+}]);
+```
+
+results in...
+
+```javascript
+var sumProductPrices = FOREACH(quantity*price) = 2*10 + 1*5 = 25
+var finalItemPrice[0] = price + ((shipping - discount) * (quantity*price/sumProductPrices) / quantity = 10 + ((5-2)*(2*10/25)/2) = 11.20
+```
+
 #### Track User Wishlist: trackWishList
 
 Allows you to store contact wishlists for items on your website.
@@ -294,9 +369,7 @@ _etmc.push(['trackWishlist', {
 
 According to the offical docs, handing in skus is optional but I haven't tested that. Make sure the 2 arrays have the same length as the first item in one list is mapped to the first in the other; the second to the second; and so on and so forth.
 
-Match the value sent for "INSERT_ITEM" to the Product Code catalog field if you include a catalog file with your Personalization Builder implementation.
-
-The contact’s wishlist data is replaced by each subsequent trackWishlist call.  If you want their entire wishlist to persist, please include all items in each call.
+The contact’s wishlist data is replaced by each subsequent trackWishlist call. Therefore, make sure to always include the entire _current_ list and remove entries from the call that the user deleted from it.
 
 ## Update Catalog
 
@@ -356,6 +429,8 @@ This is in theory possible, however so far I haven't gotten it to work.
 
 > Official docs: [help.salesforce.com/articleView?id=mc_pb_einstein_email_recommendations.htm](https://help.salesforce.com/articleView?id=mc_pb_einstein_email_recommendations.htm&type=5)
 
+**TODO:** Add more details :-)
+
 ## Einstein Web Recommendations
 
 > Official docs: [help.salesforce.com/articleView?id=mc_pb_einstein_web_recommendation.htm](https://help.salesforce.com/articleView?id=mc_pb_einstein_web_recommendation.htm&type=5)
@@ -398,7 +473,7 @@ GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/reco
 **Example for HTML/JavaScript:**
 
 ```html
-<!-- Copy this code right before the closing </body> of your joerntest page-->
+<!-- Copy this code right before the closing </body> of your INSERT_PAGE_NAME page-->
 <script src="https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js?category=My%20Shoes&search=red%20female"></script>
 ```
 
@@ -468,14 +543,14 @@ The reponse will look something like this once recommendations are actually avai
 You will be asked to load a JavaScript file like this:
 
 ```html
-<!-- Copy this code right before the closing </body> of your joerntest page-->
+<!-- Copy this code right before the closing </body> of your INSERT_PAGE_NAME page-->
 <script src='https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js'></script>
 ```
 
 As well as position some HTML where you want the final recommendation to be inserted like this:
 
 ```html
-<!-- Copy this code to where you want to show web recommendations on your joerntest page-->
+<!-- Copy this code to where you want to show web recommendations on your INSERT_PAGE_NAME page-->
 <div id='igdrec_1'></div>
 ```
 
@@ -525,7 +600,7 @@ If you defined more than one recommendation area, the code will be auto-extended
 ```javascript
 // recommend.js if recommendations are not ready yet and two areas named "idgrec_1" and "idgrec_2" were defined for this page
 
-function display_joerntest(zone, id) {
+function display_INSERT_PAGE_NAME(zone, id) {
     if (id === 'igdrec_1') {
         zone.innerHTML = '';
     }
@@ -551,11 +626,11 @@ function addLoadEvent(func) {
 function callREC() {
     var pageZone = document.getElementById('igdrec_1');
     if ( undefined != pageZone) {
-        display_joerntest(pageZone, 'igdrec_1');
+        display_INSERT_PAGE_NAME(pageZone, 'igdrec_1');
     }
     var pageZone = document.getElementById('igdrec_2');
     if ( undefined != pageZone) {
-        display_joerntest(pageZone, 'igdrec_2');
+        display_INSERT_PAGE_NAME(pageZone, 'igdrec_2');
     }
 }
 
