@@ -14,6 +14,7 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [Identify Business Unit for Tracking](#identify-business-unit-for-tracking)
     - [Identify current user](#identify-current-user)
       - [Attribute Affinity](#attribute-affinity)
+    - [Track Items in Cart: trackCart](#track-items-in-cart-trackcart)
     - [Track Page Views: trackPageView](#track-page-views-trackpageview)
     - [Track User Wishlist: trackWishList](#track-user-wishlist-trackwishlist)
 - [Update Catalog](#update-catalog)
@@ -22,6 +23,8 @@ This page aims to make using Einstein recommendations a little easier by adding 
 - [Einstein Email Recommendations](#einstein-email-recommendations)
 - [Einstein Web Recommendations](#einstein-web-recommendations)
   - [Embedding Web Recommendations](#embedding-web-recommendations)
+    - [How the recommender knows who the current user is](#how-the-recommender-knows-who-the-current-user-is)
+    - [Enhancing recommendation results](#enhancing-recommendation-results)
     - [Embed via JSON](#embed-via-json)
       - [JSON Example responses](#json-example-responses)
     - [Embed via JavaScript ("HTML")](#embed-via-javascript-html)
@@ -148,7 +151,7 @@ There are a lot of options available from the Collect Code library, available vi
 | setInsecure | Use together with `setFirstParty` to track data via a non-secure proxy server. Only works if the current website was not opened securely either; use together with one of the `track...` methods |
 | [setOrgId](#identify-business-unit-for-tracking) * | set your BUs MID; use together with one of the `track...` methods |
 | [setUserInfo](#identify-current-user) * | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
-| [trackCart](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) | Log items added or removed from a contact's cart |
+| [trackCart](#track-items-in-cart-trackcart) * | Log items added or removed from a contact's cart |
 | [trackConversion](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) | Log details about a contact’s purchase |
 | trackEvent | _Undocumented feature:_ Allows you to track custom events |
 | [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
@@ -203,6 +206,45 @@ _etmc.push(['setUserInfo', {
 }]);
 ```
 
+#### Track Items in Cart: trackCart
+
+This should be run each time a product is added or removed from the cart, the quantity is changed or when the purchase is finalized.
+
+```javascript
+_etmc.push(['trackCart', { 'cart': [
+    {
+        'item': 'INSERT_ITEM',
+        'quantity':  'INSERT_QUANTITY',
+        'price': 'INSERT_PRICE',
+        'unique_id': 'INSERT_UNIQUE_ID'
+    },
+    {
+        'item': 'INSERT_ITEM',
+        'quantity':  'INSERT_QUANTITY' ,
+        'price': 'INSERT_PRICE' ,
+        'unique_id': 'INSERT_UNIQUE_ID'
+    }
+]}]);
+```
+
+**Definitions:**
+| Key         | Definition                                                                                                                                                                                                                               |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `item`      | Matches the field mapped to **ProductCode** in the catalog.                                                                                                                                                                              |
+| `quantity`  | The number of items added for the particular SKU.                                                                                                                                                                                        |
+| `price`     | The price at the time of adding an item to the cart.                                                                                                                                                                                     |
+| `unique_id` | Matches the field mapped to the **SKUId** in the catalog. When these items match it ensures the exact record in the catalog, including all specific attributes like color and size, is tied to the cart rather than just the ProductCode |
+
+**Important:** Always include the entire cart in this call because it will overwrite whatever was stored before. Therefore, in order to remove one row, simply pass in all other rows that were not deleted.
+
+The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) state that one should use the following to remove all cart line items at once:
+
+```javascript
+_etmc.push(['trackCart', { 'clear_cart': true } ]);
+```
+
+It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point.
+
 #### Track Page Views: trackPageView
 
 The first element you pass in basically represents a method name which takes multiple variables. `trackPageView` accepts the following parameters alone or combined:
@@ -245,8 +287,12 @@ _etmc.push(['trackWishlist', {
 }]);
 ```
 
-INSERT_ITEM_X represents the unique identifier of an item.
-INSERT_UNIQUE_ID_X is optional and represents the unique child identifier for the item.
+| Key         | Definition                                                  |
+| ----------- | ----------------------------------------------------------- |
+| `item`      | Matches the field mapped to **ProductCode** in the catalog. |
+| `unique_id` | Matches the field mapped to the **SKUId** in the catalog.   |
+
+According to the offical docs, handing in skus is optional but I haven't tested that. Make sure the 2 arrays have the same length as the first item in one list is mapped to the first in the other; the second to the second; and so on and so forth.
 
 Match the value sent for "INSERT_ITEM" to the Product Code catalog field if you include a catalog file with your Personalization Builder implementation.
 
@@ -326,6 +372,34 @@ Please note that you select the output format when creating a "page" in Einstein
 
 You should define what field values you want in your recommendation via the "Output" tab. Here you can add, remove and order the fields that will be available in your recommendation. Ordering has no impact if you choose to embed via JSON.
 
+#### How the recommender knows who the current user is
+
+The current user is actually shared via cookie set by the Collect Code (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this.
+
+#### Enhancing recommendation results
+
+You can append parameters to the recommend.json / recommend.js as URL parameters to get more focused results. Please make sure you URL-Encode the values!
+
+| URL Parameter | value           |
+| ------------- | --------------- |
+| item          | _SKU_           |
+| cart          | _SKU_           |
+| category      | _CATEGORY_NAME_ |
+| search        | _SEARCH_TERM_   |
+
+**Example for JSON:**
+
+```javascript
+GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json?category=My%20Shoes&search=red%20female
+```
+
+**Example for HTML/JavaScript:**
+
+```html
+<!-- Copy this code right before the closing </body> of your joerntest page-->
+<script src="https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js?category=My%20Shoes&search=red%20female"></script>
+```
+
 #### Embed via JSON
 
 This requires you to do all the styling and processing yourself but also comes with greatest amount of flexibility. Call the below URL to get the JSON for your BU-Page combo:
@@ -393,7 +467,7 @@ You will be asked to load a JavaScript file like this:
 
 ```html
 <!-- Copy this code right before the closing </body> of your joerntest page-->
-<script src="https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js" type="text/javascript"> </script>
+<script src='https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js'></script>
 ```
 
 As well as position some HTML where you want the final recommendation to be inserted like this:
