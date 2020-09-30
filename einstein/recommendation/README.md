@@ -376,6 +376,8 @@ You should define what field values you want in your recommendation via the "Out
 
 The current user is actually shared via cookie set by the Collect Code (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this.
 
+If no cookie was set, generic recommendations are displayed.
+
 #### Enhancing recommendation results
 
 You can append parameters to the recommend.json / recommend.js as URL parameters to get more focused results. Please make sure you URL-Encode the values!
