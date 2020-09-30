@@ -318,29 +318,29 @@ _etmc.push(['trackConversion', {
 | details      | _optional:_ ???                                                                       |
 
 **Note:**
-If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately (pseudo-code):
+If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately:
 
 ```javascript
 // example call
-_etmc.push(["trackConversion", {
-    "cart": [
+_etmc.push(['trackConversion', {
+    'cart': [
         {
-            "item": "123",
-            "quantity": "2",
-            "price": "10.00",
-            "unique_id": "123"
+            'item': '123',
+            'quantity': '2',
+            'price': '10.00',
+            'unique_id': '123'
         },
         {
-            "item": "234",
-            "quantity": "1",
-            "price": "5.00",
-            "unique_id": "234"
+            'item': '234',
+            'quantity': '1',
+            'price': '5.00',
+            'unique_id': '234'
         }
     ],
     // OPTIONAL PARAMETERS
-    "order_number": "123456",
-    "discount": "2.00",
-    "shipping": "5.00"
+    'order_number': '123456',
+    'discount': '2.00',
+    'shipping': '5.00'
     // END OPTIONAL PARAMETERS
 }]);
 ```
@@ -348,6 +348,7 @@ _etmc.push(["trackConversion", {
 results in...
 
 ```javascript
+// (pseudo-code)
 var sumProductPrices = FOREACH(quantity*price) = 2*10 + 1*5 = 25
 var finalItemPrice[0] = price + ((shipping - discount) * (quantity*price/sumProductPrices) / quantity = 10 + ((5-2)*(2*10/25)/2) = 11.20
 ```
