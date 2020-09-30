@@ -70,7 +70,7 @@ _etmc.push(['setOrgId', 'INSERT_MID']);
 </script>
 ```
 
-Download: [Default sample code](collect-code/default/collect-code.defaut.html)
+Download: [Default sample code](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/einstein/recommendation/collect-code/default/collect-code.defaut.html)
 
 #### Asynchronous Collect Code
 
@@ -93,7 +93,7 @@ _etmc.push(['setOrgId', 'INSERT_MID']);
 <!-- End Einstein Collect Code -->
 ```
 
-Download: [Async sample code](collect-code/collect-code.async.html)
+Download: [Async sample code](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/einstein/recommendation/collect-code/collect-code.async.html)
 
 The above code does four main things:
 
@@ -129,7 +129,7 @@ _etmc.push(['setOrgId', 'INSERT_MID']);
 
 Keep the above in the `<head>` section of your code.
 
-Download: [Async preload sample code](collect-code/collect-code.async-preload.html)
+Download: [Async preload sample code](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/einstein/recommendation/collect-code/collect-code.async-preload.html)
 
 ### Debug your tracking solution
 
