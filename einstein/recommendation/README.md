@@ -10,8 +10,11 @@ This page aims to make using Einstein recommendations a little easier by adding 
 		- [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
 	- [Debug your tracking solution](#debug-your-tracking-solution)
 	- [Tracking and other Collect Code features](#tracking-and-other-collect-code-features)
-		- [Track Page Views: trackPageView](#track-page-views-trackpageview)
 		- [Disable tracking](#disable-tracking)
+		- [Identify Business Unit for Tracking](#identify-business-unit-for-tracking)
+		- [Identify current user](#identify-current-user)
+			- [Attribute Affinity](#attribute-affinity)
+		- [Track Page Views: trackPageView](#track-page-views-trackpageview)
 - [Update Catalog](#update-catalog)
 	- [Via Collect Code](#via-collect-code)
 	- [Update Catalog via API](#update-catalog-via-api)
@@ -131,22 +134,71 @@ Alternatively, look for loaded images in the Network tab of your browser. The ca
 
 ### Tracking and other Collect Code features
 
-There are a lot of options available from the Collect Code library, available via the `_etmc.push()` method:
+There are a lot of options available from the Collect Code library, available via the `_etmc.push()` method. Only options starting on "track" and "update" actually result in a callout to the server. The "set" and "doNotTrack" methods are mere settings that need to be executed before those.
 
 | Method |Description |
 | -- | -- |
-| [doNotTrack](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5) * | Deactivate tracking for current user; needs to be executed on page load before other push-calls. More info below. |
-| setFirstParty | ability to send tracking data to a server other than the default. Use together with one of the `track...` methods |
-| setInsecure | Allows to track data on a non-secure server if the current website was not opened securely either; use together with one of the `track...` methods |
-| setOrgId | set your BUs MID; use together with one of the `track...` methods |
-| [setUserInfo](https://help.salesforce.com/articleView?id=mc_ctc_set_user_info.htm&type=5)        | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
+| [doNotTrack](https://help.salesforce.com/articleView?id=mc_ctc_do_not_track.htm&type=5) * | Deactivate tracking on the current page. More info below. |
+| setFirstParty | Allows you to send tracking data to a server other than the default, e.g. to proxy the data through your own server. Use together with one of the `track...` methods |
+| setInsecure | Use together with `setFirstParty` to track data via a non-secure proxy server. Only works if the current website was not opened securely either; use together with one of the `track...` methods |
+| [setOrgId](#identify-business-unit-for-tracking) * | set your BUs MID; use together with one of the `track...` methods |
+| [setUserInfo](#identify-current-user) * | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
 | [trackCart](https://help.salesforce.com/articleView?id=mc_ctc_track_cart.htm&type=5) | Log items added or removed from a contact's cart |
 | [trackConversion](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) | Log details about a contact’s purchase |
-| trackEvent | **???** |
+| trackEvent | _Undocumented feature:_ Allows you to track custom events |
 | [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
 | [trackRating](https://help.salesforce.com/articleView?id=mc_ctc_track_rating.htm&type=5) | Log a user's rating for an item on your website. |
-| trackWishlist | **???** |
+| trackWishlist | _Undocumented feature:_ Allows you to track multiple "shopping carts"-like lists in which users track future wishes |
 | [updateItem](#via-collect-code) * | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
+
+#### Disable tracking
+
+Contrary to the docs, just a single line is needed, which then literally deactivates `_etmc.push()` and therefore any other tracking calls that are issued afterwards on the current page. This should be executed on page load before other push-calls.
+
+```javascript
+// disable tracking for current page
+_etmc.push(['doNotTrack']);
+```
+
+#### Identify Business Unit for Tracking
+
+This is a required configuration step before tracking anything which allows the collect code to send the tracking data to the right business unit.
+
+```javascript
+_etmc.push(['setOrgId','INSERT_MID']);
+```
+
+#### Identify current user
+
+Contrary to what the [official docs](https://help.salesforce.com/articleView?id=mc_ctc_set_user_info.htm) state, the only line required to define the user is this:
+
+```javascript
+_etmc.push(['setUserInfo', {'email': 'INSERT_EMAIL_OR_UNIQUE_ID'}]);
+```
+
+It seems that if one wants to use [Predictive Intelligence integration](https://help.salesforce.com/articleView?id=mc_pb_integration_with_contact_builder.htm&type=5) completely, one has to use the actual email address for `INSERT_EMAIL_OR_UNIQUE_ID`. This assumption is supported by the automatically created attribute set that links the PI_* Data Extensions to a Contact using the Email, rather than the subscriber key.
+
+On the other hand, if you only care about showing Einstein recommendations, you simply have to ensure that you use the same string when you retrieve web/email recommendations that you previously used for tracking via collect code.
+
+> **Note:** It is so far not completely clear to me what effect it has if you don't use the readable email here but instead follow Salesforce's optional recommendation to hash/encrypt the email address. Will update this section once I tested more.
+
+##### Attribute Affinity
+
+This should theoretically boost catalog items that carry the same attribute (detail-field and value) defined as the current user. [Quote](https://help.salesforce.com/articleView?id=mc_ctc_set_contact_attribute_affinity.htm&type=5):
+
+> Match a contact attribute to a tagged catalog field to increase the subscriber's affinity for the value of that contact attribute. The amount of increase is less than what results from a purchase but more than the increase from a view.
+
+```javascript
+_etmc.push(['setUserInfo', {
+    'email': 'INSERT_EMAIL_OR_UNIQUE_ID',
+    'details': {
+        'gender': 'female',
+        'otherCustomAttribute', 'myValue'
+    }
+}]);
+```
+
+
 
 #### Track Page Views: trackPageView
 
@@ -177,15 +229,6 @@ But of course these can also be combined: If the user came to the page using you
 
 ```javascript
 _etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE','search' : 'INSERT_SEARCH_TERM' }]);
-```
-
-#### Disable tracking
-
-Contrary to the docs, just a single line is needed, which then literally deactivates `_etmc.push()`.
-
-```javascript
-// disable tracking for current user
-_etmc.push(["doNotTrack"]);
 ```
 
 ## Update Catalog
