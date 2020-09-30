@@ -21,6 +21,7 @@ This page aims to make using Einstein recommendations a little easier by adding 
 - [Update Catalog](#update-catalog)
   - [Via Collect Code](#via-collect-code)
   - [Update Catalog via API](#update-catalog-via-api)
+- [Predictive Intelligence (PI) Data Extensions](#predictive-intelligence-pi-data-extensions)
 - [Einstein Email Recommendations](#einstein-email-recommendations)
 - [Einstein Web Recommendations](#einstein-web-recommendations)
   - [Embedding Web Recommendations](#embedding-web-recommendations)
@@ -424,6 +425,10 @@ _etmc.push(['updateItem', [
 > Source: [help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5)
 
 This is in theory possible, however so far I haven't gotten it to work.
+
+## Predictive Intelligence (PI) Data Extensions
+
+`PI_ABANDONED_CART_EVENT` and `PI_ABANDONED_CART_ITEMS` will never have any data, according to a [Partner webinar from Salesforce](https://share.vidyard.com/watch/ufsSo83N4VaCSpZzxhS7Eo). They were "part of an earlier attempt" of the solution but are no longer in use - but nonetheless still created together with your BUs.
 
 ## Einstein Email Recommendations
 
