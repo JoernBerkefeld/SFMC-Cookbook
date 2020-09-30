@@ -3,23 +3,28 @@
 This page aims to make using Einstein recommendations a little easier by adding a few explanations around how to use it in a modern setup.
 
 - [Collect Code](#collect-code)
-	- [Note to developers](#note-to-developers)
-	- [Initialize the library](#initialize-the-library)
-		- [Collect Code on page load](#collect-code-on-page-load)
-		- [Asynchronous Collect Code](#asynchronous-collect-code)
-		- [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
-	- [Debug your tracking solution](#debug-your-tracking-solution)
-	- [Tracking and other Collect Code features](#tracking-and-other-collect-code-features)
-		- [Disable tracking](#disable-tracking)
-		- [Identify Business Unit for Tracking](#identify-business-unit-for-tracking)
-		- [Identify current user](#identify-current-user)
-			- [Attribute Affinity](#attribute-affinity)
-		- [Track Page Views: trackPageView](#track-page-views-trackpageview)
+  - [Note to developers](#note-to-developers)
+  - [Initialize the library](#initialize-the-library)
+    - [Collect Code on page load](#collect-code-on-page-load)
+    - [Asynchronous Collect Code](#asynchronous-collect-code)
+    - [Asynchronous Collect Code with preloading](#asynchronous-collect-code-with-preloading)
+  - [Debug your tracking solution](#debug-your-tracking-solution)
+  - [Tracking and other Collect Code features](#tracking-and-other-collect-code-features)
+    - [Disable tracking](#disable-tracking)
+    - [Identify Business Unit for Tracking](#identify-business-unit-for-tracking)
+    - [Identify current user](#identify-current-user)
+      - [Attribute Affinity](#attribute-affinity)
+    - [Track Page Views: trackPageView](#track-page-views-trackpageview)
 - [Update Catalog](#update-catalog)
-	- [Via Collect Code](#via-collect-code)
-	- [Update Catalog via API](#update-catalog-via-api)
+  - [Via Collect Code](#via-collect-code)
+  - [Update Catalog via API](#update-catalog-via-api)
 - [Einstein Email Recommendations](#einstein-email-recommendations)
 - [Einstein Web Recommendations](#einstein-web-recommendations)
+  - [Embedding Web Recommendations](#embedding-web-recommendations)
+    - [Embed via JSON](#embed-via-json)
+      - [JSON Example responses](#json-example-responses)
+    - [Embed via JavaScript ("HTML")](#embed-via-javascript-html)
+      - [JavaScript/HTML example code](#javascripthtml-example-code)
 
 ## Collect Code
 
@@ -292,3 +297,252 @@ This is in theory possible, however so far I haven't gotten it to work.
 ## Einstein Web Recommendations
 
 > Official docs: [help.salesforce.com/articleView?id=mc_pb_einstein_web_recommendation.htm](https://help.salesforce.com/articleView?id=mc_pb_einstein_web_recommendation.htm&type=5)
+
+To get recommendations, you have to create "pages" that should mirror the views/pages of your website. You can define per page what exactly shall be recommended and also choose between JSON and JavaScript format.
+
+### Embedding Web Recommendations
+
+The JSON has to be retrieved via XHR callout and then parsed by your own code to actually create visible output in your HTML. The JavaScript approach requires you to load the JS file like any other JavaScript resource but also include  pre-defined HTML code, provided to you by the "Get Code" tab.
+
+Please note that you select the output format when creating a "page" in Einstein on the "ouput" tab. This will define what code is presented on the "Get Code" tab
+
+![selecting output format](img/select-output-format.jpg)
+
+You should define what field values you want in your recommendation via the "Output" tab. Here you can add, remove and order the fields that will be available in your recommendation. Ordering has no impact if you choose to embed via JSON.
+
+#### Embed via JSON
+
+This requires you to do all the styling and processing yourself but also comes with greatest amount of flexibility. Call the below URL to get the JSON for your BU-Page combo:
+
+```javascript
+GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json
+```
+
+The complete URL is provided on the "Get Code" tab, however that page is misleading in other ways:
+
+**Important:** The Web Recommendations' "Get Code" tab was apparently only written with the "html" / JavaScript embed code in mind and falsely asks you to load the JSON via script-tag. It then continues to also ask you to include certain HTML. You need to ignore that and simply copy the url out of that snippet instead!
+
+![Bad embed code for JSON approach](img/bad-json-embed-snippet.jpg)
+
+##### JSON Example responses
+
+The following assumes only one recommendation area was defined and the default name "igdrec_1" was kept. Furthermore, the list of included fields was defined as "ProductLink", "ImageLink", "ProductName", "RegularPrice".
+
+As long as recommendations are not ready, the API will return ab `empty:true` attribute per defined recommendation area:
+
+```json
+[
+    {
+        "name": "igdrec_1",
+        "empty": true
+    }
+]
+```
+
+The reponse will look something like this once recommendations are actually available:
+
+```json
+[
+    {
+        "name": "igdrec_1",
+        "title": "Popular Items Today",
+        "priority": 1,
+        "items": [
+            {
+                "link": "Link",
+                "image_link": "Image link",
+                "name": "Name",
+                "regular_price": 112.0
+            },
+            {
+                "link": "Link",
+                "image_link": "Image link",
+                "name": "Name",
+                "regular_price": 112.0
+            },
+            {
+                "link": "Link",
+                "image_link": "Image link",
+                "name": "Name",
+                "regular_price": 112.0
+            }
+        ]
+    }
+]
+```
+
+
+
+#### Embed via JavaScript ("HTML")
+
+You will be asked to load a JavaScript file like this:
+
+```html
+<!-- Copy this code right before the closing </body> of your joerntest page-->
+<script src="https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.js" type="text/javascript"> </script>
+```
+
+As well as position some HTML where you want the final recommendation to be inserted like this:
+
+```html
+<!-- Copy this code to where you want to show web recommendations on your joerntest page-->
+<div id="igdrec_1"></div>
+```
+
+This second part will vary depending on your choices made on the "Build">"Areas" tab.
+
+##### JavaScript/HTML example code
+
+As long as **recommendations are not ready** the code of `recommend.js` will be missing the crucial part that actually fills in the recommendation.
+
+```javascript
+// recommend.js if recommendations are not ready yet and only one area named "idgrec_1" was defined for this page
+
+function display_INSERT_PAGE_NAME(zone, id) {
+    if (id === "igdrec_1") {
+          zone.innerHTML = "";
+    }
+}
+
+function addLoadEvent(func) {
+    var oldonload = window.onload;
+    if (typeof window.onload != 'function') {
+        window.onload = func;
+    } else {
+        window.onload = function() {
+            if (oldonload) {
+                oldonload();
+            }
+            func();
+        }
+    }
+}
+
+function callREC() {
+    var pageZone = document.getElementById('igdrec_1');
+    if ( undefined != pageZone) {
+        display_INSERT_PAGE_NAME(pageZone, 'igdrec_1');
+    }
+}
+
+callREC();
+```
+
+**Note:** the method `display_INSERT_PAGE_NAME()` will be named according to your page: If you named the page "MyTest" the method will be named `display_MyTest()`.
+
+If you defined more than one recommendation area, the code will be auto-extended to match that:
+
+```javascript
+// recommend.js if recommendations are not ready yet and two areas named "idgrec_1" and "idgrec_2" were defined for this page
+
+function display_joerntest(zone, id) {
+    if (id === "igdrec_1") {
+        zone.innerHTML = "";
+    }
+    if (id === "igdrec_2") {
+        zone.innerHTML = "";
+    }
+}
+
+function addLoadEvent(func) {
+    var oldonload = window.onload;
+    if (typeof window.onload != 'function') {
+        window.onload = func;
+    } else {
+        window.onload = function() {
+            if (oldonload) {
+                oldonload();
+            }
+            func();
+        }
+    }
+}
+
+function callREC() {
+    var pageZone = document.getElementById('igdrec_1');
+    if ( undefined != pageZone) {
+        display_joerntest(pageZone, 'igdrec_1');
+    }
+    var pageZone = document.getElementById('igdrec_2');
+    if ( undefined != pageZone) {
+        display_joerntest(pageZone, 'igdrec_2');
+    }
+}
+
+callREC();
+```
+
+The reponse will look something like this **once recommendations are actually available**:
+
+```javascript
+// recommend.js if recommendations are finally ready and only one area named "idgrec_1" was defined for this page
+
+// really curious myself...
+```
+
+The HTML that will be created for you will look something like the following:
+
+```html
+<div class='igo_boxhead'>
+    <h2>Popular Items Today</h2>
+</div>
+<div class='igo_boxbody'>
+    <div class='igo_product'>
+        <div class='igo_product_link'>
+            <span class='igo_product_link_label'>Link</span>
+            <span class='igo_product_link_value'>Link</span>
+        </div>
+        <div class='igo_product_image_link'>
+            <a href="">
+                <img class='igo_product_image' src="Image link">
+            </a>
+        </div>
+        <div class='igo_product_name'>
+            <span class='igo_product_name_label'>Name</span>
+            <span class='igo_product_name_value'>Name</span>
+        </div>
+        <div class='igo_product_regular_price'>
+            <span class='igo_product_regular_price_label'>Regular Price</span>
+            <span class='igo_product_regular_price_value'>112.0</span>
+        </div>
+    </div>
+    <div class='igo_product'>
+        <div class='igo_product_link'>
+            <span class='igo_product_link_label'>Link</span>
+            <span class='igo_product_link_value'>Link</span>
+        </div>
+        <div class='igo_product_image_link'>
+            <a href="">
+                <img class='igo_product_image' src="Image link">
+            </a>
+        </div>
+        <div class='igo_product_name'>
+            <span class='igo_product_name_label'>Name</span>
+            <span class='igo_product_name_value'>Name</span>
+        </div>
+        <div class='igo_product_regular_price'>
+            <span class='igo_product_regular_price_label'>Regular Price</span>
+            <span class='igo_product_regular_price_value'>112.0</span>
+        </div>
+    </div>
+    <div class='igo_product'>
+        <div class='igo_product_link'>
+            <span class='igo_product_link_label'>Link</span>
+            <span class='igo_product_link_value'>Link</span>
+        </div>
+        <div class='igo_product_image_link'>
+            <a href="">
+                <img class='igo_product_image' src="Image link">
+            </a>
+        </div>
+        <div class='igo_product_name'>
+            <span class='igo_product_name_label'>Name</span>
+            <span class='igo_product_name_value'>Name</span>
+        </div>
+        <div class='igo_product_regular_price'>
+            <span class='igo_product_regular_price_label'>Regular Price</span>
+            <span class='igo_product_regular_price_value'>112.0</span>
+        </div>
+    </div>
+</div>
+```
