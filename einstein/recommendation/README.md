@@ -17,6 +17,8 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [Track Page Views: trackPageView](#track-page-views-trackpageview)
     - [Track Items in Cart: trackCart](#track-items-in-cart-trackcart)
     - [Track Purchases / Conversions: trackConversion](#track-purchases--conversions-trackconversion)
+      - [Tracking overhead cost](#tracking-overhead-cost)
+    - [Track Custom Event: trackEvent](#track-custom-event-trackevent)
     - [Track User Wishlist: trackWishList](#track-user-wishlist-trackwishlist)
 - [Update Catalog](#update-catalog)
   - [Via Collect Code](#via-collect-code)
@@ -148,18 +150,18 @@ There are a lot of options available from the Collect Code library, available vi
 
 | Method |Description |
 | -- | -- |
-| [doNotTrack](#disable-tracking) * | Deactivate tracking on the current page. More info below. |
+| [doNotTrack](#disable-tracking) | Deactivate tracking on the current page. More info below. |
 | setFirstParty | Allows you to send tracking data to a server other than the default, e.g. to proxy the data through your own server. Use together with one of the `track...` methods |
 | setInsecure | Use together with `setFirstParty` to track data via a non-secure proxy server. Only works if the current website was not opened securely either; use together with one of the `track...` methods |
-| [setOrgId](#identify-business-unit-for-tracking) * | set your BUs MID; use together with one of the `track...` methods |
-| [setUserInfo](#identify-current-user) * | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
-| [trackCart](#track-items-in-cart-trackcart) * | Log items added or removed from a contact's cart |
-| [trackConversion](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) | Log details about a contact’s purchase |
-| trackEvent | _Undocumented feature:_ Allows you to track custom events |
-| [trackPageView](#track-page-views-trackpageview) * | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
+| [setOrgId](#identify-business-unit-for-tracking) | set your BUs MID; use together with one of the `track...` methods |
+| [setUserInfo](#identify-current-user) | allows to send in an object with user data `{email:'', custom:'abc'}`; use together with one of the `track...` methods |
+| [trackCart](#track-items-in-cart-trackcart) | Log items added or removed from a contact's cart |
+| [trackConversion](#track-purchases--conversions-trackconversion) | Log details about a contact’s purchase |
+| [trackEvent](#track-custom-event-trackevent) | _Undocumented feature:_ Allows you to track custom events |
+| [trackPageView](#track-page-views-trackpageview) | Log [content/product page](https://help.salesforce.com/articleView?id=mc_ctc_track_page_view.htm&type=5) views, [in-site search terms](https://help.salesforce.com/articleView?id=mc_ctc_track_in_site_search.htm&type=5) and [category views](https://help.salesforce.com/articleView?id=mc_ctc_track_category_view.htm&type=5). More info below |
 | [trackRating](https://help.salesforce.com/articleView?id=mc_ctc_track_rating.htm&type=5) | Log a user's rating for an item on your website. |
-| [trackWishlist](#track-user-wishlist-trackwishlist) * | _Undocumented feature:_ Allows you to track multiple "shopping carts"-like lists in which users track future wishes |
-| [updateItem](#via-collect-code) * | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
+| [trackWishlist](#track-user-wishlist-trackwishlist) | _Undocumented feature:_ Allows you to track multiple "shopping carts"-like lists in which users track future wishes |
+| [updateItem](#via-collect-code) | This allows you to [update your product catalog](https://help.salesforce.com/articleView?id=mc_ctc_streaming_updates.htm&type=5). More info below. |
 
 #### Disable tracking
 
@@ -299,9 +301,9 @@ _etmc.push(['trackConversion', {
         }
     ],
    // OPTIONAL PARAMETERS
-   'order_number': 'INSERT_ORDER_NUMBER',
-   'discount': 'INSERT_DISCOUNT',
-   'shipping': 'INSERT_SHIPPING',
+   'order_number': 'INSERT_ORDER_NUMBER', // fact check: not supported by collect.js
+   'discount': 'INSERT_DISCOUNT', // fact check: not supported by collect.js
+   'shipping': 'INSERT_SHIPPING', // fact check: not supported by collect.js
    'details': {
        'AttributeName': 'Value'
     }
@@ -316,6 +318,12 @@ _etmc.push(['trackConversion', {
 | discount     | _optional:_ Decimal, in local currency, not percental value                           |
 | shipping     | _optional:_ Decimal, in local currency, not percental value                           |
 | details      | _optional:_ ???                                                                       |
+
+##### Tracking overhead cost
+
+The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) state that you can in fact track `order_number`, `discount` and `shipping` as separate fields and that those are then used to calculate the line item cost together with their respective overhead. While looking into collect.js however, those fields seem to get ignored when calling back to the server.
+
+> Until we figured out how this actually works, if at all, please take the rest of this subchapter as a **non-working example** from the official docs:
 
 **Note:**
 If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately:
@@ -338,9 +346,9 @@ _etmc.push(['trackConversion', {
         }
     ],
     // OPTIONAL PARAMETERS
-    'order_number': '123456',
-    'discount': '2.00',
-    'shipping': '5.00'
+    'order_number': '123456', // fact check: not supported by collect.js
+    'discount': '2.00', // fact check: not supported by collect.js
+    'shipping': '5.00' // fact check: not supported by collect.js
     // END OPTIONAL PARAMETERS
 }]);
 ```
@@ -352,6 +360,22 @@ results in...
 var sumProductPrices = FOREACH(quantity*price) = 2*10 + 1*5 = 25
 var finalItemPrice[0] = price + ((shipping - discount) * (quantity*price/sumProductPrices) / quantity = 10 + ((5-2)*(2*10/25)/2) = 11.20
 ```
+
+#### Track Custom Event: trackEvent
+
+From what collect.js shows, only `name` and `details` are actually send to the server. The field `details` is optional!
+
+```javascript
+_etmc.push(['trackEvent', {
+    'name': 'INSERT_CUSTOM_EVENT_NAME',
+    'details': {
+        'gender': 'female',
+        'otherCustomAttribute', 'myValue'
+    }
+}]);
+```
+
+This is untested code and hence further information will be added later once we've seen it in action.
 
 #### Track User Wishlist: trackWishList
 
