@@ -1,20 +1,27 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWNVD23');</script>
+<!-- End Google Tag Manager -->
+
 # 1. Frequently Asked Questions
 
-- [1. Frequently Asked Questions](#1-frequently-asked-questions)
-	- [1.1. Automations](#11-automations)
-		- [1.1.1. How do I test automations? 'Run once' does not show any progress.](#111-how-do-i-test-automations-run-once-does-not-show-any-progress)
-	- [1.2. CloudPages](#12-cloudpages)
-		- [1.2.1. I want to publish my CloudPage but the interface seems like it's stuck?](#121-i-want-to-publish-my-cloudpage-but-the-interface-seems-like-its-stuck)
-		- [1.2.2. I changed the name of my CloudPage but it still shows up with a different name.](#122-i-changed-the-name-of-my-cloudpage-but-it-still-shows-up-with-a-different-name)
-		- [1.2.3. How do I change the HTML title or SEO attributes of my Cloudpage?](#123-how-do-i-change-the-html-title-or-seo-attributes-of-my-cloudpage)
-		- [1.2.4. How can I set a custom URL / path for my CloudPage? It always shows auto-generated URLs instead.](#124-how-can-i-set-a-custom-url--path-for-my-cloudpage-it-always-shows-auto-generated-urls-instead)
-	- [1.3. Emails](#13-emails)
-		- [1.3.1. How do I test if my email code works?](#131-how-do-i-test-if-my-email-code-works)
-		- [1.3.2. I want to send a triggered send email with custom data coming from the API call](#132-i-want-to-send-a-triggered-send-email-with-custom-data-coming-from-the-api-call)
-	- [1.4. Journey Builder](#14-journey-builder)
-		- [1.4.1. How can I enable that contacts should not re-enter my Journey?](#141-how-can-i-enable-that-contacts-should-not-re-enter-my-journey)
-	- [1.5. Setup (Admin) menu](#15-setup-admin-menu)
-		- [1.5.1. How can I add new users? – I have access, but I get error messages when I want to save.](#151-how-can-i-add-new-users--i-have-access-but-i-get-error-messages-when-i-want-to-save)
+- [1.1. Automations](#11-automations)
+  - [1.1.1. How do I test automations? 'Run once' does not show any progress.](#111-how-do-i-test-automations-run-once-does-not-show-any-progress)
+- [1.2. CloudPages](#12-cloudpages)
+  - [1.2.1. I want to publish my CloudPage but the interface seems like it's stuck?](#121-i-want-to-publish-my-cloudpage-but-the-interface-seems-like-its-stuck)
+  - [1.2.2. I changed the name of my CloudPage but it still shows up with a different name.](#122-i-changed-the-name-of-my-cloudpage-but-it-still-shows-up-with-a-different-name)
+  - [1.2.3. How do I change the HTML title or SEO attributes of my Cloudpage?](#123-how-do-i-change-the-html-title-or-seo-attributes-of-my-cloudpage)
+  - [1.2.4. How can I set a custom URL / path for my CloudPage? It always shows auto-generated URLs instead.](#124-how-can-i-set-a-custom-url--path-for-my-cloudpage-it-always-shows-auto-generated-urls-instead)
+- [1.3. Emails](#13-emails)
+  - [1.3.1. How do I test if my email code works?](#131-how-do-i-test-if-my-email-code-works)
+  - [1.3.2. I want to send a triggered send email with custom data coming from the API call](#132-i-want-to-send-a-triggered-send-email-with-custom-data-coming-from-the-api-call)
+- [1.4. Journey Builder](#14-journey-builder)
+  - [1.4.1. How can I enable that contacts should not re-enter my Journey?](#141-how-can-i-enable-that-contacts-should-not-re-enter-my-journey)
+- [1.5. Setup (Admin) menu](#15-setup-admin-menu)
+  - [1.5.1. How can I add new users? – I have access, but I get error messages when I want to save.](#151-how-can-i-add-new-users--i-have-access-but-i-get-error-messages-when-i-want-to-save)
 
 ## 1.1. Automations
 
@@ -53,22 +60,22 @@ This one is a bit tricky, however possible in both SSJS and AmpScript:
 ```json
 // {{hostEndpoint}}/messaging/v1/messageDefinitionSends/key:{{TriggeredSend}}/sendBatch
 [
-	{
-		"To": {
-			"Address": "joern.berkefeld@some-mail.com",
-			"SubscriberKey": "123abc123abc123abc123abc123abc",
+    {
+        "To": {
+            "Address": "joern.berkefeld@some-mail.com",
+            "SubscriberKey": "123abc123abc123abc123abc123abc",
 
-			"ContactAttributes": {
-				"SubscriberAttributes": {
-					"myCustomAttribute1": "some value",
-					"myCustomAttribute2": 4,
-					"myCustomAttribute3": false,
-					"myCustomAttribute4": "{\"complex-objects\":\"need to be stringified\"}",
-					"myCustomAttribute5": "<some><xml>here</xml><xml>or here</xml></some>"
-				}
-			}
-		}
-	}
+            "ContactAttributes": {
+                "SubscriberAttributes": {
+                    "myCustomAttribute1": "some value",
+                    "myCustomAttribute2": 4,
+                    "myCustomAttribute3": false,
+                    "myCustomAttribute4": "{\"complex-objects\":\"need to be stringified\"}",
+                    "myCustomAttribute5": "<some><xml>here</xml><xml>or here</xml></some>"
+                }
+            }
+        }
+    }
 ]
 ```
 
@@ -89,7 +96,7 @@ Server-Side JavaScript solution:
 
 ```javascript
 function jsonParse(str) {
-	return Platform.Function.ParseJSON(str + '');
+    return Platform.Function.ParseJSON(str + '');
 }
 // no AMPscript needed, just use the same function without the leading "@"
 var payload1 = Variable.GetValue('myCustomAttribute1');

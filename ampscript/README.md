@@ -1,17 +1,24 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWNVD23');</script>
+<!-- End Google Tag Manager -->
+
 # 1. The AMPscript Coding Guide
 
-- [1. The AMPscript Coding Guide](#1-the-ampscript-coding-guide)
-	- [1.1. Hide your code](#11-hide-your-code)
-	- [1.2. AMPscript snippets for typical problems](#12-ampscript-snippets-for-typical-problems)
-		- [1.2.1. Use dynamic trackable links](#121-use-dynamic-trackable-links)
-		- [1.2.2. Data Extensions](#122-data-extensions)
-			- [1.2.2.1. SELECT](#1221-select)
-				- [1.2.2.1.1. Single column of row, case-insensitive](#12211-single-column-of-row-case-insensitive)
-				- [1.2.2.1.2. Full row, case-insensitive](#12212-full-row-case-insensitive)
-				- [1.2.2.1.3. Full row, case-sensitive](#12213-full-row-case-sensitive)
-				- [1.2.2.1.4. Sorted full row, case-insensitive](#12214-sorted-full-row-case-insensitive)
-				- [1.2.2.1.5. Sorted full row, case-sensitive](#12215-sorted-full-row-case-sensitive)
-	- [1.3. Other resources](#13-other-resources)
+- [1.1. Hide your code](#11-hide-your-code)
+- [1.2. AMPscript snippets for typical problems](#12-ampscript-snippets-for-typical-problems)
+  - [1.2.1. Use dynamic trackable links](#121-use-dynamic-trackable-links)
+  - [1.2.2. Data Extensions](#122-data-extensions)
+    - [1.2.2.1. SELECT](#1221-select)
+      - [1.2.2.1.1. Single column of row, case-insensitive](#12211-single-column-of-row-case-insensitive)
+      - [1.2.2.1.2. Full row, case-insensitive](#12212-full-row-case-insensitive)
+      - [1.2.2.1.3. Full row, case-sensitive](#12213-full-row-case-sensitive)
+      - [1.2.2.1.4. Sorted full row, case-insensitive](#12214-sorted-full-row-case-insensitive)
+      - [1.2.2.1.5. Sorted full row, case-sensitive](#12215-sorted-full-row-case-sensitive)
+- [1.3. Other resources](#13-other-resources)
 
 ## 1.1. Hide your code
 

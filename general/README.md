@@ -1,22 +1,29 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWNVD23');</script>
+<!-- End Google Tag Manager -->
+
 # 1. General Guide on SFMC developing
 
-- [1. General Guide on SFMC developing](#1-general-guide-on-sfmc-developing)
-	- [1.1. Development Environment](#11-development-environment)
-		- [1.1.1. Use Live Linting & Auto-Formatting](#111-use-live-linting--auto-formatting)
-		- [1.1.2. Use Syntax Highlighting](#112-use-syntax-highlighting)
-		- [1.1.3. Where to code: GUI vs. online editor vs. IDE](#113-where-to-code-gui-vs-online-editor-vs-ide)
-		- [1.1.4. How to debug quickly](#114-how-to-debug-quickly)
-			- [1.1.4.1. Use Online Services for quick debugging](#1141-use-online-services-for-quick-debugging)
-			- [1.1.4.2. Use browser console for debug output](#1142-use-browser-console-for-debug-output)
-	- [1.2. Project Setup](#12-project-setup)
-		- [1.2.1. Folder structure](#121-folder-structure)
-		- [1.2.2. File structure](#122-file-structure)
-	- [1.3. Data Extensions](#13-data-extensions)
-		- [1.3.1. SEO, Page title](#131-seo-page-title)
-		- [1.3.2. Data types](#132-data-types)
-		- [1.3.3. updating External key of Data Extensions](#133-updating-external-key-of-data-extensions)
-	- [1.4. Businesss Units](#14-businesss-units)
-		- [1.4.1. Seeing all business units as admin](#141-seeing-all-business-units-as-admin)
+- [1.1. Development Environment](#11-development-environment)
+  - [1.1.1. Use Live Linting & Auto-Formatting](#111-use-live-linting--auto-formatting)
+  - [1.1.2. Use Syntax Highlighting](#112-use-syntax-highlighting)
+  - [1.1.3. Where to code: GUI vs. online editor vs. IDE](#113-where-to-code-gui-vs-online-editor-vs-ide)
+  - [1.1.4. How to debug quickly](#114-how-to-debug-quickly)
+    - [1.1.4.1. Use Online Services for quick debugging](#1141-use-online-services-for-quick-debugging)
+    - [1.1.4.2. Use browser console for debug output](#1142-use-browser-console-for-debug-output)
+- [1.2. Project Setup](#12-project-setup)
+  - [1.2.1. Folder structure](#121-folder-structure)
+  - [1.2.2. File structure](#122-file-structure)
+- [1.3. Data Extensions](#13-data-extensions)
+  - [1.3.1. SEO, Page title](#131-seo-page-title)
+  - [1.3.2. Data types](#132-data-types)
+  - [1.3.3. updating External key of Data Extensions](#133-updating-external-key-of-data-extensions)
+- [1.4. Businesss Units](#14-businesss-units)
+  - [1.4.1. Seeing all business units as admin](#141-seeing-all-business-units-as-admin)
 
 ## 1.1. Development Environment
 
@@ -135,12 +142,12 @@ When testing your code you will likely want to see what's in your variables. Pri
 <script runat="server">
 Platform.Load("core", "1.1.1");
 var console = {
-	log: function(string) {
-		Write('<script>console.log(`' + string + '`)</script>');
-	},
-	error: function(string) {
-		Write('<script>console.error(`' + string + '`)</script>');
-	}
+    log: function(string) {
+        Write('<script>console.log(`' + string + '`)</script>');
+    },
+    error: function(string) {
+        Write('<script>console.error(`' + string + '`)</script>');
+    }
 }
 </script>
 ```
@@ -155,11 +162,11 @@ console.error('something went wrong'); // prints "something went wrong" in red l
 
 // or more real life:
 try {
-	console.log('executing my fancy code');
-	// your fancy code here
-	// ...
+    console.log('executing my fancy code');
+    // your fancy code here
+    // ...
 } catch (ex) {
-	console.error("An error has occurred: " + Stringify(ex));
+    console.error("An error has occurred: " + Stringify(ex));
 }
 </script>
 ```
@@ -245,7 +252,7 @@ Load the Platform Core once before all other SSJS files to use one consistent ve
 <!-- load this before all other SSJS files to use one consistent Core version across the CloudPage -->
 %%[ /* <b>initCore.ssjs</b> */ ]%%
 <script runat="server" language="JavaScript">
-	Platform.Load('core', '1.1.5'); // choose a version suitable to your needs!
+    Platform.Load('core', '1.1.5'); // choose a version suitable to your needs!
 </script>
 ```
 

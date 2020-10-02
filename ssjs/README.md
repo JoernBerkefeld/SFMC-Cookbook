@@ -1,27 +1,34 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWNVD23');</script>
+<!-- End Google Tag Manager -->
+
 # 1. The SSJS Coding Guide
 
-- [1. The SSJS Coding Guide](#1-the-ssjs-coding-guide)
-	- [1.1. Style Guideline](#11-style-guideline)
-	- [1.2. SSJS snippets](#12-ssjs-snippets)
-		- [1.2.1. Reading GET parameters](#121-reading-get-parameters)
-		- [1.2.2. Reading POST form parameters](#122-reading-post-form-parameters)
-		- [1.2.3. Reading POST payload](#123-reading-post-payload)
-		- [1.2.4. Getting/Setting AMPscript variables](#124-gettingsetting-ampscript-variables)
-		- [1.2.5. Get/Set Cookies](#125-getset-cookies)
-		- [1.2.6. Update (All) Subscriber List](#126-update-all-subscriber-list)
-		- [1.2.7. Data Extensions](#127-data-extensions)
-			- [1.2.7.1. SELECT](#1271-select)
-			- [1.2.7.2. INSERT, UPSERT, UPDATE, DELETE](#1272-insert-upsert-update-delete)
-	- [1.3. SSJS vs. JavaScript – the major differences that will break your code.](#13-ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
-		- [1.3.1. Standard JS features not available in SSJS](#131-standard-js-features-not-available-in-ssjs)
-			- [1.3.1.1. “new” Operator](#1311-new-operator)
-			- [1.3.1.2. Returning a new object in a function](#1312-returning-a-new-object-in-a-function)
-			- [1.3.1.3. Using multiple script-tags and hoisting](#1313-using-multiple-script-tags-and-hoisting)
-		- [1.3.2. SSJS vs. SSJS documentation – stuff that simply does not work](#132-ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
-			- [1.3.2.1. Retrieve()](#1321-retrieve)
-			- [1.3.2.2. Platform.Request.GetPostData()](#1322-platformrequestgetpostdata)
-			- [1.3.2.3. DateExtension.Init(): DE Name vs. External Key](#1323-dateextensioninit-de-name-vs-external-key)
-			- [1.3.2.4. Using "default" in a switch(...) {} statement](#1324-using-default-in-a-switch--statement)
+- [1.1. Style Guideline](#11-style-guideline)
+- [1.2. SSJS snippets](#12-ssjs-snippets)
+  - [1.2.1. Reading GET parameters](#121-reading-get-parameters)
+  - [1.2.2. Reading POST form parameters](#122-reading-post-form-parameters)
+  - [1.2.3. Reading POST payload](#123-reading-post-payload)
+  - [1.2.4. Getting/Setting AMPscript variables](#124-gettingsetting-ampscript-variables)
+  - [1.2.5. Get/Set Cookies](#125-getset-cookies)
+  - [1.2.6. Update (All) Subscriber List](#126-update-all-subscriber-list)
+  - [1.2.7. Data Extensions](#127-data-extensions)
+    - [1.2.7.1. SELECT](#1271-select)
+    - [1.2.7.2. INSERT, UPSERT, UPDATE, DELETE](#1272-insert-upsert-update-delete)
+- [1.3. SSJS vs. JavaScript – the major differences that will break your code.](#13-ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
+  - [1.3.1. Standard JS features not available in SSJS](#131-standard-js-features-not-available-in-ssjs)
+    - [1.3.1.1. “new” Operator](#1311-new-operator)
+    - [1.3.1.2. Returning a new object in a function](#1312-returning-a-new-object-in-a-function)
+    - [1.3.1.3. Using multiple script-tags and hoisting](#1313-using-multiple-script-tags-and-hoisting)
+  - [1.3.2. SSJS vs. SSJS documentation – stuff that simply does not work](#132-ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
+    - [1.3.2.1. Retrieve()](#1321-retrieve)
+    - [1.3.2.2. Platform.Request.GetPostData()](#1322-platformrequestgetpostdata)
+    - [1.3.2.3. DateExtension.Init(): DE Name vs. External Key](#1323-dateextensioninit-de-name-vs-external-key)
+    - [1.3.2.4. Using "default" in a switch(...) {} statement](#1324-using-default-in-a-switch--statement)
 
 ## 1.1. Style Guideline
 
@@ -103,43 +110,43 @@ The return value varies depending on the header. Some bad payload-header combina
 Platform.Load("core", "1.1.1");
 
 function PostBody() {
-	var postBody = null;
-	var service = {
-		json: json,
-		form: form,
-		text: text
-	};
+    var postBody = null;
+    var service = {
+        json: json,
+        form: form,
+        text: text
+    };
 
-	// init
-	_init();
+    // init
+    _init();
 
-	return service;
+    return service;
 
-	function _init() {
-		postBody = Platform.Request.GetPostData();
-	}
+    function _init() {
+        postBody = Platform.Request.GetPostData();
+    }
 
-	function text() {
-		return postBody;
-	}
-	function json() {
-		var temp = Platform.Function.ParseJSON(postBody);
-		if (!temp && postBody) {
-			temp = {error: "input was no string and not JSON formatted"};
-		}
-		return temp;
-	}
-	function form() {
-		var obj = {};
-		var tempArr = postBody.split("&");
-		for (var i = 0; i < tempArr.length; i++) {
-			var temp = tempArr[i].split("=");
-			if(temp.lengh>1) {
-				obj[temp[0]] = temp[1];
-			}
-		}
-		return obj;
-	}
+    function text() {
+        return postBody;
+    }
+    function json() {
+        var temp = Platform.Function.ParseJSON(postBody);
+        if (!temp && postBody) {
+            temp = {error: "input was no string and not JSON formatted"};
+        }
+        return temp;
+    }
+    function form() {
+        var obj = {};
+        var tempArr = postBody.split("&");
+        for (var i = 0; i < tempArr.length; i++) {
+            var temp = tempArr[i].split("=");
+            if(temp.lengh>1) {
+                obj[temp[0]] = temp[1];
+            }
+        }
+        return obj;
+    }
 }
 
 // demo on how to use it
@@ -149,16 +156,16 @@ Write(myPostBody.text() + "\n");
 
 var json = myPostBody.json();
 for (var el in json) {
-	Write(el + ": " + json[el] + "\n");
-	// attribute1: test
-	// foo: bar
+    Write(el + ": " + json[el] + "\n");
+    // attribute1: test
+    // foo: bar
 }
 
 var form = myPostBody.form();
 for (var el in form) {
-	Write(el + ": " + form[el] + "\n");
-	// attribute1: test
-	// foo: bar
+    Write(el + ": " + form[el] + "\n");
+    // attribute1: test
+    // foo: bar
 }
 
 </script>
@@ -232,21 +239,21 @@ Platform.Response.SetCookie('cookie_name', newCookieValue, expirationString, htt
 
 /* helper function that returns the date in a format SFMC can understand */
 function getTimestamp(dt) {
-	var h = dt.getHours();
-	var m = dt.getMinutes();
-	var s = dt.getSeconds();
-	if (h < 10) {
-		h = '0' + h;
-	}
-	if (m < 10) {
-		m = '0' + m;
-	}
-	if (s < 10) {
-		s = '0' + s;
-	}
-	var ts = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear() + ' ' + h + ':' + m + ':' + s;
+    var h = dt.getHours();
+    var m = dt.getMinutes();
+    var s = dt.getSeconds();
+    if (h < 10) {
+        h = '0' + h;
+    }
+    if (m < 10) {
+        m = '0' + m;
+    }
+    if (s < 10) {
+        s = '0' + s;
+    }
+    var ts = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear() + ' ' + h + ':' + m + ':' + s;
 
-	return ts;
+    return ts;
 }
 ```
 
@@ -267,20 +274,20 @@ var newStatus = 'Unsubscribed'; // Active|Unsubscribed
 var subscriberListID = 12; // see how to find the ID above; potentially different on every instance!
 var mySubKey = 'test@domain.com'; // this is the subscriberKey of the contact that you want to udpate
 var subscriberObj = {
-	Attributes: {}, // optional custom attributes
-	EmailTypePreference: 'HTML',
-	Lists: {
-		Status: newStatus,
-		ID: subscriberListID,
-		Action: 'Update'
-	},
-	SubscriberKey: mySubKey
+    Attributes: {}, // optional custom attributes
+    EmailTypePreference: 'HTML',
+    Lists: {
+        Status: newStatus,
+        ID: subscriberListID,
+        Action: 'Update'
+    },
+    SubscriberKey: mySubKey
 };
 
 // optionally add custom attribues:
 subscriberObj.Attributes = {
-	foo: 'bar',
-	hello: 'world'
+    foo: 'bar',
+    hello: 'world'
 };
 
 // *** execute update ***
@@ -333,11 +340,11 @@ var myDeArr = myDe.Rows.Lookup(whereColumnArr, whereColumValueArr, limit, orderB
 // if no rows where returned, myDeArr returns NULL
 // optionally normalize the result:
 if (myDeArr === null) {
-	myDeArr = [];
+    myDeArr = [];
 }
 
 if (myDeArr.length) {
-	// your code here
+    // your code here
 }
 ```
 
@@ -382,8 +389,8 @@ Platform.Function.InsertDE(deName, insertColumnArr, insertColumnValueArr);
 // https://developer.salesforce.com/docs/atlas.en-us.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsAdd.htm
 
 var arrContacts = [
-	{ Email: 'jdoe@example.com', FirstName: 'John', LastName: 'Doe' },
-	{ Email: 'aruiz@example.com', FirstName: 'Angel', LastName: 'Ruiz' }
+    { Email: 'jdoe@example.com', FirstName: 'John', LastName: 'Doe' },
+    { Email: 'aruiz@example.com', FirstName: 'Angel', LastName: 'Ruiz' }
 ];
 
 var birthdayDE = DataExtension.Init('birthdayDE');
@@ -402,11 +409,11 @@ var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
 var upsertedRowCount = Platform.Function.UpsertData(
-	deName,
-	whereColumnArr,
-	whereColumValueArr,
-	upsertColumnArr,
-	upsertColumnValueArr
+    deName,
+    whereColumnArr,
+    whereColumValueArr,
+    upsertColumnArr,
+    upsertColumnValueArr
 );
 // or
 Platform.Function.UpsertDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
@@ -424,11 +431,11 @@ var upsertColumnArr = ['lastname', 'age']; // REQUIRED
 var upsertColumnValueArr = ['Connor', '16']; // REQUIRED
 
 var updatedRowCount = Platform.Function.UpdateData(
-	deName,
-	whereColumnArr,
-	whereColumValueArr,
-	upsertColumnArr,
-	upsertColumnValueArr
+    deName,
+    whereColumnArr,
+    whereColumValueArr,
+    upsertColumnArr,
+    upsertColumnValueArr
 );
 // or
 Platform.Function.UpdateDE(deName, whereColumnArr, whereColumValueArr, upsertColumnArr, upsertColumnValueArr);
@@ -530,49 +537,49 @@ Normally, you can easily spread your code over multiple files and as long as you
 ```html
 <!-- fails -->
 <script runat="server" language="JavaScript">
-	var myInstance = MyClass();
+    var myInstance = MyClass();
 </script>
 
 <script runat="server" language="JavaScript">
-	function MyClass() {
-	    var service = {
-	        attr1: true,
-	        method1: function(){…}
-	    };
-	    return service;
-	}
-</script>
-```
-
-```html
-<!-- good -->
-<script runat="server" language="JavaScript">
-	var myInstance = MyClass();
-
-	function MyClass() {
-	    var service = {
-	        attr1: true,
-	        method1: function(){…}
-	    };
-	    return service;
-	}
+    function MyClass() {
+        var service = {
+            attr1: true,
+            method1: function(){…}
+        };
+        return service;
+    }
 </script>
 ```
 
 ```html
 <!-- good -->
 <script runat="server" language="JavaScript">
-	function MyClass() {
-	    var service = {
-	        attr1: true,
-	        method1: function(){…}
-	    };
-	    return service;
-	}
+    var myInstance = MyClass();
+
+    function MyClass() {
+        var service = {
+            attr1: true,
+            method1: function(){…}
+        };
+        return service;
+    }
+</script>
+```
+
+```html
+<!-- good -->
+<script runat="server" language="JavaScript">
+    function MyClass() {
+        var service = {
+            attr1: true,
+            method1: function(){…}
+        };
+        return service;
+    }
 </script>
 
 <script runat="server" language="JavaScript">
-	var myInstance = MyClass();
+    var myInstance = MyClass();
 </script>
 ```
 
