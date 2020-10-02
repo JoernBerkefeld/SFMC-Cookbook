@@ -20,5 +20,5 @@ Kudos goes to [John Papa](https://github.com/johnpapa) and his [Angular Style Gu
 
 ### Copyright
 
-Copyright 2019 Jörn Berkefeld
+Copyright 2020 Jörn Berkefeld
 [MIT License applies](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/LICENSE)
