@@ -767,20 +767,20 @@ Also, Google's `add_to_cart` and `remove_from_cart` only take the items actually
 
 There seems to be no OOTB support for tracking in-site search results in GA which can be done in SFMC using `trackPageView.item`.
 
-SFMC Event | GA Event | Trigger | GA Parameters
--- | -- | -- | --
-- | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value
-- | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value
-trackCart | add_to_cart | when a user adds items to cart | currency, items, value
-trackWishlist | add_to_wishlist | when a user adds items to a wishlist | currency, items, value
-- | begin_checkout | when a user begins checkout | coupon, currency, items, value
-- | generate_lead | when a user submits a form or request for information | value, currency
-trackConversion | purchase | when a user completes a purchase | affiliation, coupon, currency, items, transaction_id, shipping, tax, value
-- | refund | when a refund is issued | affiliation, coupon, currency, items, transaction_id, shipping, tax, value
-trackCart | remove_from_cart | when a user removes items from a cart | currency, items, value
-- | select_item | when an item is selected from a list | items, item_list_name, item_list_id
-- | select_promotion | when a user selects a promotion | items, promotion_id, promotion_name, creative_name, creative_slot, location_id
-- | view_cart | when a user views their cart | currency, items, value
-trackPageView.item | view_item | when a user views an item | currency, items, value
-trackPageView.category | view_item_list | when a user sees a list of items/offerings | items, item_list_name, item_list_id
-- | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id
+| SFMC Event | GA Event | Trigger | GA Parameters |
+| -- | -- | -- | -- |
+| - | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value |
+| - | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value |
+| trackCart | add_to_cart | when a user adds items to cart | currency, items, value |
+trackWishlist | add_to_wishlist | when a user adds items to a wishlist | currency, items, value |
+| - | begin_checkout | when a user begins checkout | coupon, currency, items, value |
+| - | generate_lead | when a user submits a form or request for information | value, currency |
+| trackConversion | purchase | when a user completes a purchase | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
+| - | refund | when a refund is issued | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
+trackCart | remove_from_cart | when a user removes items from a cart | currency, items, value |
+| - | select_item | when an item is selected from a list | items, item_list_name, item_list_id |
+| - | select_promotion | when a user selects a promotion | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
+| - | view_cart | when a user views their cart | currency, items, value |
+trackPageView.item | view_item | when a user views an item | currency, items, value |
+| trackPageView.category | view_item_list | when a user sees a list of items/offerings | items, item_list_name, item_list_id |
+| - | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
