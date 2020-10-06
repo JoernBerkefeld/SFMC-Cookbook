@@ -33,6 +33,8 @@ This page aims to make using Einstein recommendations a little easier by adding 
       - [JSON Example responses](#json-example-responses)
     - [Embed via JavaScript ("HTML")](#embed-via-javascript-html)
       - [JavaScript/HTML example code](#javascripthtml-example-code)
+  - [Embedding Web Recommendations via Google Tag Manager (GTM)](#embedding-web-recommendations-via-google-tag-manager-gtm)
+    - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
 
 ## Collect Code
 
@@ -226,19 +228,19 @@ The most simple versions use **one** of the following lines
 
 ```javascript
 // product page viewed
-_etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE' }]);
+_etmc.push(['trackPageView', { 'item': 'INSERT_PRODUCT_CODE' }]);
 
 // category viewed
-_etmc.push(['trackPageView', { 'category' : 'INSERT_CATEGORY' }]);
+_etmc.push(['trackPageView', { 'category': 'INSERT_CATEGORY' }]);
 
 // search executed
-_etmc.push(['trackPageView', { 'search' : 'INSERT_SEARCH_TERM' }]);
+_etmc.push(['trackPageView', { 'search': 'INSERT_SEARCH_TERM' }]);
 ```
 
 But of course these can also be combined: If the user came to the page using your search you can optionally use the following extended snippet:
 
 ```javascript
-_etmc.push(['trackPageView', { 'item' : 'INSERT_PRODUCT_CODE','search' : 'INSERT_SEARCH_TERM' }]);
+_etmc.push(['trackPageView', { 'item': 'INSERT_PRODUCT_CODE','search': 'INSERT_SEARCH_TERM' }]);
 ```
 
 #### Track Items in Cart: trackCart
@@ -314,17 +316,17 @@ _etmc.push(['trackConversion', {
 
 | Key          | Description                                                                           |
 | ------------ | ------------------------------------------------------------------------------------- |
-| cart         | same as for `trackCart`; [see above](#track-items-in-cart-trackcart) for more details |
-| order_number | _optional:_ String                                                                    |
-| discount     | _optional:_ Decimal, in local currency, not percental value                           |
-| shipping     | _optional:_ Decimal, in local currency, not percental value                           |
-| details      | _optional:_ ???                                                                       |
+| `cart`         | same as for `trackCart`; [see above](#track-items-in-cart-trackcart) for more details |
+| `order_number` | _optional:_ String                                                                    |
+| `discount`     | _optional:_ Decimal, in local currency, not percental value                           |
+| `shipping`     | _optional:_ Decimal, in local currency, not percental value                           |
+| `details`      | _optional:_ ???                                                                       |
 
 ##### Tracking overhead cost
 
-The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) state that you can in fact track `order_number`, `discount` and `shipping` as separate fields and that those are then used to calculate the line item cost together with their respective overhead. While looking into collect.js however, those fields seem to get ignored when calling back to the server.
-
 > Until we figured out how this actually works, if at all, please take the rest of this subchapter as a **non-working example** from the official docs:
+
+The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) state that you can in fact track `order_number`, `discount` and `shipping` as separate fields and that those are then used to calculate the line item cost together with their respective overhead. While looking into collect.js however, those fields seem to get ignored when calling back to the server.
 
 **Note:**
 If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately:
@@ -384,8 +386,8 @@ Allows you to store contact wishlists for items on your website.
 
 ```javascript
 _etmc.push(['trackWishlist', {
-    'items' : ['INSERT_ITEM_1', 'INSERT_ITEM_2', 'INSERT_ITEM_3'],
-    'skus' : ['INSERT_UNIQUE_ID_1', 'INSERT_UNIQUE_ID_2', 'INSERT_UNIQUE_ID_3']
+    'items': ['INSERT_ITEM_1', 'INSERT_ITEM_2', 'INSERT_ITEM_3'],
+    'skus': ['INSERT_UNIQUE_ID_1', 'INSERT_UNIQUE_ID_2', 'INSERT_UNIQUE_ID_3']
 }]);
 ```
 
@@ -459,8 +461,7 @@ This is in theory possible, however so far I haven't gotten it to work.
 ## Einstein Email Recommendations
 
 > Official docs: [help.salesforce.com/articleView?id=mc_pb_einstein_email_recommendations.htm](https://help.salesforce.com/articleView?id=mc_pb_einstein_email_recommendations.htm&type=5)
-
-**TODO:** Add more details :-)
+> _**TODO:** Add more details :-)_
 
 ## Einstein Web Recommendations
 
@@ -742,3 +743,44 @@ The HTML that will be created for you will look something like the following:
     </div>
 </div>
 ```
+
+### Embedding Web Recommendations via Google Tag Manager (GTM)
+
+There are multiple ways of achieving an integration, but given that you are looking at a tag manager, you are likely including multiple trackers in your page.
+In this scenario, you will want to dive deep into Google's [Ecommerce (App+Web) Developer Guide](https://developers.google.com/tag-manager/ecommerce-appweb). There is also the **outdated** [Enhanced Ecommerce GTM Developer Guide](https://developers.google.com/tag-manager/enhanced-ecommerce) - please disregard this document in favor of the newer "App+Web" version.
+
+> _Optional read:_ You may want to understand the [Enhanced Ecommerce GA Developer Guide](https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce) which describes how to enable the measurement of user interactions with products on ecommerce websites across the user's shopping experience in **Google Analytics** (GA). While you of course do not need to use GA together with Einstein, it does explain the underlying concepts.
+
+While we are looking at prerequisites, please also pay attention to Google's [definition of "triggers"](https://support.google.com/tagmanager/answer/7679316?hl=en) and their [defintion of tags](https://support.google.com/tagmanager/answer/3281060?hl=en&ref_topic=3281056).
+
+For SFMC's Collect Code, you will need to understand [Custom Tags](https://support.google.com/tagmanager/answer/6107167?hl=en&ref_topic=3281056).
+
+> _**To-Do:** Add more details_
+
+#### Event mapping Google Analytyics to Collect Code
+
+> The most current list of GA Events can be found in the [Analytics Help](https://support.google.com/analytics/answer/9268036).
+
+The following table aims to show how events are tracked in comparison to each other. Please note that SFMC can track additional events (marked with '-' below) using `trackEvent` method, however, this would not have an impact on Einstein Recommendations.
+
+Also, Google's `add_to_cart` and `remove_from_cart` only take the items actually added/removed, SFMC's Collect code, however, requires you to use `trackCart` for both events and to pass in all items that remain in the cart after the event.
+
+There seems to be no OOTB support for tracking in-site search results in GA which can be done in SFMC using `trackPageView.item`.
+
+SFMC Event | GA Event | Trigger | GA Parameters
+-- | -- | -- | --
+- | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value
+- | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value
+trackCart | add_to_cart | when a user adds items to cart | currency, items, value
+trackWishlist | add_to_wishlist | when a user adds items to a wishlist | currency, items, value
+- | begin_checkout | when a user begins checkout | coupon, currency, items, value
+- | generate_lead | when a user submits a form or request for information | value, currency
+trackConversion | purchase | when a user completes a purchase | affiliation, coupon, currency, items, transaction_id, shipping, tax, value
+- | refund | when a refund is issued | affiliation, coupon, currency, items, transaction_id, shipping, tax, value
+trackCart | remove_from_cart | when a user removes items from a cart | currency, items, value
+- | select_item | when an item is selected from a list | items, item_list_name, item_list_id
+- | select_promotion | when a user selects a promotion | items, promotion_id, promotion_name, creative_name, creative_slot, location_id
+- | view_cart | when a user views their cart | currency, items, value
+trackPageView.item | view_item | when a user views an item | currency, items, value
+trackPageView.category | view_item_list | when a user sees a list of items/offerings | items, item_list_name, item_list_id
+- | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id
