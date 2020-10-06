@@ -765,7 +765,13 @@ The following table aims to show how events are tracked in comparison to each ot
 
 Also, Google's `add_to_cart` and `remove_from_cart` only take the items actually added/removed, SFMC's Collect code, however, requires you to use `trackCart` for both events and to pass in all items that remain in the cart after the event.
 
-There seems to be no OOTB support for tracking in-site search results in GA which can be done in SFMC using `trackPageView.item`.
+**Events missing in GA:**
+
+- [Insite search](#track-page-views-trackpageview)
+- [User Log in](#identify-current-user)
+- [User Log out](#identify-current-user)
+
+Also don't forget about `setOrgId` that needs to run on page load and `doNotTrack` after login / as soon as we know.
 
 | SFMC Event | GA Event | Trigger | GA Parameters |
 | -- | -- | -- | -- |
