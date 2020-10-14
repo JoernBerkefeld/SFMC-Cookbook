@@ -188,6 +188,9 @@ Contrary to what the [official docs](https://help.salesforce.com/articleView?id=
 
 ```javascript
 _etmc.push(['setUserInfo', {'email': 'INSERT_EMAIL_OR_UNIQUE_ID'}]);
+
+// run a generic trackPageView once to set cookies that are necessary for personalized Web Recommendations to show up
+_etmc.push(['trackPageView');
 ```
 
 It seems that if one wants to use [Predictive Intelligence integration](https://help.salesforce.com/articleView?id=mc_pb_integration_with_contact_builder.htm&type=5) completely, one has to use the actual email address for `INSERT_EMAIL_OR_UNIQUE_ID`. This assumption is supported by the automatically created attribute set that links the PI_* Data Extensions to a Contact using the Email, rather than the subscriber key.
@@ -481,20 +484,26 @@ You should define what field values you want in your recommendation via the "Out
 
 #### How the recommender knows who the current user is
 
-The current user is actually shared via cookie set by the Collect Code (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this.
+The current user is actually shared via cookie set by the **Collect Code** (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this.
 
 If no cookie was set, generic recommendations are displayed.
 
+**Important:** Make sure you run one of the trackXXX methods from collect.js before trying to see personalized recommendations. The setXXX methods alone do not set these cookies.
+
 #### Enhancing recommendation results
 
-You can append parameters to the recommend.json / recommend.js as URL parameters to get more focused results. Please make sure you URL-Encode the values!
+You can append parameters to the recommend.json / recommend.js as URL parameters to get more focused results. Please make sure you URL-Encode the values! Depending on the page name, these parameters are even shown to you on the "Get Code" tab.
 
-| URL Parameter | value           |
-| ------------- | --------------- |
-| item          | _SKU_           |
-| cart          | _SKU_           |
-| category      | _CATEGORY_NAME_ |
-| search        | _SEARCH_TERM_   |
+| Page Name     | GET Parameter                                |
+| ------------- | -------------------------------------------- |
+| `category`    | `?category=INSERT_CATEGORY_NAME`             |
+| `product`     | `?item=INSERT_SKU`                           |
+| `cart`        | `?cart=INSERT_SKU_LIST` **TBC:comma-separated?** |
+| `search`      | `?search=INSERT_SEARCH_TERM`                 |
+| `home`        | _no parameter_                               |
+| _custom name_ | _no parameter needed but optionally usable_  |
+
+You may also combine the above (with an & sign, the questionmark is only used up front).
 
 **Example for JSON:**
 
@@ -517,9 +526,16 @@ This requires you to do all the styling and processing yourself but also comes w
 GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json
 ```
 
-The complete URL is provided on the "Get Code" tab, however that page is misleading in other ways:
+**Example:**
+
+```javascript
+// example for web recommendation on 'product' page with SKU=12345 for BU=67890
+GET https://67890.recs.igodigital.com/a/v2/67890/product/recommend.json?item=12345
+```
 
 **Important:** The Web Recommendations' "Get Code" tab was apparently only written with the "html" / JavaScript embed code in mind and falsely asks you to load the JSON via script-tag. It then continues to also ask you to include certain HTML. You need to ignore that and simply copy the url out of that snippet instead!
+
+The URL per page (without parameter value) is provided on the "Get Code" tab, however that page is misleading in other ways:
 
 ![Bad embed code for JSON approach](img/bad-json-embed-snippet.jpg)
 
@@ -530,6 +546,7 @@ The following assumes only one recommendation area was defined and the default n
 As long as recommendations are not ready, the API will return ab `empty:true` attribute per defined recommendation area:
 
 ```json
+// no recommendation available yet
 [
     {
         "name": "igdrec_1",
@@ -538,13 +555,15 @@ As long as recommendations are not ready, the API will return ab `empty:true` at
 ]
 ```
 
-The reponse will look something like this once recommendations are actually available:
+The reponse will look something like this once recommendations are actually available. Note that you define the area-`name` (e.g. by default "igdreg_x") and the number of `items` on the "Areas" tab. What scenarios are displayed first (if possible based on available data) is defined on the "Scenario" tab. If one or more scenarios are not possible to use yet, the system skips to the next one in your order or even falls back to "System Scenarios" (unless you specifically disabled that checkbox for the current page). Finally, the item-attributes (e.g. `link`, `regular_price`, ...) are defined for all areas of a page at once on the "Output" tab.
 
 ```json
-[
+// (some) recommendation returned for a page with 3 defined areas
+
+[ // list of areas, corresponding to scenario ordering
     {
-        "name": "igdrec_1",
-        "title": "Popular Items Today",
+        "name": "igdrec_1", // Name of Area #1
+        "title": "Popular Items Today", // title of 1st available scenario
         "priority": 1,
         "items": [
             {
@@ -557,15 +576,32 @@ The reponse will look something like this once recommendations are actually avai
                 "link": "Link",
                 "image_link": "Image link",
                 "name": "Name",
-                "regular_price": 112.0
+                "regular_price": 412.0
+            }
+        ]
+    },
+    {
+        "name": "igdrec_2", // Name of Area #2
+        "title": "Most Viewed Items", // title of 2nd available scenario
+        "priority": 2,
+        "items": [
+            {
+                "link": "Link",
+                "image_link": "Image link",
+                "name": "Name",
+                "regular_price": 212.0
             },
             {
                 "link": "Link",
                 "image_link": "Image link",
                 "name": "Name",
-                "regular_price": 112.0
+                "regular_price": 312.0
             }
         ]
+    },
+    {
+        "name": "igdrec_3", // Name of Area #3
+        "empty": true // no further recommendation available yet
     }
 ]
 ```
@@ -669,79 +705,83 @@ function callREC() {
 callREC();
 ```
 
-The reponse will look something like this **once recommendations are actually available**:
+The reponse will look something like this **once recommendations are actually available**. The only difference is that the `zone.innerHTML`-line now gets the actual HTML set, pre-rendered on the server without further callouts:
 
 ```javascript
-// recommend.js if recommendations are finally ready and only one area named "idgrec_1" was defined for this page
+// recommend.js if recommendations are finally ready and only one area named "idgrec_1" was defined for this page with 2 items returned
 
-// really curious myself...
+function display_INSERT_PAGE_NAME(zone, id) {
+    if (id === 'igdrec_1') {
+        // NOTE: main difference is that zone.innerHTML actually gets a value
+        zone.innerHTML = "  <div class='igo_boxhead'><h2>Most Viewed Items</h2></div>  <div class='igo_boxbody'><div class='igo_product'><a href='https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_ZGYyNw=='>banana</a><a href='https://INSERT_MID.collect.igodigital.com/redirect/v3Qk_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_ZGYyNw=='><img class='igo_product_image' src='https://your.own.image-server.com/2332264' /></a><div class='igo_product_product_name'><span class='igo_product_product_name_label'>Product Name:</span><span class='igo_product_product_name_value'>banana</span></div><div class='igo_product_regular_price'><span class='igo_product_regular_price_label'></span><span class='igo_product_regular_price_value'>$12.30</span></div></div><div class='igo_product last_rec'><a href='https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_iYjNhOQ=='>banana</a><a href='https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_iYjNhOQ=='><img class='igo_product_image' src='https://your.own.image-server.com/2324009' /></a><div class='igo_product_product_name'><span class='igo_product_product_name_label'>Product Name:</span><span class='igo_product_product_name_value'>banana</span></div><div class='igo_product_regular_price'><span class='igo_product_regular_price_label'></span><span class='igo_product_regular_price_value'>$12.30</span></div></div>  </div>";
+    }
+}
+
+function addLoadEvent(func) {
+    var oldonload = window.onload;
+    if (typeof window.onload != 'function') {
+        window.onload = func;
+    } else {
+        window.onload = function() {
+            if (oldonload) {
+                oldonload();
+            }
+            func();
+        }
+    }
+}
+
+function callREC() {
+    var pageZone = document.getElementById('igdrec_1');
+    if ( undefined != pageZone) {
+        display_INSERT_PAGE_NAME(pageZone, 'igdrec_1');
+    }
+}
+
+callREC();
 ```
 
 The HTML that will be created for you will look something like the following:
 
 ```html
-<div class='igo_boxhead'>
-    <h2>Popular Items Today</h2>
-</div>
-<div class='igo_boxbody'>
-    <div class='igo_product'>
-        <div class='igo_product_link'>
-            <span class='igo_product_link_label'>Link</span>
-            <span class='igo_product_link_value'>Link</span>
+<div class="igo_boxhead"><h2>Most Viewed Items</h2></div>
+<div class="igo_boxbody">
+    <div class="igo_product">
+        <a
+            href="https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_ZGYyNw=="
+            >banana</a
+        ><a
+            href="https://INSERT_MID.collect.igodigital.com/redirect/v3Qk_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_ZGYyNw=="
+            ><img class="igo_product_image" src="https://your.own.image-server.com/2332264"
+        /></a>
+        <div class="igo_product_product_name">
+            <span class="igo_product_product_name_label">Product Name:</span
+            ><span class="igo_product_product_name_value">banana</span>
         </div>
-        <div class='igo_product_image_link'>
-            <a href=''>
-                <img class='igo_product_image' src='Image link'>
-            </a>
-        </div>
-        <div class='igo_product_name'>
-            <span class='igo_product_name_label'>Name</span>
-            <span class='igo_product_name_value'>Name</span>
-        </div>
-        <div class='igo_product_regular_price'>
-            <span class='igo_product_regular_price_label'>Regular Price</span>
-            <span class='igo_product_regular_price_value'>112.0</span>
+        <div class="igo_product_regular_price">
+            <span class="igo_product_regular_price_label"></span
+            ><span class="igo_product_regular_price_value">$12.30</span>
         </div>
     </div>
-    <div class='igo_product'>
-        <div class='igo_product_link'>
-            <span class='igo_product_link_label'>Link</span>
-            <span class='igo_product_link_value'>Link</span>
+    <div class="igo_product last_rec">
+        <a
+            href="https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_iYjNhOQ=="
+            >banana</a
+        ><a
+            href="https://INSERT_MID.collect.igodigital.com/redirect/v3Q_SOME_BASE64_ENCODED_AND_ENRRYPTED_STRING_HERE_iYjNhOQ=="
+            ><img class="igo_product_image" src="https://your.own.image-server.com/2324009"
+        /></a>
+        <div class="igo_product_product_name">
+            <span class="igo_product_product_name_label">Product Name:</span
+            ><span class="igo_product_product_name_value">banana</span>
         </div>
-        <div class='igo_product_image_link'>
-            <a href=''>
-                <img class='igo_product_image' src='Image link'>
-            </a>
-        </div>
-        <div class='igo_product_name'>
-            <span class='igo_product_name_label'>Name</span>
-            <span class='igo_product_name_value'>Name</span>
-        </div>
-        <div class='igo_product_regular_price'>
-            <span class='igo_product_regular_price_label'>Regular Price</span>
-            <span class='igo_product_regular_price_value'>112.0</span>
-        </div>
-    </div>
-    <div class='igo_product'>
-        <div class='igo_product_link'>
-            <span class='igo_product_link_label'>Link</span>
-            <span class='igo_product_link_value'>Link</span>
-        </div>
-        <div class='igo_product_image_link'>
-            <a href=''>
-                <img class='igo_product_image' src='Image link'>
-            </a>
-        </div>
-        <div class='igo_product_name'>
-            <span class='igo_product_name_label'>Name</span>
-            <span class='igo_product_name_value'>Name</span>
-        </div>
-        <div class='igo_product_regular_price'>
-            <span class='igo_product_regular_price_label'>Regular Price</span>
-            <span class='igo_product_regular_price_value'>112.0</span>
+        <div class="igo_product_regular_price">
+            <span class="igo_product_regular_price_label"></span
+            ><span class="igo_product_regular_price_value">$12.30</span>
         </div>
     </div>
 </div>
+
 ```
 
 ### Embedding Web Recommendations via Google Tag Manager (GTM)
