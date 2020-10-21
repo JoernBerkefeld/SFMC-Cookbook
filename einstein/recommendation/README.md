@@ -197,7 +197,7 @@ It seems that if one wants to use [Predictive Intelligence integration](https://
 
 On the other hand, if you only care about showing Einstein recommendations, you simply have to ensure that you use the same string when you retrieve web/email recommendations that you previously used for tracking via collect code.
 
-> **Note:** It is so far not completely clear to me what effect it has if you don't use the readable email here but instead follow Salesforce's optional recommendation to hash/encrypt the email address. Will update this section once I tested more.
+> **Note:** It is so far not completely clear to me what effect it has if you don't use the readable email here but instead follow Salesforce's optional recommendation to hash/encrypt the email address. Will update this section once I tested more. **TBC**
 
 ##### Attribute Affinity
 
@@ -481,12 +481,12 @@ You can append parameters to the recommend.json / recommend.js as URL parameters
 | ------------- | -------------------------------------------- |
 | `category`    | `?category=INSERT_CATEGORY_NAME`             |
 | `product`     | `?item=INSERT_SKU`                           |
-| `cart`        | `?cart=INSERT_SKU_LIST` **TBC:comma-separated?** |
+| `cart`        | `?cart=INSERT_SKU1,INSERT_SKU2,INSERT_SKU3,...` <br>(separate SKUs with `,`) |
 | `search`      | `?search=INSERT_SEARCH_TERM`                 |
 | `home`        | _no parameter_                               |
 | _custom name_ | _no parameter needed but optionally usable_  |
 
-You may also combine the above (with an & sign, the questionmark is only used up front).
+You may also combine two or more GET parameters (with an & sign, the questionmark is only used up front):
 
 **Example for JSON:**
 
