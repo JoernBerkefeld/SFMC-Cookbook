@@ -194,17 +194,25 @@ _etmc.push(['setUserInfo', {'email': 'INSERT_EMAIL_OR_UNIQUE_ID'}]);
 _etmc.push(['trackPageView');
 ```
 
-It seems that if one wants to use [Predictive Intelligence integration](https://help.salesforce.com/articleView?id=mc_pb_integration_with_contact_builder.htm&type=5) completely, one has to use the actual email address for `INSERT_EMAIL_OR_UNIQUE_ID`. This assumption is supported by the automatically created attribute set that links the PI_* Data Extensions to a Contact using the Email, rather than the subscriber key.
+According to a well hidden part of the [documentation](https://help.salesforce.com/articleView?id=mc_anb_prerequisites_einstein_engagement_scoring.htm&type=5) Einstein Engagement Scoring actually supports for `INSERT_EMAIL_OR_UNIQUE_ID`:
 
-On the other hand, if you only care about showing Einstein recommendations, you simply have to ensure that you use the same string when you retrieve web/email recommendations that you previously used for tracking via collect code.
+- **Subscriber Key**, which can be implemented with a support request (**not tested yet**)
+- **Subscriber ID**
+- **Email address**
+- **MD5 Hashed lowercase version of email address**
 
-> **Note:** It is so far not completely clear to me what effect it has if you don't use the readable email here but instead follow Salesforce's optional recommendation to hash/encrypt the email address. Will update this section once I tested more. **TBC**
+... as your subscriber identifier in Collect Tracking Code. Based on the source of collect.js, this should always be handed in as a value of `'email'`.
+
+Thinking about using Einstein in Journey Builder it makes sense to align with something that Einstein can actually understand and map to existing contacts in SFMC.
+However, there is the automatically created attribute group that links the PI_* Data Extensions to a Contact using the Email. Based on what I was able to find out, one should simply ignore that Attribute Group altogether.
+
+On the other hand, if all you care about is showing Einstein powered recommendations, you simply have to ensure that you use the same string when you retrieve web/email recommendations that you previously used for tracking via collect code.
 
 ##### Attribute Affinity
 
-This should theoretically boost catalog items that carry the same attribute (detail-field and value) defined as the current user. [Quote](https://help.salesforce.com/articleView?id=mc_ctc_set_contact_attribute_affinity.htm&type=5):
+This should theoretically boost catalog items that carry the same attribute (detail-field and value) defined as the current user.
 
-> Match a contact attribute to a tagged catalog field to increase the subscriber's affinity for the value of that contact attribute. The amount of increase is less than what results from a purchase but more than the increase from a view.
+> _[Quote](https://help.salesforce.com/articleView?id=mc_ctc_set_contact_attribute_affinity.htm&type=5):_ Match a contact attribute to a tagged catalog field to increase the subscriber's affinity for the value of that contact attribute. The amount of increase is less than what results from a purchase but more than the increase from a view.
 
 ```javascript
 _etmc.push(['setUserInfo', {
