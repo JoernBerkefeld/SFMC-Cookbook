@@ -295,7 +295,7 @@ The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_cart
 _etmc.push(['trackCart', { 'clear_cart': true } ]);
 ```
 
-It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point.
+It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point. **TBC**
 
 #### Track Purchases / Conversions: trackConversion
 
