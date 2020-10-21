@@ -33,8 +33,9 @@ This page aims to make using Einstein recommendations a little easier by adding 
       - [JSON Example responses](#json-example-responses)
     - [Embed via JavaScript ("HTML")](#embed-via-javascript-html)
       - [JavaScript/HTML example code](#javascripthtml-example-code)
+  - [Debugging Web Recommendations](#debugging-web-recommendations)
 - [Embedding Collect Code via Google Tag Manager (GTM)](#embedding-collect-code-via-google-tag-manager-gtm)
-    - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
+  - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
 
 ## Collect Code
 
@@ -765,6 +766,269 @@ The HTML that will be created for you will look something like the following:
     </div>
 </div>
 
+```
+
+### Debugging Web Recommendations
+
+Once you have created a page and start seeing recommendations come in you might wonder why things are displayed the way they are. An easy way to dig deeper is to the `recommend.js` or `recommend.json` URL that the Get Code tab shows you and change the ending to `recommend.explain`. That shows you a whole lot more output all the sudden and lets you analyze whats happening.
+
+Example:
+
+```json
+{
+    "scenarios": [
+        {
+            "name": "topenjoyed",
+            "code": "Home_TopEnjoyed",
+            "score": 990,
+            "getmores": 1,
+            "for_target": "OurMostBoughtProducts",
+            "items": [
+                "ABC-93710600001",
+                "ABC-86594971",
+                "ABC-94212000003"
+            ],
+            "filters": [],
+            "status": "returned"
+        },
+        {
+            "name": "topenjoyed",
+            "code": "Home_TopEnjoyed",
+            "score": 900,
+            "getmores": 1,
+            "for_target": "InSeason",
+            "items": ["ABC-87847461", "ABC-87843491", "ABC-87847471"],
+            "filters": [],
+            "status": "returned"
+        },
+        {
+            "name": "topenjoyed",
+            "code": "Home_TopEnjoyed",
+            "score": 800,
+            "getmores": 1,
+            "for_target": "NewProducts",
+            "items": [
+                "ABC-19025001",
+                "ABC-87906121",
+                "ABC-24690301"
+            ],
+            "filters": [],
+            "status": "returned"
+        },
+        {
+            "name": "topenjoyed",
+            "code": "Home_TopEnjoyed",
+            "score": 700,
+            "getmores": 2,
+            "for_target": "MostRelevantPromotedProducts",
+            "items": [
+                "ABC-35926501",
+                "ABC-30965601",
+                "ABC-22645201"
+            ],
+            "filters": [],
+            "status": "returned"
+        },
+        {
+            "name": "topsellers",
+            "code": "Home_MostPopular",
+            "score": 1000,
+            "getmores": 2,
+            "for_target": "OurMostBoughtProducts",
+            "items": [],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topsellers",
+            "code": "Home_MostPopular",
+            "score": 920,
+            "getmores": 2,
+            "for_target": "InSeason",
+            "items": [],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topviews",
+            "code": "Home_MostViewed",
+            "score": 910,
+            "getmores": 2,
+            "for_target": "InSeason",
+            "items": [
+                "ABC-89673861",
+                "ABC-88148871",
+                "ABC-99403401050"
+            ],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topsellers",
+            "code": "Home_MostPopular",
+            "score": 820,
+            "getmores": 2,
+            "for_target": "NewProducts",
+            "items": [],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topviews",
+            "code": "Home_MostViewed",
+            "score": 810,
+            "getmores": 2,
+            "for_target": "NewProducts",
+            "items": [
+                "ABC-89673861",
+                "ABC-88148871",
+                "ABC-99403401050"
+            ],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topsellers",
+            "code": "Home_MostPopular",
+            "score": 720,
+            "getmores": 2,
+            "for_target": "MostRelevantPromotedProducts",
+            "items": [],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topviews",
+            "code": "Home_MostViewed",
+            "score": 710,
+            "getmores": 2,
+            "for_target": "MostRelevantPromotedProducts",
+            "items": [
+                "ABC-89673861",
+                "ABC-88148871",
+                "ABC-99403401050"
+            ],
+            "filters": [],
+            "status": "rejected"
+        },
+        {
+            "name": "topgrossing",
+            "code": "Home_TopGrossing",
+            "score": 1,
+            "getmores": 0,
+            "for_target": null,
+            "items": null,
+            "filters": [],
+            "status": "available"
+        },
+        {
+            "name": "topviews",
+            "code": "Home_MostViewed",
+            "score": 1,
+            "getmores": 0,
+            "for_target": null,
+            "items": null,
+            "filters": [],
+            "status": "available"
+        },
+        {
+            "name": "topsellers",
+            "code": "Home_MostPopular",
+            "score": 1,
+            "getmores": 0,
+            "for_target": null,
+            "items": null,
+            "filters": [],
+            "status": "available"
+        }
+    ],
+    "filters": [
+        {
+            "type": "emphasize_tags",
+            "params": [{}],
+            "block_given?": false,
+            "priority": 0,
+            "waslocal": true,
+            "excluded_skus": null
+        },
+        {
+            "type": "exclude",
+            "params": [{ "ct": ["asset", "content", "banner"] }],
+            "block_given?": false,
+            "priority": 0,
+            "waslocal": true,
+            "excluded_skus": []
+        }
+    ],
+    "divs": [
+        { "size": "1..16", "target": "OurMostBoughtProducts" },
+        {
+            "size": "1..16",
+            "target": "InSeason",
+            "filters": [
+                {
+                    "type": "include",
+                    "params": [{ "st": "Christmas" }, null],
+                    "block_given?": false,
+                    "priority": 0,
+                    "waslocal": true,
+                    "excluded_skus": [
+                        "ABC-94212300001",
+                        "ABC-46054901",
+                        "ABC-32529101",
+                        "ABC-87906081",
+                        "ABC-54878201"
+                    ]
+                }
+            ]
+        },
+        {
+            "size": "1..16",
+            "target": "NewProducts",
+            "filters": [
+                {
+                    "type": "include",
+                    "params": [{ "ne": "Y" }, null],
+                    "block_given?": false,
+                    "priority": 0,
+                    "waslocal": true,
+                    "excluded_skus": [
+                        "ABC-89673861",
+                        "ABC-88148871",
+                        "ABC-99403401050",
+                        "ABC-87879261",
+                        "ABC-87842451"
+                    ]
+                }
+            ]
+        },
+        {
+            "size": "1..16",
+            "target": "MostRelevantPromotedProducts",
+            "filters": [
+                {
+                    "type": "include",
+                    "params": [{ "ioo": "Y" }, null],
+                    "block_given?": false,
+                    "priority": 0,
+                    "waslocal": true,
+                    "excluded_skus": [
+                        "ABC-87842441",
+                        "ABC-87884171",
+                        "ABC-93710500001",
+                        "ABC-87905821",
+                        "ABC-87842491",
+                        "ABC-87842451"
+                    ]
+                }
+            ]
+        }
+    ],
+    "errors": [],
+    "weights": {},
+    "page": "general",
+    "referer": null
+}
 ```
 
 ## Embedding Collect Code via Google Tag Manager (GTM)
