@@ -772,7 +772,13 @@ The HTML that will be created for you will look something like the following:
 
 Once you have created a page and start seeing recommendations come in you might wonder why things are displayed the way they are. An easy way to dig deeper is to the `recommend.js` or `recommend.json` URL that the Get Code tab shows you and change the ending to `recommend.explain`. That shows you a whole lot more output all the sudden and lets you analyze whats happening.
 
-Example:
+Example call:
+
+```javascript
+GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.explain
+```
+
+Example response:
 
 ```json
 {
