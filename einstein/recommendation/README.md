@@ -33,7 +33,7 @@ This page aims to make using Einstein recommendations a little easier by adding 
       - [JSON Example responses](#json-example-responses)
     - [Embed via JavaScript ("HTML")](#embed-via-javascript-html)
       - [JavaScript/HTML example code](#javascripthtml-example-code)
-  - [Embedding Web Recommendations via Google Tag Manager (GTM)](#embedding-web-recommendations-via-google-tag-manager-gtm)
+- [Embedding Collect Code via Google Tag Manager (GTM)](#embedding-collect-code-via-google-tag-manager-gtm)
     - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
 
 ## Collect Code
@@ -767,7 +767,7 @@ The HTML that will be created for you will look something like the following:
 
 ```
 
-### Embedding Web Recommendations via Google Tag Manager (GTM)
+## Embedding Collect Code via Google Tag Manager (GTM)
 
 There are multiple ways of achieving an integration, but given that you are looking at a tag manager, you are likely including multiple trackers in your page.
 In this scenario, you will want to dive deep into Google's [Ecommerce (App+Web) Developer Guide](https://developers.google.com/tag-manager/ecommerce-appweb). There is also the **outdated** [Enhanced Ecommerce GTM Developer Guide](https://developers.google.com/tag-manager/enhanced-ecommerce) - please disregard this document in favor of the newer "App+Web" version.
@@ -780,7 +780,7 @@ For SFMC's Collect Code, you will need to understand [Custom Tags](https://suppo
 
 > _**To-Do:** Add more details_
 
-#### Event mapping Google Analytyics to Collect Code
+### Event mapping Google Analytyics to Collect Code
 
 > The most current list of GA Events can be found in the [Analytics Help](https://support.google.com/analytics/answer/9268036).
 
