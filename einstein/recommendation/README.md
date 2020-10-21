@@ -307,9 +307,6 @@ _etmc.push(['trackConversion', {
         }
     ],
    // OPTIONAL PARAMETERS
-   'order_number': 'INSERT_ORDER_NUMBER', // fact check: not supported by collect.js
-   'discount': 'INSERT_DISCOUNT', // fact check: not supported by collect.js
-   'shipping': 'INSERT_SHIPPING', // fact check: not supported by collect.js
    'details': {
        'AttributeName': 'Value'
     }
@@ -320,22 +317,21 @@ _etmc.push(['trackConversion', {
 | Key          | Description                                                                           |
 | ------------ | ------------------------------------------------------------------------------------- |
 | `cart`         | same as for `trackCart`; [see above](#track-items-in-cart-trackcart) for more details |
-| `order_number` | _optional:_ String                                                                    |
-| `discount`     | _optional:_ Decimal, in local currency, not percental value                           |
-| `shipping`     | _optional:_ Decimal, in local currency, not percental value                           |
-| `details`      | _optional:_ ???                                                                       |
+| `order_number` | _mentioned in official docs but not actually supported_ |
+| `discount`     | _mentioned in official docs but not actually supported_ |
+| `shipping`     | _mentioned in official docs but not actually supported_ |
+| `details`      | _optional: Given the similar format this could have something to do with affinity attributes but the effect remains unclear_ **TBC** |
 
 ##### Tracking overhead cost
 
-> Until we figured out how this actually works, if at all, please take the rest of this subchapter as a **non-working example** from the official docs:
+> **Not actually working!**
 
 The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_conversion.htm&type=5) state that you can in fact track `order_number`, `discount` and `shipping` as separate fields and that those are then used to calculate the line item cost together with their respective overhead. While looking into collect.js however, those fields seem to get ignored when calling back to the server.
 
-**Note:**
-If `shipping` or `discount` is set, the line item `price` values will actually be calculated keeping these in mind rather than storing discount and shipping separately:
+**What to do instead:** Simply calculate final prices on an order-line-item level before sharing it with the Collect Code. Shipping Cost have no bearing on the recommendation but if you have to track it, send it in as an order-line-item.
 
 ```javascript
-// example call
+// non-working example from official docs
 _etmc.push(['trackConversion', {
     'cart': [
         {
@@ -343,12 +339,6 @@ _etmc.push(['trackConversion', {
             'quantity': '2',
             'price': '10.00',
             'unique_id': '123'
-        },
-        {
-            'item': '234',
-            'quantity': '1',
-            'price': '5.00',
-            'unique_id': '234'
         }
     ],
     // OPTIONAL PARAMETERS
@@ -359,13 +349,6 @@ _etmc.push(['trackConversion', {
 }]);
 ```
 
-results in...
-
-```javascript
-// (pseudo-code)
-var sumProductPrices = FOREACH(quantity*price) = 2*10 + 1*5 = 25
-var finalItemPrice[0] = price + ((shipping - discount) * (quantity*price/sumProductPrices) / quantity = 10 + ((5-2)*(2*10/25)/2) = 11.20
-```
 
 #### Track Custom Event: trackEvent
 
