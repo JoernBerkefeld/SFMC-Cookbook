@@ -531,6 +531,46 @@ GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/reco
 GET https://67890.recs.igodigital.com/a/v2/67890/product/recommend.json?item=12345
 ```
 
+**Handling CORS via JSONP - Cross-Origin-Ressource-Sharing the old way:**
+
+If, naturally, you assumed that the JSON would come with proper CORS headers allowing to use this anywhere or that could be configured in some way to be limited to your website then, well, tough luck: It does not and you can't. Someone even decided it's a good idea to set `x-frame-options: SAMEORIGIN` response headers...
+
+However, you can tell the JSON-version of the API to return its payload as a parameter to the callback instead to circumvent the issue. Bit old-fashioned if you ask me but effective.
+
+```html
+<script>
+// define callback method; ensure it is defined in the GLOBAL scope!
+function myJsFunctionName(json) {
+    // parse JSON response with your code here
+}
+</script>
+```
+
+Now, load the JavasScript-ified JSON. One way is to simply use another script tag:
+
+```html
+<script src="https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json?callback=myJsFunctionName"></script>
+```
+
+If your framework has a good wrapper for JSONP then feel free to use that instead of static script-nodes like shown below. The following example uses [jQuery](https://jquery.com/):
+
+```javascript
+$.ajax({
+    type: 'GET',
+    url: 'https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json',
+    dataType: 'jsonp',
+    jsonpCallback: 'myJsFunctionName',
+    crossDomain: true
+});
+```
+
+Either way, the content of recommend.json will be transformed to something like the following:
+
+```javascript
+// the content of recommend.json will turn into javascript
+myJsFunctionName([{"name": "igdrec_1","empty": true}]);
+```
+
 **Important:** The Web Recommendations' "Get Code" tab was apparently only written with the "html" / JavaScript embed code in mind and falsely asks you to load the JSON via script-tag. It then continues to also ask you to include certain HTML. You need to ignore that and simply copy the url out of that snippet instead!
 
 The URL per page (without parameter value) is provided on the "Get Code" tab, however that page is misleading in other ways:
