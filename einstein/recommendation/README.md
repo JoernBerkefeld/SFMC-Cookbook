@@ -540,7 +540,7 @@ However, you can tell the JSON-version of the API to return its payload as a par
 ```html
 <script>
 // define callback method; ensure it is defined in the GLOBAL scope!
-function myJsFunctionName(json) {
+window.myJsFunctionName = function(json) {
     // parse JSON response with your code here
 }
 </script>
