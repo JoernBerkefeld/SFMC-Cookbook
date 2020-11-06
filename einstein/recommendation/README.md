@@ -476,11 +476,17 @@ You should define what field values you want in your recommendation via the "Out
 
 #### How the recommender knows who the current user is
 
-The current user is actually shared via cookie set by the **Collect Code** (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this.
-
-If no cookie was set, generic recommendations are displayed.
+The current user can be identified in 2 ways. The **first option** uses the cookie set by the **Collect Code** (collect.js). This might lead to other challenges given the browser initiatives to block third-party cookies (see CORS) and explains what `setFirstParty` is for. You might have to implement a proxy logic to accomodate this. If no cookie was set, generic recommendations are displayed.
 
 **Important:** Make sure you run one of the trackXXX methods from collect.js before trying to see personalized recommendations. The setXXX methods alone do not set these cookies.
+
+The **second option** uses the GET parameter `?email=INSERT_EMAIL_OR_UNIQUE_ID` (same you string you used for the Collect Code). Simply attach that to your `recommend.js` or `recommend.json` and you are good to go.
+
+**Example for JSON:**
+
+```javascript
+GET https://INSERT_MID.recs.igodigital.com/a/v2/INSERT_MID/INSERT_PAGE_NAME/recommend.json?category=My%20Shoes&email=joern@foobar.com
+```
 
 #### Enhancing recommendation results
 
