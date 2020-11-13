@@ -506,16 +506,14 @@ You can append parameters to the recommend.json / recommend.js as URL parameters
 | Get Parameter | Definition |
 | ------------- | ---------- |
 | `item`        | This unique identifier for your product or content must match the unique key in the catalog and the value sent in the trackPageView collect item variable. This parameter is required to make a product- or content-based recommendation on any page. |
-| `search`      | This _comma_-delimited list contains search terms from your search page and matches the value sent in the trackPageView collect search variable. |
-| `category`    | This _comma_-delimited list of categories matches both the values sent in the catalog feed and the value sent in the trackPageView collect category variable. |
-| `cart`        | This _comma_-delimited list of products in the cart matches the trackCart collect item variable. |
-| `wishlist`    | This _comma_-delimited list of products in the customer's wishlist must match the trackWishlist collect items variable array. |
+| `search`      | This _pipe_-delimited list contains search terms from your search page and matches the value sent in the trackPageView collect search variable. Example: `search=foo\|bar` |
+| `category`    | This _pipe_-delimited list of categories matches both the values sent in the catalog feed and the value sent in the trackPageView collect category variable. Example: `search=shoes\|adults\|men` |
+| `cart`        | This _pipe_-delimited list of products in the cart matches the trackCart collect item variable. |
+| `wishlist`    | This _pipe_-delimited list of products in the customer's wishlist must match the trackWishlist collect items variable array. |
 | `email`       | Use this parameter for faux-server-side, CloudPages, MobilePush, FaceBook tab, or some mobile apps. Pass the email address of the profile recommendation you want to access. The email value is the same value passed to Collect. If this value is a SubscriberKey, pass the SubscriberKey value. |
 | `user_id`     | _Not verified:_ This parameter is used in testing or an advanced setup. It returns the cookie value from the profile containing the recommendations you want to access. |
 | `item_count`  | Use this parameter to set the number of returned products or override the returned products setting per area. If you have multiple areas, define the numbers _pipe_-delimited (exampe of 4 areas: `item_count=1\|1\|1\|1` ensures only one item is returned for each) |
 | `locale`      | This five-character value (e.g. `fr-FR`, `en-US`) indicates which localized content to display. [How to set up your Product Catalog for this](https://help.salesforce.com/articleView?id=mc_pb_localized_recommendations.htm&type=5). |
-
-> **Important:** The official docs state that the lists should be "pipe-delimited". Our tests showed that entries instead should instead be separated by a comma.
 
 You may also combine two or more GET parameters (with an & sign, the questionmark is only used up front):
 
