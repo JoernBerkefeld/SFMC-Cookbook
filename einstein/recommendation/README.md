@@ -1190,7 +1190,8 @@ With collect.js loading prepared, you may now start creating more custom tags, o
 
 #### Identify current user via GTM
 
-In you website you want to trigger an event that is then caught by the triggers you specified in GTM for a certain tag. First, we need to define the variable that we want to log - unless it's one of the default ones of course. For our user login, let us create a custom Data Layer variable called `userId`:
+In you website you want to trigger an event that is then caught by the triggers you specified in GTM for a certain tag. First, we need to define the variable that we want to log - unless it's one of the default ones of course.
+For our user login, let us create a **custom Data Layer variable** called `userId`:
 
 ![](img/gtm_create_variable.jpg)
 
@@ -1211,7 +1212,7 @@ dataLayer.push({
 
 ```html
 <script>
-_etmc.push(['setUserInfo', {'email': {{userid}} }]);
+_etmc.push(['setUserInfo', {'email': \{\{userid\}\} }]);
 
 // run a generic trackPageView once to set cookies that are necessary for personalized Web Recommendations to show up
 _etmc.push(['trackPageView']);
