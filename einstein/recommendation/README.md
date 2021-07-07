@@ -40,6 +40,8 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [GTM: Developer Playground](#gtm-developer-playground)
   - [Logging events via GTM](#logging-events-via-gtm)
     - [Identify current user via GTM](#identify-current-user-via-gtm)
+  - [Debugging / Previewing your GTM setup](#debugging--previewing-your-gtm-setup)
+  - [Publishing your changes](#publishing-your-changes)
   - [Events mapping: Collect Code to GA4 Retail/Ecommerce](#events-mapping-collect-code-to-ga4-retailecommerce)
 
 ## Collect Code
@@ -1230,6 +1232,14 @@ Now, finally, we **need** to ensure our collect.js library is actually loaded. T
 
 Ensure that for the option "Fire a tag **before**" you select the first tag we create earlier. That way, our library is really only loaded if events occur. And since it supports queueing events, loading it only now won't have a negative effect on whats loaded, nor on performance.
 
+### Debugging / Previewing your GTM setup
+
+Make sure to go through [Loading the GTM library](#loading-the-gtm-library) for the page you intend to test this on (unless you are just updating a previous setup). If the GTM library is loading fine, you can now try the white **Preview** button in the top right corner. This will open up **Tag Assistant** which should ask you to provide the URL of your page. Once given, Tag Assistant will open a new window (or new tab) with that link and try to "connect". That way, whatever changes you made will be usable in a save environment while normal users continue to use the last released ("submitted") version.
+
+### Publishing your changes
+
+When things look good, do make sure you actually publish your changes! You can do so by hitting the blue **Submit** button which should be in the top right corner of every GTM page. Unless you do this, none of your changes will be live!
+
 ### Events mapping: Collect Code to GA4 Retail/Ecommerce
 
 > The most current list of GA Events can be found in the [Analytics Help](https://support.google.com/analytics/answer/9268036).
@@ -1264,5 +1274,4 @@ trackPageView.item | view_item | when a user views an item | currency, items, va
 | trackPageView.category | view_item_list | when a user sees a list of items/offerings | items, item_list_name, item_list_id |
 | _trackPageView_ | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
 | doNotTrack | _probably best to handle in application layer and avoid loading collect.js at all_ | - | - |
-| setUserInfo | _custom? TBC_ | - | - |
-| trackWishlist | _custom? TBC_ | - | - |
+| setUserInfo | _see [Identify current user via GTM](#identify-current-user-via-gtm) above_ | - | - |
