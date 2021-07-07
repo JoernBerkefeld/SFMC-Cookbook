@@ -300,8 +300,6 @@ The [official docs](https://help.salesforce.com/articleView?id=mc_ctc_track_cart
 _etmc.push(['trackCart', { 'clear_cart': true } ]);
 ```
 
-It is likely that sending in an empty Array (`{ 'cart': [] }`) also works but this is untested at this point. **TBC**
-
 #### Track Purchases / Conversions: trackConversion
 
 ```javascript
@@ -1250,18 +1248,21 @@ Also don't forget about `setOrgId` that needs to run on page load and `doNotTrac
 
 | SFMC Event | GA4 Event | Trigger | GA Parameters |
 | -- | -- | -- | -- |
-| - | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value |
-| - | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value |
+| _trackEvent_ | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value |
+| _trackEvent_ | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value |
 | trackCart | add_to_cart | when a user adds items to cart | currency, items, value |
 trackWishlist | add_to_wishlist | when a user adds items to a wishlist | currency, items, value |
-| - | begin_checkout | when a user begins checkout | coupon, currency, items, value |
-| - | generate_lead | when a user submits a form or request for information | value, currency |
-| trackConversion | purchase | when a user completes a purchase | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
-| - | refund | when a refund is issued | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
-trackCart | remove_from_cart | when a user removes items from a cart | currency, items, value |
-| - | select_item | when an item is selected from a list | items, item_list_name, item_list_id |
-| - | select_promotion | when a user selects a promotion | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
-| - | view_cart | when a user views their cart | currency, items, value |
+| _trackEvent_ | begin_checkout | when a user begins checkout | coupon, currency, items, value |
+| _trackEvent_ | generate_lead | when a user submits a form or request for information | value, currency |
+| trackConversion<br>trackCart.clear_cart | purchase | when a user completes a purchase | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
+| _trackEvent_ | refund | when a refund is issued | affiliation, coupon, currency, items, transaction_id, shipping, tax, value |
+trackCart<br>trackCart.clear_cart | remove_from_cart | when a user removes items from a cart | currency, items, value |
+| _trackEvent_ | select_item | when an item is selected from a list | items, item_list_name, item_list_id |
+| _trackEvent_ | select_promotion | when a user selects a promotion | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
+| _trackPageView_ | view_cart | when a user views their cart | currency, items, value |
 trackPageView.item | view_item | when a user views an item | currency, items, value |
 | trackPageView.category | view_item_list | when a user sees a list of items/offerings | items, item_list_name, item_list_id |
-| - | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
+| _trackPageView_ | view_promotion | when a promotion is shown to a user | items, promotion_id, promotion_name, creative_name, creative_slot, location_id |
+| doNotTrack | _probably best to handle in application layer and avoid loading collect.js at all_ | - | - |
+| setUserInfo | _custom? TBC_ | - | - |
+| trackWishlist | _custom? TBC_ | - | - |
