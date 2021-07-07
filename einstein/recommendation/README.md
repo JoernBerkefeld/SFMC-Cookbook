@@ -35,6 +35,11 @@ This page aims to make using Einstein recommendations a little easier by adding 
       - [JavaScript/HTML example code](#javascripthtml-example-code)
   - [Debugging Web Recommendations](#debugging-web-recommendations)
 - [Embedding Collect Code via Google Tag Manager (GTM)](#embedding-collect-code-via-google-tag-manager-gtm)
+  - [Loading the GTM library](#loading-the-gtm-library)
+  - [Loading collect.js via GTM](#loading-collectjs-via-gtm)
+    - [GTM: Developer Playground](#gtm-developer-playground)
+  - [Logging events via GTM](#logging-events-via-gtm)
+    - [Identify current user via GTM](#identify-current-user-via-gtm)
   - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
 
 ## Collect Code
@@ -1108,7 +1113,7 @@ Example response:
 ## Embedding Collect Code via Google Tag Manager (GTM)
 
 There are multiple ways of achieving an integration, but given that you are looking at a tag manager, you are likely including multiple trackers in your page.
-In this scenario, you will want to dive deep into Google's [Ecommerce (App+Web) Developer Guide](https://developers.google.com/tag-manager/ecommerce-appweb). There is also the **outdated** [Enhanced Ecommerce GTM Developer Guide](https://developers.google.com/tag-manager/enhanced-ecommerce) - please disregard this document in favor of the newer "App+Web" version.
+In this scenario, you will want to dive deep into Google's [Ecommerce (GA4) Developer Guide](https://developers.google.com/tag-manager/ecommerce-ga4). There is also the **deprecated** [Enhanced Ecommerce (UA) Developer Guide](https://developers.google.com/tag-manager/enhanced-ecommerce) - please disregard this document in favor of the newer "GA4" version.
 
 > _Optional read:_ You may want to understand the [Enhanced Ecommerce GA Developer Guide](https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce) which describes how to enable the measurement of user interactions with products on ecommerce websites across the user's shopping experience in **Google Analytics** (GA). While you of course do not need to use GA together with Einstein, it does explain the underlying concepts.
 
@@ -1116,7 +1121,112 @@ While we are looking at prerequisites, please also pay attention to Google's [de
 
 For SFMC's Collect Code, you will need to understand [Custom Tags](https://support.google.com/tagmanager/answer/6107167?hl=en&ref_topic=3281056).
 
-> _**To-Do:** Add more details_
+### Loading the GTM library
+
+First off, let's make sure GTM is loaded on your website. You will need to go to [Google Tag Manager](https://tagmanager.google.com/) and select your Account (1), or alternatively [create a new Account](https://tagmanager.google.com/#/admin/accounts/create) (2).
+
+![Create or select Account](img/gtm_account_create_select.jpg)
+
+Either way, you end up with the Container ID (starting with "GTM-"). Now, we switch over to GTM's own Quick Start Guide which at the time of writing, asks you to complete the following 2 steps in your website:
+
+1. Copy the following JavaScript and paste it as close to the opening <head> tag as possible on every page of your website, replacing GTM-XXXX with your container ID:
+
+```html
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXX');</script>
+<!-- End Google Tag Manager -->
+```
+
+2. Copy the following snippet and paste it immediately after the opening <body> tag on every page of your website, replacing GTM-XXXX with your container ID:
+
+```html
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+```
+
+### Loading collect.js via GTM
+
+After selecting/creating a GTM account in the previous step, find "Tags" in the navigation and then click on **Create** by clicking on the upper tile, ignoring the lower "Triggering" tile.
+
+![Create new GTM Tag](img/gtm-create-tag.jpg)
+
+The "Choose tag type" dialogue pops up. Scroll down until you find the Custom section and click on "Custom HTML":
+
+![Create Custom HTML Tag](img/gtm-create-tag-custom.jpg)
+
+Now you can configure all relevant details of ur library-loading tag:
+
+![Create Custom HTML Tag](img/gtm-create-tag-details.jpg)
+
+1. Change the name from "Untitled Tag" to "Collect.js loader" (or whatever suits you).
+2. Go fetch the code from _Initialize the library_ > _[Asynchronous Collect Code](#asynchronous-collect-code)_ section above. and paste it into the "HTML" textarea.
+   > **Important**: make sure you replace `INSERT_MID` with your BU's MID in 2 places in this snippet!
+3. click on "Advanced Settings" which pops up the below additional interface and ensure "Tag firing options" is set to "Once per page".
+   ![Advanced Tag settings](img/gtm-create-tag-advanced.jpg)
+4. Ignore the "Triggering" section for this tag. We will load it through the actual events.
+
+When you are done the tag should look like this:
+
+![Library loader tag](img/gtm-tag-library-loader.jpg)
+
+While saving the system might ask you to add a trigger - **Do not add a trigger here** but instead simply save the tag. We will ensure it's loaded later.
+
+![Library loader tag w/o trigger](img/gtm-tag-library-loader-no-trigger.jpg)
+
+#### GTM: Developer Playground
+
+For early testing and especially if you don't have access to it on your SFMC instance just yet, you may replace the URL of the loader from `'//1234567.collect.igodigital.com/collect.js'` to `'https://joernberkefeld.github.io/SFMC-Cookbook/einstein/recommendation/collect-code/default/collect.js'`. This probably won't actually log anything but you can check in your browser DevTools's network tab if the right type of callouts are made without actually having access to Marketing Cloud.
+
+### Logging events via GTM
+
+With collect.js loading prepared, you may now start creating more custom tags, one for each event you want to be able to log for Einstein. Make sure you understood how to actually log events of all kinds via GTM and then simply hook up your new custom tags to those triggers.
+
+
+#### Identify current user via GTM
+
+In you website you want to trigger an event that is then caught by the triggers you specified in GTM for a certain tag.
+
+**Website Code:**
+
+```html
+<script>
+dataLayer.push({
+  'userId': 'my.personal@email.com',
+  'event': 'identifyUser'
+});
+</script>
+```
+
+**Your Custom HTML Tag:**
+
+```html
+<script>
+_etmc.push(['setUserInfo', {'email': {{userid}} }]);
+
+// run a generic trackPageView once to set cookies that are necessary for personalized Web Recommendations to show up
+_etmc.push(['trackPageView']);
+</script>
+```
+
+Putting that all together it will look something like this for the tag:
+
+![GTM "Identify user" Tag](img/gtm_id_user_tag_config.jpg)
+
+And like this for the trigger that you will need to create as a "Custom Event", based on the event name you used in the website code. In this example that event is called `identifyUser`:
+
+![GTM "Identify User" Trigger](img/gtm_id_user_trigger_config.jpg)
+
+Now, finally, we **need** to ensure our collect.js library is actually loaded. That is done in the Advanced Settings of the Custom HTML Tag that we just created (named "Collect.js - Identify current user").
+
+![GTM Ensure that collect.js is loaded when event occurs](img/gtm_id_user_tag_config_advanced.jpg)
+
+Ensure that for the option "Fire a tag **before**" you select the first tag we create earlier. That way, our library is really only loaded if events occur. And since it supports queueing events, loading it only now won't have a negative effect on whats loaded, nor on performance.
 
 ### Event mapping Google Analytyics to Collect Code
 
