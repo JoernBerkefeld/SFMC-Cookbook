@@ -40,7 +40,7 @@ This page aims to make using Einstein recommendations a little easier by adding 
     - [GTM: Developer Playground](#gtm-developer-playground)
   - [Logging events via GTM](#logging-events-via-gtm)
     - [Identify current user via GTM](#identify-current-user-via-gtm)
-  - [Event mapping Google Analytyics to Collect Code](#event-mapping-google-analytyics-to-collect-code)
+  - [Events mapping: Collect Code to GA4 Retail/Ecommerce](#events-mapping-collect-code-to-ga4-retailecommerce)
 
 ## Collect Code
 
@@ -1190,7 +1190,11 @@ With collect.js loading prepared, you may now start creating more custom tags, o
 
 #### Identify current user via GTM
 
-In you website you want to trigger an event that is then caught by the triggers you specified in GTM for a certain tag.
+In you website you want to trigger an event that is then caught by the triggers you specified in GTM for a certain tag. First, we need to define the variable that we want to log - unless it's one of the default ones of course. For our user login, let us create a custom Data Layer variable called `userId`:
+
+![](img/gtm_create_variable.jpg)
+
+This variable can then be used when writing into the data layer on the website and referenced in our Custom HTML Tag:
 
 **Website Code:**
 
@@ -1228,7 +1232,7 @@ Now, finally, we **need** to ensure our collect.js library is actually loaded. T
 
 Ensure that for the option "Fire a tag **before**" you select the first tag we create earlier. That way, our library is really only loaded if events occur. And since it supports queueing events, loading it only now won't have a negative effect on whats loaded, nor on performance.
 
-### Event mapping Google Analytyics to Collect Code
+### Events mapping: Collect Code to GA4 Retail/Ecommerce
 
 > The most current list of GA Events can be found in the [Analytics Help](https://support.google.com/analytics/answer/9268036).
 
@@ -1244,7 +1248,7 @@ Also, Google's `add_to_cart` and `remove_from_cart` only take the items actually
 
 Also don't forget about `setOrgId` that needs to run on page load and `doNotTrack` after login / as soon as we know.
 
-| SFMC Event | GA Event | Trigger | GA Parameters |
+| SFMC Event | GA4 Event | Trigger | GA Parameters |
 | -- | -- | -- | -- |
 | - | add_payment_info | when a user submits their payment information | coupon, currency, items, payment_type, value |
 | - | add_shipping_info | when a user submits their shipping information | coupon, currency, items, shipping_tier, value |
