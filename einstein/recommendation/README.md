@@ -191,7 +191,7 @@ Contrary to what the [official docs](https://help.salesforce.com/articleView?id=
 _etmc.push(['setUserInfo', {'email': 'INSERT_EMAIL_OR_UNIQUE_ID'}]);
 
 // run a generic trackPageView once to set cookies that are necessary for personalized Web Recommendations to show up
-_etmc.push(['trackPageView');
+_etmc.push(['trackPageView']);
 ```
 
 According to a well hidden part of the [documentation](https://help.salesforce.com/articleView?id=mc_anb_prerequisites_einstein_engagement_scoring.htm&type=5) Einstein Engagement Scoring actually supports for `INSERT_EMAIL_OR_UNIQUE_ID`:
