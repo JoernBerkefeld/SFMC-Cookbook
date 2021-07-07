@@ -1210,9 +1210,11 @@ dataLayer.push({
 
 **Your Custom HTML Tag:**
 
+_Please remove the 4 backslashes around \{\{userid\}\} - those are there to work around a weird templating issue I have here in GitHub. Do compare the following code snippet with the below screenshot if your are unsure about how this should look._
+
 ```html
 <script>
-_etmc.push(['setUserInfo', {'email': \{\{userid\}\} }]);
+_etmc.push(['setUserInfo', {'email': \{{userid}} }]);
 
 // run a generic trackPageView once to set cookies that are necessary for personalized Web Recommendations to show up
 _etmc.push(['trackPageView']);
