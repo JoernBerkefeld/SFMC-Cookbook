@@ -1,5 +1,7 @@
 # Encryption in Marketing Cloud
 
+![encryption title graphic](img/encryption-header.jpg)
+
 - [Keys](#keys)
   - [Creating PGP / GPG keys](#creating-pgp--gpg-keys)
   - [Importing PGP / GPG keys into SFMC's Key Manager](#importing-pgp--gpg-keys-into-sfmcs-key-manager)
