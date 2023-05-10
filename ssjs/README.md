@@ -1,26 +1,26 @@
 # 1. The SSJS Coding Guide
 
-- [1.1. Style Guideline](#11-style-guideline)
-- [1.2. SSJS snippets](#12-ssjs-snippets)
-  - [1.2.1. Reading GET parameters](#121-reading-get-parameters)
-  - [1.2.2. Reading POST form parameters](#122-reading-post-form-parameters)
-  - [1.2.3. Reading POST payload](#123-reading-post-payload)
-  - [1.2.4. Getting/Setting AMPscript variables](#124-gettingsetting-ampscript-variables)
-  - [1.2.5. Get/Set Cookies](#125-getset-cookies)
-  - [1.2.6. Update (All) Subscriber List](#126-update-all-subscriber-list)
-  - [1.2.7. Data Extensions](#127-data-extensions)
-    - [1.2.7.1. SELECT](#1271-select)
-    - [1.2.7.2. INSERT, UPSERT, UPDATE, DELETE](#1272-insert-upsert-update-delete)
-- [1.3. SSJS vs. JavaScript – the major differences that will break your code.](#13-ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
-  - [1.3.1. Standard JS features not available in SSJS](#131-standard-js-features-not-available-in-ssjs)
-    - [1.3.1.1. “new” Operator](#1311-new-operator)
-    - [1.3.1.2. Returning a new object in a function](#1312-returning-a-new-object-in-a-function)
-    - [1.3.1.3. Using multiple script-tags and hoisting](#1313-using-multiple-script-tags-and-hoisting)
-  - [1.3.2. SSJS vs. SSJS documentation – stuff that simply does not work](#132-ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
-    - [1.3.2.1. Retrieve()](#1321-retrieve)
-    - [1.3.2.2. Platform.Request.GetPostData()](#1322-platformrequestgetpostdata)
-    - [1.3.2.3. DateExtension.Init(): DE Name vs. External Key](#1323-dateextensioninit-de-name-vs-external-key)
-    - [1.3.2.4. Using "default" in a switch(...) {} statement](#1324-using-default-in-a-switch--statement)
+- [1.1. Style Guideline](#style-guideline)
+- [1.2. SSJS snippets](#ssjs-snippets)
+  - [1.2.1. Reading GET parameters](#reading-get-parameters)
+  - [1.2.2. Reading POST form parameters](#reading-post-form-parameters)
+  - [1.2.3. Reading POST payload](#reading-post-payload)
+  - [1.2.4. Getting/Setting AMPscript variables](#gettingsetting-ampscript-variables)
+  - [1.2.5. Get/Set Cookies](#getset-cookies)
+  - [1.2.6. Update (All) Subscriber List](#update-all-subscriber-list)
+  - [1.2.7. Data Extensions](#data-extensions)
+    - [1.2.7.1. SELECT](#select)
+    - [1.2.7.2. INSERT, UPSERT, UPDATE, DELETE](#insert-upsert-update-delete)
+- [1.3. SSJS vs. JavaScript – the major differences that will break your code.](#ssjs-vs-javascript--the-major-differences-that-will-break-your-code)
+  - [1.3.1. Standard JS features not available in SSJS](#standard-js-features-not-available-in-ssjs)
+    - [1.3.1.1. “new” Operator](#new-operator)
+    - [1.3.1.2. Returning a new object in a function](#returning-a-new-object-in-a-function)
+    - [1.3.1.3. Using multiple script-tags and hoisting](#using-multiple-script-tags-and-hoisting)
+  - [1.3.2. SSJS vs. SSJS documentation – stuff that simply does not work](#ssjs-vs-ssjs-documentation--stuff-that-simply-does-not-work)
+    - [1.3.2.1. Retrieve()](#retrieve)
+    - [1.3.2.2. Platform.Request.GetPostData()](#platformrequestgetpostdata)
+    - [1.3.2.3. DateExtension.Init(): DE Name vs. External Key](#dateextensioninit-de-name-vs-external-key)
+    - [1.3.2.4. Using "default" in a switch(...) {} statement](#using-default-in-a-switch--statement)
 
 ## 1.1. Style Guideline
 
@@ -30,25 +30,47 @@ In general, sticking to the [official Angular.js 1.0 guide](https://github.com/j
 
 Download these for general setup:
 
-- [.eslintrc](../.eslintrc)
-- [.prettierrc](../.prettierrc)
-- [.editorconfig](../.editorconfig)
-- [package.json](../package.json)
+- [.eslintrc](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/.eslintrc)
+- [.prettierrc](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/.prettierrc)
+- [.editorconfig](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/.editorconfig)
+- [package.json](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/package.json)
 
 And these if you will use Visual Studio Code (place them .vscode folder inside the root of your project folder):
 
-- [Recommended VSC Extensions](../.vscode/extensions.json)
-- [Recommended VSC Settings](../.vscode/settings.json)
+- [Recommended VSC Extensions](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/.vscode/extensions.json)
+- [Recommended VSC Settings](https://github.com/JoernBerkefeld/SFMC-Cookbook/blob/master/.vscode/settings.json)
 
 ## 1.2. SSJS snippets
 
 ### 1.2.1. Reading GET parameters
 
-GET parameters require you to know the name. It seems there is no way to get all parameters or the query string itself.
+To get all GET parameters you can parse `Platform.Request.RequestURL`, which holds the full URL including those parameters:
+
+```html
+<script runat="server">
+Platform.Load("core", "1.1.1");
+
+var queryParams = {};
+var pageUrl = Platform.Request.RequestURL;
+var helper = pageUrl.split("?");
+
+if(helper.length == 2) {
+    var queryArr = helper[1].split('&');
+    for(var i=0; i<queryArr.length; i++) {
+        var keyVal = queryArr[i].split('=');
+        queryParams[keyVal[0]] = keyVal[1];
+    }
+}
+
+// queryParams should now be an object holding the query parameters with parameter name as keys
+</script>
+```
+
+If instead, you already know which parameter you want to read, you can directly access it via `Platform.Request.GetQueryStringParameter()`:
 
 ```html
 <!-- GET url.com/cloudpage?data=test -->
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 var param = Platform.Request.GetQueryStringParameter("data");
@@ -64,7 +86,7 @@ This is a shortcut if you want to read only a few values. Below is an option to 
 
 ```html
 <!-- GET url.com/cloudpage with form field "firstname" -->
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 var param = Platform.Request.GetFormField("firstname");
@@ -76,7 +98,7 @@ var param = Platform.Request.GetFormField("firstname");
 
 ```html
 <!-- POST url.com/cloudpage -->
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 var postBody = Platform.Request.GetPostData();
@@ -98,7 +120,7 @@ The return value varies depending on the header. Some bad payload-header combina
 <!-- enhanced wrapper to deal with post data -->
 <!-- post body: {"attribute1": "test", "foo":"bar"} -->
 
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 function PostBody() {
@@ -174,7 +196,7 @@ Set @myAmpscriptVariable = "test"
 ]%%
 
 <!-- getter.ssjs -->
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 var temp = Variable.GetValue('@myAmpscriptVariable');
@@ -184,7 +206,7 @@ var temp = Variable.GetValue('@myAmpscriptVariable');
 
 ```html
 <!-- setter.ssjs -->
-<script runat="server" language="JavaScript">
+<script runat="server">
 Platform.Load("core", "1.1.1");
 
 var temp = 'test2';
@@ -528,11 +550,11 @@ Normally, you can easily spread your code over multiple files and as long as you
 
 ```html
 <!-- fails -->
-<script runat="server" language="JavaScript">
+<script runat="server">
     var myInstance = MyClass();
 </script>
 
-<script runat="server" language="JavaScript">
+<script runat="server">
     function MyClass() {
         var service = {
             attr1: true,
@@ -545,7 +567,7 @@ Normally, you can easily spread your code over multiple files and as long as you
 
 ```html
 <!-- good -->
-<script runat="server" language="JavaScript">
+<script runat="server">
     var myInstance = MyClass();
 
     function MyClass() {
@@ -560,7 +582,7 @@ Normally, you can easily spread your code over multiple files and as long as you
 
 ```html
 <!-- good -->
-<script runat="server" language="JavaScript">
+<script runat="server">
     function MyClass() {
         var service = {
             attr1: true,
@@ -570,7 +592,7 @@ Normally, you can easily spread your code over multiple files and as long as you
     }
 </script>
 
-<script runat="server" language="JavaScript">
+<script runat="server">
     var myInstance = MyClass();
 </script>
 ```
@@ -582,7 +604,8 @@ Yup, this happens more often than you would think: The docs offer you this reall
 #### 1.3.2.1. Retrieve()
 
 This is a fun one because it comes with multiple challenges: It does not work AT ALL in CloudPages but it does work just fine in automations.
-Also, if you leave out the filter parameter, which is officially an optional parameter, then it stops working all together. Also, if you try to omit it in a sneaky way by checking isNotNull on some field that is always filled it will still not work. You
+Also, if you leave out the filter parameter, which is officially an optional parameter, then it stops working all to
+ her. Also, if you try to omit it in a sneaky way by checking isNotNull on some field that is always filled it will still not work. You
 
 #### 1.3.2.2. Platform.Request.GetPostData()
 
