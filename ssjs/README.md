@@ -493,7 +493,9 @@ This is a list of features that are standard in EcmaScript 3 but that are not su
 
 #### 1.3.1.1. “new” Operator
 
-Using “new” is common when you define your libraries in class format, however, this simply shows a 500 in SSJS. Writing the very same only without “new” works fine though.
+Using “new” is common when you define your libraries in class format, however, depending on how you write it, it can throw a 500-error in SSJS.
+
+**Not working:**
 
 ```javascript
 /* fails with 500 */
@@ -508,8 +510,12 @@ var myInstance = new MyClass();
 myInstance.method1();
 ```
 
+**Workaround:**
+
+This option gets the job done but without proper intellisense support.
+
 ```javascript
-/* good */
+/* good - without new operator */
 function MyClass() {
     var service = {
         attr1: true,
@@ -518,6 +524,23 @@ function MyClass() {
     return service;
 }
 var myInstance = MyClass();
+myInstance.method1();
+```
+
+**Preferred Solution:**
+
+This last option should be your go-to approach because it ensures intellisense in VSCode works as expected AND it does not break the SSJS parser in Marketing Cloud.
+
+```javascript
+/* best - with new operator and this.service */
+function MyClass() {
+    this.service = {
+        attr1: true,
+        method1: function(){}
+    };
+}
+
+var myInstance = new MyClass();
 myInstance.method1();
 ```
 
